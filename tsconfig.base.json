@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "customConditions": ["source"],
-    "composite": true
+    "composite": true,
+    "moduleResolution": "bundler",
+    "module": "preserve"
   }
 }
