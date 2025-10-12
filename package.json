@@ -1,17 +1,16 @@
 {
-  "name": "resume-analizer",
+  "name": "root",
   "version": "1.0.0",
-  "private": true,
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"pnpm --filter backend run dev\" \"pnpm --filter frontend run dev\"",
-    "dev:frontend": "pnpm --filter frontend run dev"
+    "dev": "pnpm --recursive --parallel run dev",
+    "build": "pnpm --recursive run build"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
-  "dependencies": {
-    "concurrently": "^9.2.1",
+  "devDependencies": {
     "@biomejs/biome": "2.2.5"
   }
 }
