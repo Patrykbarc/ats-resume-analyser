@@ -1,0 +1,75 @@
+{
+  "version": 1.1,
+  "atDirectives": [
+    {
+      "name": "@tailwind",
+      "description": "Use the `@tailwind` directive to insert Tailwind's `base`, `components`, `utilities` and `screens` styles into your CSS.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#tailwind"
+        }
+      ]
+    },
+    {
+      "name": "@apply",
+      "description": "Use the `@apply` directive to inline any existing utility classes into your own custom CSS. This is useful when you find a common utility pattern in your HTML that you’d like to extract to a new component.",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#apply"
+        }
+      ]
+    },
+    {
+      "name": "@responsive",
+      "description": "You can generate responsive variants of your own classes by wrapping their definitions in the `@responsive` directive:\n@responsive {\n\t.alert {\n\t\tbackground-color: #E53E3E;\n\t}\n}",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#responsive"
+        }
+      ]
+    },
+    {
+      "name": "@screen",
+      "description": "The `@screen` directive allows you to create media queries that reference your breakpoints by **name** instead of duplicating their values in your own CSS:\n@screen sm {\n\t/* ... */\n}\n…gets transformed into this:\n@media (min-width: 640px) {\n\t/* ... */\n}",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#screen"
+        }
+      ]
+    },
+    {
+      "name": "@variants",
+      "description": "Generate `hover`, `focus`, `active` and other **variants** of your own utilities by wrapping their definitions in the `@variants` directive:\n@variants hover, focus {\n\t.btn-brand {\n\t\tbackground-color: #3182CE;\n\t}\n}",
+      "references": [
+        {
+          "name": "Tailwind Documentation",
+          "url": "https://tailwindcss.com/docs/functions-and-directives#variants"
+        }
+      ]
+    },
+    {
+      "name": "@custom-variant",
+      "description": "Use the `@custom-variant` directive to define a new utility variant based on an arbitrary selector, like a parent class or data attribute, for use in your HTML. This allows creating contextual or state-based variants beyond the default ones. For example: `[data-active='true']:hover:text-blue-500`.\n@custom-variant active {\n\t&[data-active='true']\n}",
+      "references": [
+        {
+          "name": "Hypothetical Feature Reference",
+          "url": "https://example.com/custom-variant-docs"
+        }
+      ]
+    },
+    {
+      "name": "@theme",
+      "description": "The `@theme` function/directive allows you to access values from your `tailwind.config.js` configuration file within your custom CSS. It is used to easily reference design tokens like colors, spacing, or fonts defined in your theme section.\n.custom-element {\n\tcolor: theme('colors.primary');\n\tpadding: theme('spacing.4');\n}",
+      "references": [
+        {
+          "name": "Hypothetical Feature Reference",
+          "url": "https://example.com/theme-function-docs"
+        }
+      ]
+    }
+  ]
+}

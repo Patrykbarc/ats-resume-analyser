@@ -5,6 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "pnpm --recursive --parallel run dev",
+    "dev:web": "pnpm --filter @monorepo/web run dev",
+    "dev:api": "pnpm --filter @monorepo/api run dev",
     "build": "pnpm --recursive run build"
   },
   "keywords": [],
