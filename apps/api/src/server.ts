@@ -6,7 +6,7 @@ const server = fastify()
 
 server.register(cors)
 
-server.get("/", async (req, res) => {
+server.get("/", async () => {
 	const user: User = {
 		username: "hello",
 	}
