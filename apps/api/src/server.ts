@@ -1,18 +1,17 @@
 import cors from "@fastify/cors"
-import type { User } from "@monorepo/schemas"
-import fastify from "fastify"
+import multipart from "@fastify/multipart"
+import Fastify from "fastify"
+import { getAnalyze } from "./controllers/getAnalyzeController"
 
-const server = fastify()
+const server = Fastify({ logger: true })
 
 server.register(cors)
+server.register(multipart)
 
-server.get("/", async () => {
-	const user: User = {
-		username: "hello",
-	}
-
-	return { user }
-})
+server.post(
+	"/api/analyze",
+	async (request, reply) => await getAnalyze(request, reply),
+)
 
 server.listen({ port: 8080 }, (err, address) => {
 	if (err) {
