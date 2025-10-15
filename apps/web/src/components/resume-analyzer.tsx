@@ -7,10 +7,9 @@ import { AnalysisResults } from "@/components/analysis-results"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
-const apiUrl = import.meta.env.VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL
 
 export function ResumeAnalyzer() {
-	console.log(apiUrl)
 	const [file, setFile] = useState<File | null>(null)
 	const [analyzing, setAnalyzing] = useState(false)
 	const [analysis, setAnalysis] = useState<string | null>(null)
@@ -34,7 +33,7 @@ export function ResumeAnalyzer() {
 			const formData = new FormData()
 			formData.append("file", file)
 
-			const response = await fetch("/api/analyze", {
+			const response = await fetch(`${API_URL}/api/analyze`, {
 				method: "POST",
 				body: formData,
 			})
