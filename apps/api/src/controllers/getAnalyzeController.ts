@@ -1,14 +1,7 @@
-import * as PDFParse from "@monorepo/pdf-parse"
 import type { FastifyReply, FastifyRequest } from "fastify"
-
-const streamToBuffer = (stream: NodeJS.ReadableStream): Promise<Buffer> => {
-	return new Promise((resolve, reject) => {
-		const chunks: Uint8Array[] = []
-		stream.on("data", (chunk) => chunks.push(chunk))
-		stream.on("error", (err) => reject(err))
-		stream.on("end", () => resolve(Buffer.concat(chunks)))
-	})
-}
+import { analyseFile } from "./helper/analyseFile"
+import { parseAndSanitize } from "./helper/parseAndSanitize"
+import { streamToBuffer } from "./helper/streamToBuffer"
 
 export const getAnalyze = async (
 	request: FastifyRequest,
@@ -22,20 +15,14 @@ export const getAnalyze = async (
 
 	try {
 		const buffer = await streamToBuffer(data.file)
-		const uint8ArrayData: Uint8Array = new Uint8Array(buffer)
-
-		const parser = new PDFParse.PDFParse({ data: uint8ArrayData })
-
-		const textResult = await parser.getText()
 
 		data.file.destroy()
 
-		const analysis = {
-			extractedText: textResult.text,
-			filename: data.filename,
-		}
+		const sanitizedTextResult = await parseAndSanitize(buffer)
 
-		return reply.send(analysis)
+		const analysedFile = await analyseFile(sanitizedTextResult)
+
+		return reply.send(analysedFile)
 	} catch (error) {
 		console.error("Error while processing the file:", error)
 

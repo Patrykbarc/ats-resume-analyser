@@ -1,7 +1,10 @@
 import cors from "@fastify/cors"
 import multipart from "@fastify/multipart"
+import dotenv from "dotenv"
 import Fastify from "fastify"
 import { getAnalyze } from "./controllers/getAnalyzeController"
+
+dotenv.config()
 
 const server = Fastify({ logger: true })
 
