@@ -1,11 +1,12 @@
 {
-  "extends": ["@tsconfig/vite-react/tsconfig.json", "../../tsconfig.base.json"],
-  "include": ["src", "vite-env.d.ts"],
+	"extends": ["@tsconfig/vite-react/tsconfig.json", "../../tsconfig.base.json"],
+	"include": ["src", "vite-env.d.ts"],
 
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
-  }
+	"compilerOptions": {
+		"lib": ["DOM", "ES2021"],
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["./src/*"]
+		}
+	}
 }

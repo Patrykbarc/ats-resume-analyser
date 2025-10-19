@@ -1,8 +1,9 @@
 {
-  "compilerOptions": {
-    "customConditions": ["source"],
-    "composite": true,
-    "moduleResolution": "bundler",
-    "module": "preserve"
-  }
+	"compilerOptions": {
+		"target": "es2021",
+		"customConditions": ["source"],
+		"composite": true,
+		"moduleResolution": "bundler",
+		"module": "preserve"
+	}
 }
