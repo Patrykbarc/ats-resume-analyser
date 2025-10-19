@@ -1,4 +1,4 @@
-import { ResumeAnalyzer } from "./components/resume-analyzer"
+import { ResumeAnalyser } from "./components/resume-analyser"
 
 function App() {
 	return (
@@ -13,7 +13,7 @@ function App() {
 					</p>
 				</header>
 
-				<ResumeAnalyzer />
+				<ResumeAnalyser />
 			</div>
 		</main>
 	)

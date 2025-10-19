@@ -1,39 +1,19 @@
 "use client"
 
+import type { AiAnalysis } from "@monorepo/types"
+import { capitalize } from "lodash"
 import { AlertCircle, CheckCircle2, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
-const sections = [
-	{
-		title: "Strengths",
-		icon: CheckCircle2,
-		color: "text-green-500",
-		content:
-			"Strong technical skills section with relevant technologies. Clear work experience with quantifiable achievements.",
-	},
-	{
-		title: "Areas for Improvement",
-		icon: AlertCircle,
-		color: "text-yellow-500",
-		content:
-			"Consider adding more specific metrics to demonstrate impact. Professional summary could be more concise and targeted.",
-	},
-	{
-		title: "Recommendations",
-		icon: Lightbulb,
-		color: "text-accent",
-		content:
-			"Add keywords relevant to your target role. Include links to portfolio or GitHub. Ensure consistent formatting throughout.",
-	},
-]
-
 type AnalysisResultsProps = {
-	analysis: string
+	analysis: AiAnalysis
 	onReset: () => void
 }
 
 export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
+	const sections = Object.entries(analysis.sections)
+
 	return (
 		<div className="space-y-6">
 			<div className="flex items-center justify-between">
@@ -44,18 +24,33 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
 			</div>
 
 			<div className="grid gap-6 md:grid-cols-1">
-				{sections.map((section) => {
-					const Icon = section.icon
+				{sections.map(([key, value], index) => {
+					const title = capitalize(key.replaceAll("_", " "))
+					const description = value.map((i) => i.replaceAll(".", ". "))
+
+					const iconsData = [
+						{ icon: CheckCircle2, color: "text-green-500" },
+						{ icon: AlertCircle, color: "text-yellow-500" },
+						{ icon: Lightbulb, color: "text-accent" },
+					]
+
+					const sectionIconData = iconsData[index % iconsData.length]
+
+					const IconComponent = sectionIconData.icon
+					const iconColor = sectionIconData.color
+
 					return (
-						<Card key={section.title} className="border-border bg-card p-6">
+						<Card key={key} className="border-border bg-card p-6">
 							<div className="mb-4 flex items-center gap-3">
-								<Icon className={`h-6 w-6 ${section.color}`} />
+								<div>
+									<IconComponent className={`h-6 w-6 ${iconColor}`} />
+								</div>
 								<h3 className="text-lg font-semibold text-foreground">
-									{section.title}
+									{title}
 								</h3>
 							</div>
 							<p className="leading-relaxed text-muted-foreground">
-								{section.content}
+								{description}
 							</p>
 						</Card>
 					)
@@ -71,15 +66,16 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
 						<div className="h-3 overflow-hidden rounded-full bg-secondary">
 							<div
 								className="h-full bg-accent transition-all duration-500"
-								style={{ width: "78%" }}
+								style={{ width: analysis.overall_score.score }}
 							/>
 						</div>
 					</div>
-					<span className="text-2xl font-bold text-accent">78/100</span>
+					<span className="text-2xl font-bold text-accent">
+						{analysis.overall_score.score} / 100
+					</span>
 				</div>
 				<p className="mt-3 text-sm text-muted-foreground">
-					Your resume is strong but has room for improvement. Focus on the
-					recommendations above to increase your score.
+					{analysis.overall_score.justification}
 				</p>
 			</Card>
 		</div>

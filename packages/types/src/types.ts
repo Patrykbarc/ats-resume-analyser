@@ -1,4 +1,4 @@
-export type ApiResponse = {
+export type AiAnalysis = {
 	title: string
 	overall_score: {
 		label: string

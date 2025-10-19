@@ -1,5 +1,8 @@
 "use client"
 
+import type { AiAnalysis } from "@monorepo/types"
+import axios from "axios"
+import { StatusCodes } from "http-status-codes"
 import { FileText, Sparkles, Upload } from "lucide-react"
 import type React from "react"
 import { useId, useState } from "react"
@@ -9,10 +12,11 @@ import { Card } from "@/components/ui/card"
 
 const API_URL = import.meta.env.VITE_API_URL
 
-export function ResumeAnalyzer() {
+export function ResumeAnalyser() {
 	const [file, setFile] = useState<File | null>(null)
 	const [analyzing, setAnalyzing] = useState(false)
-	const [analysis, setAnalysis] = useState<string | null>(null)
+	const [analysis, setAnalysis] = useState<AiAnalysis | null>(null)
+	const [errorMessage, setErrorMessage] = useState<string | null>(null)
 	const id = useId()
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,24 +28,26 @@ export function ResumeAnalyzer() {
 		}
 	}
 
-	const handleAnalyze = async () => {
+	const handleAnalyse = async () => {
 		if (!file) return
 
 		setAnalyzing(true)
+		setErrorMessage(null)
 
 		try {
 			const formData = new FormData()
 			formData.append("file", file)
 
-			const response = await fetch(`${API_URL}/api/analyze`, {
-				method: "POST",
-				body: formData,
+			const response = await axios.post(`${API_URL}/api/analyze`, formData, {
+				headers: { "Content-Type": "multipart/form-data" },
 			})
 
-			const data = await response.json()
-			setAnalysis(data.analysis)
+			if (response.status === StatusCodes.OK) {
+				setAnalysis(JSON.parse(response.data.analysedFile))
+			}
 		} catch (error) {
 			console.error("Error analyzing resume:", error)
+			setErrorMessage("The file seems to not be a CV.")
 		} finally {
 			setAnalyzing(false)
 		}
@@ -102,7 +108,7 @@ export function ResumeAnalyzer() {
 
 								<div className="flex gap-3">
 									<Button
-										onClick={handleAnalyze}
+										onClick={handleAnalyse}
 										disabled={analyzing}
 										className="bg-accent text-accent-foreground hover:bg-accent/90"
 									>
@@ -130,6 +136,9 @@ export function ResumeAnalyzer() {
 							</>
 						)}
 					</div>
+					{errorMessage && (
+						<p className="text-center text-rose-400">{errorMessage}</p>
+					)}
 				</Card>
 			) : (
 				<AnalysisResults analysis={analysis} onReset={handleReset} />
