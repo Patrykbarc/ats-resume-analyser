@@ -1,50 +1,52 @@
-import type { AiAnalysis } from "@monorepo/types"
-import type { FastifyReply, FastifyRequest } from "fastify"
+import { promises as fs } from "node:fs"
+import type { Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
 import { analyseFile } from "./helper/analyseFile"
 import { parseAndSanitize } from "./helper/parseAndSanitize"
-import { streamToBuffer } from "./helper/streamToBuffer"
-
-type ErrorRes = { status: number; error: string }
-type Response = { status: StatusCodes.OK; data: AiAnalysis } | ErrorRes
 
 export const getAnalyze = async (
-	request: FastifyRequest,
-	reply: FastifyReply,
+	req: Request,
+	res: Response,
 ): Promise<Response> => {
-	const data = await request.file()
+	const file = req.file
 
-	if (!data) {
-		return reply
-			.status(400)
+	if (!file) {
+		return res
+			.status(StatusCodes.BAD_REQUEST)
 			.send({ status: StatusCodes.BAD_REQUEST, error: "No file sent." })
 	}
 
 	try {
-		const buffer = await streamToBuffer(data.file)
+		let buffer: Buffer
 
-		data.file.destroy()
+		if (file.buffer) {
+			buffer = file.buffer
+		} else if (file.path) {
+			buffer = await fs.readFile(file.path)
+
+			await fs.unlink(file.path)
+		} else {
+			return res.status(StatusCodes.BAD_REQUEST).send({
+				status: StatusCodes.BAD_REQUEST,
+				error: "Unsupported file upload method.",
+			})
+		}
 
 		const sanitizedTextResult = await parseAndSanitize(buffer)
-
 		const analysedFile = await analyseFile(sanitizedTextResult)
 
 		if ("error" in JSON.parse(analysedFile)) {
-			return reply.send({
+			return res.send({
 				status: StatusCodes.BAD_REQUEST,
 				error: "The file seems to not be a CV.",
 			})
 		}
 
-		return reply.send({ status: StatusCodes.OK, analysedFile })
+		return res.send({ status: StatusCodes.OK, analysedFile })
 	} catch (error) {
 		console.error("Error while processing the file:", error)
 
-		if (data.file && !data.file.destroyed) {
-			data.file.destroy()
-		}
-
-		return reply.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
 			status: StatusCodes.INTERNAL_SERVER_ERROR,
 			error: "The file could not be processed.",
 		})
