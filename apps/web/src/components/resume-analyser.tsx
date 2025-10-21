@@ -84,7 +84,7 @@ export function ResumeAnalyser() {
 
 								<label htmlFor={id}>
 									<Button asChild>
-										<span className="cursor-pointer">Choose File</span>
+										<span>Choose File</span>
 									</Button>
 									<input
 										id={id}

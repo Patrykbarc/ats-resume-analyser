@@ -5,6 +5,7 @@ import { capitalize } from "lodash"
 import { AlertCircle, CheckCircle2, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { Progress } from "./ui/progress"
 
 type AnalysisResultsProps = {
 	analysis: AiAnalysis
@@ -31,7 +32,7 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
 					const iconsData = [
 						{ icon: CheckCircle2, color: "text-green-500" },
 						{ icon: AlertCircle, color: "text-yellow-500" },
-						{ icon: Lightbulb, color: "text-accent" },
+						{ icon: Lightbulb, color: "text-blue-500" },
 					]
 
 					const sectionIconData = iconsData[index % iconsData.length]
@@ -57,27 +58,32 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
 				})}
 			</div>
 
-			<Card className="border-border bg-card p-6">
-				<h3 className="mb-3 text-lg font-semibold text-foreground">
-					Overall Score
-				</h3>
-				<div className="flex items-center gap-4">
-					<div className="flex-1">
-						<div className="h-3 overflow-hidden rounded-full bg-secondary">
-							<div
-								className="h-full bg-accent transition-all duration-500"
-								style={{ width: analysis.overall_score.score }}
-							/>
-						</div>
-					</div>
-					<span className="text-2xl font-bold text-accent">
-						{analysis.overall_score.score} / 100
-					</span>
-				</div>
-				<p className="mt-3 text-sm text-muted-foreground">
-					{analysis.overall_score.justification}
-				</p>
-			</Card>
+			<AnalysisSummary
+				score={analysis.overall_score.score}
+				justification={analysis.overall_score.justification}
+			/>
 		</div>
+	)
+}
+
+type OverallScore = AiAnalysis["overall_score"]
+
+type AnalysisSummaryProps = {
+	score: OverallScore["score"]
+	justification: OverallScore["justification"]
+}
+
+function AnalysisSummary({ score, justification }: AnalysisSummaryProps) {
+	return (
+		<Card className="border-border bg-card p-6">
+			<h3 className="mb-3 text-lg font-semibold text-foreground">
+				Overall Score
+			</h3>
+			<div className="grid text-end gap-3">
+				<Progress value={+score} />
+				<span className="text-xl font-bold">{score} / 100</span>
+			</div>
+			<p className="mt-3  text-muted-foreground">{justification}</p>
+		</Card>
 	)
 }
