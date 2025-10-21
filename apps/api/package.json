@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "tsup",
-    "dev": "tsup --watch './src'"
+    "dev": "tsup --watch './src'",
+    "gen-key": "openssl rand -hex 32"
   },
   "dependencies": {
     "@monorepo/pdf-parse": "workspace:*",

@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 
 const API_URL = import.meta.env.VITE_API_URL
+const API_KEY = import.meta.env.VITE_API_KEY
 
 export function ResumeAnalyser() {
 	const [file, setFile] = useState<File | null>(null)
@@ -39,7 +40,10 @@ export function ResumeAnalyser() {
 			formData.append("file", file)
 
 			const response = await axios.post(`${API_URL}/api/analyze`, formData, {
-				headers: { "Content-Type": "multipart/form-data" },
+				headers: {
+					"Content-Type": "multipart/form-data",
+					Authorization: `bearer ${API_KEY}`,
+				},
 			})
 
 			if (response.status === StatusCodes.OK) {

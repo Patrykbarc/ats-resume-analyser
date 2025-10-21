@@ -9,7 +9,7 @@ export const verifyApiKey = (
 	const NODE_ENV = process.env.NODE_ENV
 	const API_KEY = process.env.API_KEY
 
-	if (NODE_ENV === "test" || NODE_ENV === "development") {
+	if (NODE_ENV === "test") {
 		return next()
 	}
 

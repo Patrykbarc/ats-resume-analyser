@@ -1,10 +1,10 @@
 import { FileSchema } from "@monorepo/schemas"
 import { Router } from "express"
 import { getAnalyze } from "../controllers/getAnalyseController"
-import { validateData } from "../middleware/validateSchema"
+import { validateFile } from "../middleware/validateFile"
 
 const router: Router = Router()
 
-router.post("/", validateData(FileSchema), getAnalyze)
+router.post("/", validateFile(FileSchema), getAnalyze)
 
 export default router

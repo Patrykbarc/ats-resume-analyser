@@ -4,26 +4,21 @@ import express from "express"
 import rateLimit from "express-rate-limit"
 import helmet from "helmet"
 import logger from "morgan"
-import multer from "multer"
+import { routes } from "../routes/routes"
 import { errorHandler } from "./errorHandler"
 import { verifyApiKey } from "./verifyApiKey"
 
-const upload = multer({ storage: multer.memoryStorage() })
-
-const multipartParser = upload.single("file")
-
-export const middleware = (app: Application, routes: () => void) => {
+export const middleware = (app: Application) => {
 	app.use(helmet())
 	app.use(cors(corsOptions))
 	app.use(logger("dev"))
 	app.use("/api", limiter)
 
-	app.use(multipartParser)
-
 	app.use(express.json())
 	app.use(verifyApiKey)
 
-	routes()
+	routes(app)
+
 	app.use(errorHandler)
 }
 
