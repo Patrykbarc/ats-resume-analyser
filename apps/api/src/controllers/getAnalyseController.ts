@@ -13,7 +13,7 @@ export const getAnalyze = async (
 	if (!file) {
 		return res
 			.status(StatusCodes.BAD_REQUEST)
-			.send({ status: StatusCodes.BAD_REQUEST, error: "No file sent." })
+			.json({ status: StatusCodes.BAD_REQUEST, error: "No file sent." })
 	}
 
 	try {
@@ -26,7 +26,7 @@ export const getAnalyze = async (
 
 			await fs.unlink(file.path)
 		} else {
-			return res.status(StatusCodes.BAD_REQUEST).send({
+			return res.status(StatusCodes.BAD_REQUEST).json({
 				status: StatusCodes.BAD_REQUEST,
 				error: "Unsupported file upload method.",
 			})
@@ -36,17 +36,18 @@ export const getAnalyze = async (
 		const analysedFile = await analyseFile(sanitizedTextResult)
 
 		if ("error" in JSON.parse(analysedFile)) {
-			return res.send({
-				status: StatusCodes.BAD_REQUEST,
+			return res.status(StatusCodes.BAD_REQUEST).json({
 				error: "The file seems to not be a CV.",
 			})
 		}
 
-		return res.send({ status: StatusCodes.OK, analysedFile })
+		return res
+			.status(StatusCodes.OK)
+			.json({ status: StatusCodes.OK, analysedFile: JSON.parse(analysedFile) })
 	} catch (error) {
 		console.error("Error while processing the file:", error)
 
-		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+		return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
 			status: StatusCodes.INTERNAL_SERVER_ERROR,
 			error: "The file could not be processed.",
 		})
