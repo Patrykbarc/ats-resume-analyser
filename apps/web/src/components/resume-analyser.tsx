@@ -49,11 +49,13 @@ export function ResumeAnalyser() {
 			)
 
 			if (response.status === StatusCodes.OK) {
-				setAnalysis(JSON.parse(response.data.analysedFile))
+				setAnalysis(response.data.analysedFile)
 			}
 		} catch (error) {
 			console.error("Error analyzing resume:", error)
-			setErrorMessage("The file seems to not be a CV.")
+			setErrorMessage(
+				"An error occurred while analyzing your resume. Please try again.",
+			)
 		} finally {
 			setAnalyzing(false)
 		}
@@ -107,9 +109,7 @@ function UploadFile({ handleFileChange }: UploadFileProps) {
 				<h2 className="mb-2 text-xl font-semibold text-foreground">
 					Upload Your Resume
 				</h2>
-				<p className="text-sm text-muted-foreground">
-					PDF, DOC, or DOCX format
-				</p>
+				<p className="text-sm text-muted-foreground">PDF format</p>
 			</div>
 
 			<label htmlFor={id}>
@@ -119,7 +119,7 @@ function UploadFile({ handleFileChange }: UploadFileProps) {
 				<input
 					id={id}
 					type="file"
-					accept=".pdf,.doc,.docx"
+					accept=".pdf"
 					onChange={handleFileChange}
 					className="sr-only"
 				/>
