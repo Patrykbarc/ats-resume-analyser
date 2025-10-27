@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs"
+import type { AiAnalysis, AiAnalysisError } from "@monorepo/types"
 import type { Request, Response } from "express"
 import { StatusCodes } from "http-status-codes"
 import { analyseFile } from "./helper/analyseFile"
@@ -35,15 +36,19 @@ export const getAnalyze = async (
 		const sanitizedTextResult = await parseAndSanitize(buffer)
 		const analysedFile = await analyseFile(sanitizedTextResult)
 
+		const parsedAnalysedFile: AiAnalysis | AiAnalysisError =
+			JSON.parse(analysedFile)
+
 		if ("error" in JSON.parse(analysedFile)) {
 			return res.status(StatusCodes.BAD_REQUEST).json({
-				error: "The file seems to not be a CV.",
+				...(parsedAnalysedFile as AiAnalysisError),
 			})
 		}
 
-		return res
-			.status(StatusCodes.OK)
-			.json({ status: StatusCodes.OK, analysedFile: JSON.parse(analysedFile) })
+		return res.status(StatusCodes.OK).json({
+			status: StatusCodes.OK,
+			...(parsedAnalysedFile as AiAnalysis),
+		})
 	} catch (error) {
 		console.error("Error while processing the file:", error)
 

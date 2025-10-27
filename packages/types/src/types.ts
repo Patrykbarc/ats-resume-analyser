@@ -1,4 +1,4 @@
-export type AiAnalysis = {
+type AiAnalysis = {
 	title: string
 	overall_score: {
 		label: string
@@ -17,3 +17,7 @@ export type AiAnalysis = {
 		recommendations: string[]
 	}
 }
+
+type AiAnalysisError = { error: string }
+
+export type { AiAnalysis, AiAnalysisError }

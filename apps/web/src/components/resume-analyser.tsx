@@ -1,7 +1,7 @@
 "use client"
 
-import type { AiAnalysis } from "@monorepo/types"
-import axios from "axios"
+import type { AiAnalysis, AiAnalysisError } from "@monorepo/types"
+import axios, { type AxiosError } from "axios"
 import { StatusCodes } from "http-status-codes"
 import { FileText, Sparkles, Upload } from "lucide-react"
 import type React from "react"
@@ -16,7 +16,9 @@ export function ResumeAnalyser() {
 	const [file, setFile] = useState<File | null>(null)
 	const [analyzing, setAnalyzing] = useState(false)
 	const [analysis, setAnalysis] = useState<AiAnalysis | null>(null)
-	const [errorMessage, setErrorMessage] = useState<string | null>(null)
+	const [errorMessage, setErrorMessage] = useState<string | undefined>(
+		undefined,
+	)
 
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const selectedFile = e.target.files?.[0]
@@ -31,13 +33,13 @@ export function ResumeAnalyser() {
 		if (!file) return
 
 		setAnalyzing(true)
-		setErrorMessage(null)
+		setErrorMessage(undefined)
 
 		try {
 			const formData = new FormData()
 			formData.append("file", file)
 
-			const response = await axios.post(
+			const response = await axios.post<AiAnalysis & AiAnalysisError>(
 				`${env.API_URL}/api/analyze`,
 				formData,
 				{
@@ -49,13 +51,12 @@ export function ResumeAnalyser() {
 			)
 
 			if (response.status === StatusCodes.OK) {
-				setAnalysis(response.data.analysedFile)
+				setAnalysis(response.data)
 			}
 		} catch (error) {
-			console.error("Error analyzing resume:", error)
-			setErrorMessage(
-				"An error occurred while analyzing your resume. Please try again.",
-			)
+			const err = error as AxiosError<AiAnalysisError>
+
+			setErrorMessage(err.response?.data.error)
 		} finally {
 			setAnalyzing(false)
 		}
