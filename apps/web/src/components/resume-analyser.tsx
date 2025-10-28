@@ -1,18 +1,15 @@
 "use client"
 
-import type { AiAnalysis, AiAnalysisError } from "@monorepo/types"
-import axios, { type AxiosError } from "axios"
-import { StatusCodes } from "http-status-codes"
+import type { AiAnalysis } from "@monorepo/types"
 import { FileText, Sparkles, Upload } from "lucide-react"
 import type React from "react"
 import { type ChangeEvent, useId, useState } from "react"
 import { AnalysisResults } from "@/components/analysis-results"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { getEnv } from "@/lib/getEnv"
+import { analyseResume } from "@/services/analyseService"
 
 export function ResumeAnalyser() {
-	const env = getEnv()
 	const [file, setFile] = useState<File | null>(null)
 	const [analyzing, setAnalyzing] = useState(false)
 	const [analysis, setAnalysis] = useState<AiAnalysis | null>(null)
@@ -26,6 +23,7 @@ export function ResumeAnalyser() {
 		if (selectedFile) {
 			setFile(selectedFile)
 			setAnalysis(null)
+			setErrorMessage(undefined)
 		}
 	}
 
@@ -35,31 +33,15 @@ export function ResumeAnalyser() {
 		setAnalyzing(true)
 		setErrorMessage(undefined)
 
-		try {
-			const formData = new FormData()
-			formData.append("file", file)
+		const result = await analyseResume(file)
 
-			const response = await axios.post<AiAnalysis & AiAnalysisError>(
-				`${env.API_URL}/api/analyze`,
-				formData,
-				{
-					headers: {
-						"Content-Type": "multipart/form-data",
-						Authorization: `bearer ${env.API_KEY}`,
-					},
-				},
-			)
-
-			if (response.status === StatusCodes.OK) {
-				setAnalysis(response.data)
-			}
-		} catch (error) {
-			const err = error as AxiosError<AiAnalysisError>
-
-			setErrorMessage(err.response?.data.error)
-		} finally {
-			setAnalyzing(false)
+		if (result.success) {
+			setAnalysis(result.data)
+		} else {
+			setErrorMessage(result.error)
 		}
+
+		setAnalyzing(false)
 	}
 
 	const handleReset = () => {
@@ -78,7 +60,7 @@ export function ResumeAnalyser() {
 							<AnalyseFile
 								file={file}
 								analyzing={analyzing}
-								handlers={{ handleAnalyse, handleReset }}
+								handlers={{ handleReset, handleAnalyse }}
 							/>
 						)}
 					</div>
@@ -133,15 +115,15 @@ type AnalyseFileProps = {
 	file: File
 	analyzing: boolean
 	handlers: {
-		handleAnalyse: () => Promise<void>
 		handleReset: () => void
+		handleAnalyse: () => void
 	}
 }
 
 function AnalyseFile({
 	file,
 	analyzing,
-	handlers: { handleAnalyse, handleReset },
+	handlers: { handleReset, handleAnalyse },
 }: AnalyseFileProps) {
 	return (
 		<>
