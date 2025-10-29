@@ -42,7 +42,6 @@ export const analyseResume = async (file: File): Promise<AnalyseResult> => {
 			{
 				headers: {
 					"Content-Type": "multipart/form-data",
-					Authorization: `bearer ${env.API_KEY}`,
 				},
 			},
 		)

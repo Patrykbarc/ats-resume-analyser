@@ -6,7 +6,6 @@ import helmet from "helmet"
 import logger from "morgan"
 import { routes } from "../routes/routes"
 import { errorHandler } from "./errorHandler"
-import { verifyApiKey } from "./verifyApiKey"
 
 export const middleware = (app: Application) => {
 	app.use(helmet())
@@ -15,7 +14,6 @@ export const middleware = (app: Application) => {
 	app.use("/api", limiter)
 
 	app.use(express.json())
-	app.use(verifyApiKey)
 
 	routes(app)
 
@@ -24,7 +22,7 @@ export const middleware = (app: Application) => {
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 min
-	max: 100,
+	max: 5,
 	message: {
 		error: "Too many requests, please try again later.",
 	},
