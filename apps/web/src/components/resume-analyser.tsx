@@ -2,12 +2,12 @@
 
 import type { AiAnalysis } from "@monorepo/types"
 import { FileText, Sparkles, Upload } from "lucide-react"
-import type React from "react"
 import { type ChangeEvent, useId, useState } from "react"
 import { AnalysisResults } from "@/components/analysis-results"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { analyseResume } from "@/services/analyseService"
+import { FileSchema } from "@monorepo/schemas"
 
 export function ResumeAnalyser() {
 	const [file, setFile] = useState<File | null>(null)
@@ -29,6 +29,13 @@ export function ResumeAnalyser() {
 
 	const handleAnalyse = async () => {
 		if (!file) return
+
+		const { success, error } = FileSchema.safeParse(file)
+
+		if (!success) {
+			setErrorMessage(error.issues[0].message)
+			return
+		}
 
 		setAnalyzing(true)
 		setErrorMessage(undefined)
@@ -76,7 +83,7 @@ export function ResumeAnalyser() {
 }
 
 type UploadFileProps = {
-	handleFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+	handleFileChange: (e: ChangeEvent<HTMLInputElement>) => void
 }
 
 function UploadFile({ handleFileChange }: UploadFileProps) {
@@ -93,6 +100,7 @@ function UploadFile({ handleFileChange }: UploadFileProps) {
 					Upload Your Resume
 				</h2>
 				<p className="text-sm text-muted-foreground">PDF format</p>
+				<p className="text-sm text-muted-foreground">Max size: 3MB</p>
 			</div>
 
 			<label htmlFor={id}>
