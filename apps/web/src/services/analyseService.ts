@@ -37,7 +37,7 @@ export const analyseResume = async (file: File): Promise<AnalyseResult> => {
     formData.append('file', file)
 
     const response = await axios.post<AiAnalysis>(
-      `${env.API_URL}/api/analyze`,
+      `${env.API_URL}/api/cv/analyze`,
       formData,
       {
         headers: {

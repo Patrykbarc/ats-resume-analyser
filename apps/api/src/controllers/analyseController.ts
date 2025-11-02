@@ -34,27 +34,32 @@ export const createAnalyze = async (
     }
 
     const sanitizedTextResult = await parseAndSanitize(buffer)
-    const analysedFile = await analyseFile(sanitizedTextResult)
 
-    const parsedAnalysedFile: AiAnalysis | AiAnalysisError =
-      JSON.parse(analysedFile)
+    const analysisResult: AiAnalysis | AiAnalysisError =
+      await analyseFile(sanitizedTextResult)
 
-    if ('error' in JSON.parse(analysedFile)) {
+    if ('error' in analysisResult) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        ...(parsedAnalysedFile as AiAnalysisError)
+        status: StatusCodes.BAD_REQUEST,
+        ...analysisResult
       })
     }
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
-      ...(parsedAnalysedFile as AiAnalysis)
+      ...(analysisResult as AiAnalysis)
     })
   } catch (error) {
     console.error('Error while processing the file:', error)
 
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       status: StatusCodes.INTERNAL_SERVER_ERROR,
-      error: 'The file could not be processed.'
+      error: 'The file could not be processed due to an internal server error.'
     })
   }
+}
+
+export const getAnalysys = async (req: Request, res: Response) => {
+  // TODO: Implement logic of getting analysis by id
+  res.status(StatusCodes.OK).json({ success: 'ok' })
 }

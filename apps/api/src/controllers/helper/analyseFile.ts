@@ -1,26 +1,58 @@
+import { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import OpenAI from 'openai'
 import type { EasyInputMessage } from 'openai/resources/responses/responses.mjs'
 import jsonPrompt from '../../prompt/prompt.json'
 
 const PROMPT_VAR = '{{CV_TEXT}}'
 
-export const analyseFile = async (extractedText: string) => {
+export const analyseFile = async (
+  extractedText: string
+): Promise<AiAnalysis | AiAnalysisError> => {
   const apiKey = process.env.OPENAI_API_KEY
+
+  if (!apiKey) {
+    return { error: 'OPENAI_API_KEY is not set in environment variables.' }
+  }
+
   const client = new OpenAI({ apiKey })
 
-  const response = await client.responses.create({
-    model: 'gpt-4.1-nano',
-    input: [
-      { role: 'developer', content: getPrompt('developer') },
-      {
-        role: 'assistant',
-        content: getPrompt('assistant').replace(PROMPT_VAR, extractedText)
-      },
-      { role: 'user', content: extractedText }
-    ]
-  })
+  let response
+  try {
+    response = await client.responses.create({
+      model: 'gpt-4.1-nano',
+      input: [
+        { role: 'developer', content: getPrompt('developer') },
+        {
+          role: 'assistant',
+          content: getPrompt('assistant').replace(PROMPT_VAR, extractedText)
+        },
+        { role: 'user', content: extractedText }
+      ]
+    })
+  } catch (error: unknown) {
+    return { error: `OpenAI API Error: ${error || 'Unknown error'}` }
+  }
 
-  return response.output_text
+  try {
+    const analysisData = JSON.parse(response.output_text) as Omit<
+      AiAnalysis,
+      'id'
+    >
+
+    const finalAnalysis: AiAnalysis = {
+      ...analysisData,
+      id: response.id
+    }
+
+    return finalAnalysis
+  } catch (parseError: unknown) {
+    console.error('JSON Parsing Error:', parseError)
+    console.error('Raw Response:', response.output_text)
+
+    return {
+      error: `Failed to parse AI response as JSON. Raw data: ${response.output_text.substring(0, 200)}...`
+    }
+  }
 }
 
 const getPrompt = (role: EasyInputMessage['role']) => {
@@ -33,3 +65,5 @@ const getPrompt = (role: EasyInputMessage['role']) => {
       throw new Error(`Role not supported: ${role}`)
   }
 }
+
+export type { AiAnalysis, AiAnalysisError }
