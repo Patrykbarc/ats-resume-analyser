@@ -9,14 +9,22 @@
     "dev:api": "pnpm --filter @monorepo/api run dev",
     "build": "pnpm --recursive run build",
     "prepare": "husky",
-    "lint": "npx prettier apps/*/** --write --verbose"
+    "prettier": "npx prettier apps/*/** --write --verbose",
+    "lint": "eslint \"apps/**/*.{js,ts,jsx,tsx}\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.39.0",
+    "eslint": "^9.39.0",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "globals": "^16.4.0",
     "husky": "^9.1.7",
     "prettier": "3.6.2",
-    "prettier-plugin-organize-imports": "^4.3.0"
+    "prettier-plugin-organize-imports": "^4.3.0",
+    "typescript-eslint": "^8.46.2"
   }
 }
