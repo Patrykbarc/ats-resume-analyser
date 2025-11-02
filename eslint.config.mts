@@ -10,7 +10,9 @@ const IGNORES = {
     '**/vite.config.ts',
     'tailwind.config.js',
     'eslint.config.mjs',
-    'postcss.config.js'
+    'postcss.config.js',
+    'eslint.config.mts',
+    'tsup.config.ts'
   ]
 }
 
@@ -24,7 +26,11 @@ export default defineConfig([
     languageOptions: {
       globals: { ...globals.browser, ...globals.node },
       parserOptions: {
-        project: ['./apps/api/tsconfig.json', './apps/web/tsconfig.json'],
+        project: [
+          './apps/api/tsconfig.json',
+          './apps/web/tsconfig.json',
+          './packages/*/**/tsconfig.json'
+        ],
         tsconfigRootDir: import.meta.dirname
       }
     },
@@ -35,7 +41,7 @@ export default defineConfig([
     }
   },
 
-  ...tseslint.configs.strictTypeChecked,
+  ...tseslint.configs.strict,
 
   pluginReact.configs.flat.recommended,
 
@@ -44,6 +50,8 @@ export default defineConfig([
     rules: {
       '@typescript-eslint/unified-signatures': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unnecessary-condition': 'off',
+      '@typescript-eslint/no-unsafe-return': 'warn',
 
       'no-console': [
         'warn',

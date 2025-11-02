@@ -1,9 +1,16 @@
 {
-	"compilerOptions": {
-		"target": "es2021",
-		"customConditions": ["source"],
-		"composite": true,
-		"moduleResolution": "bundler",
-		"module": "preserve"
-	}
+  "compilerOptions": {
+    "target": "es2021",
+    "customConditions": ["source"],
+    "composite": true,
+    "moduleResolution": "bundler",
+    "module": "preserve"
+  },
+  "include": [
+    // Obejmuje tsup.config.ts w dowolnym katalogu:
+    "**/*.config.ts",
+    "**/*.config.js",
+    // Możesz dodać też inne pliki konfiguracyjne, które chcesz lintować
+    "eslint.config.mjs"
+  ]
 }

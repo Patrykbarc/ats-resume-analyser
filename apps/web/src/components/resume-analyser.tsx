@@ -28,7 +28,9 @@ export function ResumeAnalyser() {
   }
 
   const handleAnalyse = async () => {
-    if (!file) return
+    if (!file) {
+      return
+    }
 
     const { success, error } = FileSchema.safeParse(file)
 

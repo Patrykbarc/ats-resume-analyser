@@ -3,5 +3,16 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "css.customData": [".vscode/tailwind.json"]
+  "css.customData": [".vscode/tailwind.json"],
+  "eslint.probe": [
+    "javascript",
+    "javascriptreact",
+    "typescript",
+    "typescriptreact",
+    "html",
+    "mdx",
+    "markdown",
+    "json",
+    "jsonc"
+  ]
 }
