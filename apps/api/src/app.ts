@@ -1,6 +1,6 @@
-import dotenv from "dotenv"
-import express, { type Express } from "express"
-import middleware from "./middleware/middleware"
+import dotenv from 'dotenv'
+import express, { type Express } from 'express'
+import middleware from './middleware/middleware'
 
 dotenv.config()
 

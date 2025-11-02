@@ -31,7 +31,6 @@ An intelligent web application that analyzes resumes for compatibility with Appl
 ### Monorepo
 - pnpm workspaces
 - Shared packages for types, schemas, and PDF parsing
-- Biome for linting
 
 ## Prerequisites
 
@@ -161,7 +160,7 @@ resume-analizer/
 - `pnpm dev:api` - Run only the API server
 - `pnpm dev:web` - Run only the web application
 - `pnpm build` - Build all packages and applications
-- `pnpm lint` - Run Biome linter
+- `pnpm lint` - Run ESlint linter
 
 ## API Endpoints
 

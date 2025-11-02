@@ -5,7 +5,7 @@ import { promises as fs } from 'node:fs'
 import { analyseFile } from './helper/analyseFile'
 import { parseAndSanitize } from './helper/parseAndSanitize'
 
-export const getAnalyze = async (
+export const createAnalyze = async (
   req: Request,
   res: Response
 ): Promise<Response> => {

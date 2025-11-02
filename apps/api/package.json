@@ -1,37 +1,37 @@
 {
-	"name": "@monorepo/api",
-	"private": true,
-	"version": "1.0.0",
-	"type": "module",
-	"scripts": {
-		"build": "tsup",
-		"dev": "tsup --watch './src'",
-		"gen-key": "openssl rand -hex 32"
-	},
-	"dependencies": {
-		"@monorepo/pdf-parse": "workspace:*",
-		"@monorepo/schemas": "workspace:*",
-		"@monorepo/types": "workspace:*",
-		"cors": "^2.8.5",
-		"dotenv": "^17.2.3",
-		"express": "^5.1.0",
-		"express-rate-limit": "^8.1.0",
-		"helmet": "^8.1.0",
-		"http-status-codes": "^2.3.0",
-		"morgan": "^1.10.1",
-		"multer": "^2.0.2",
-		"openai": "^6.3.0",
-		"sanitize-html": "^2.17.0",
-		"zod": "3.23.8"
-	},
-	"devDependencies": {
-		"@tsconfig/node20": "20.1.4",
-		"@types/cors": "^2.8.19",
-		"@types/express": "^5.0.3",
-		"@types/morgan": "^1.9.10",
-		"@types/multer": "^2.0.0",
-		"@types/node": "20.14.1",
-		"@types/sanitize-html": "^2.16.0",
-		"tsup": "8.1.0"
-	}
+  "name": "@monorepo/api",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch './src'",
+    "gen-key": "openssl rand -hex 32"
+  },
+  "dependencies": {
+    "@monorepo/pdf-parse": "workspace:*",
+    "@monorepo/schemas": "workspace:*",
+    "@monorepo/types": "workspace:*",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.1.0",
+    "helmet": "^8.1.0",
+    "http-status-codes": "^2.3.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "openai": "^6.3.0",
+    "sanitize-html": "^2.17.0",
+    "zod": "3.23.8"
+  },
+  "devDependencies": {
+    "@tsconfig/node20": "20.1.4",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/morgan": "^1.9.10",
+    "@types/multer": "^2.0.0",
+    "@types/node": "20.14.1",
+    "@types/sanitize-html": "^2.16.0",
+    "tsup": "8.1.0"
+  }
 }
