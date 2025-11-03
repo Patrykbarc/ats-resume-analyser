@@ -6,11 +6,5 @@
     "moduleResolution": "bundler",
     "module": "preserve"
   },
-  "include": [
-    // Obejmuje tsup.config.ts w dowolnym katalogu:
-    "**/*.config.ts",
-    "**/*.config.js",
-    // Możesz dodać też inne pliki konfiguracyjne, które chcesz lintować
-    "eslint.config.mjs"
-  ]
+  "include": ["**/*.config.ts", "**/*.config.js", "eslint.config.mjs"]
 }
