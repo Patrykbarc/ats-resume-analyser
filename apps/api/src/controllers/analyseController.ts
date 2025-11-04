@@ -2,8 +2,10 @@ import type { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
+import { openAiClient } from '../server'
 import { analyseFile } from './helper/analyseFile'
-import { parseAndSanitize } from './helper/parseAndSanitize'
+import { parseFileAndSanitize } from './helper/parseFileAndSanitize'
+import { parseOpenAiApiResponse } from './helper/parseOpenAiApiResponse'
 
 export const createAnalyze = async (
   req: Request,
@@ -33,7 +35,7 @@ export const createAnalyze = async (
       })
     }
 
-    const sanitizedTextResult = await parseAndSanitize(buffer)
+    const sanitizedTextResult = await parseFileAndSanitize(buffer)
 
     const analysisResult: AiAnalysis | AiAnalysisError =
       await analyseFile(sanitizedTextResult)
@@ -60,6 +62,24 @@ export const createAnalyze = async (
 }
 
 export const getAnalysys = async (req: Request, res: Response) => {
-  // TODO: Implement logic of getting analysis by id
-  res.status(StatusCodes.OK).json({ success: 'ok' })
+  const { id } = req.params
+  let response
+
+  try {
+    response = await openAiClient.responses.retrieve(id)
+  } catch (error) {
+    console.error('Error while retrieving analysis from OpenAI:', error)
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      error:
+        'The analysis could not be retrieved due to an internal server error.'
+    })
+  }
+
+  const parsedResponse = parseOpenAiApiResponse(response)
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ status: StatusCodes.OK, ...parsedResponse })
 }
