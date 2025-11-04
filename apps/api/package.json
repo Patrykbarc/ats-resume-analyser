@@ -22,7 +22,7 @@
     "multer": "^2.0.2",
     "openai": "^6.3.0",
     "sanitize-html": "^2.17.0",
-    "zod": "3.23.8"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@tsconfig/node20": "20.1.4",
@@ -32,6 +32,6 @@
     "@types/multer": "^2.0.0",
     "@types/node": "20.14.1",
     "@types/sanitize-html": "^2.16.0",
-    "tsup": "8.1.0"
+    "tsup": "catalog:"
   }
 }

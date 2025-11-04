@@ -2,8 +2,10 @@ import type { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
+import { openAiClient } from '../server'
 import { analyseFile } from './helper/analyseFile'
-import { parseAndSanitize } from './helper/parseAndSanitize'
+import { parseFileAndSanitize } from './helper/parseFileAndSanitize'
+import { parseOpenAiApiResponse } from './helper/parseOpenAiApiResponse'
 
 export const createAnalyze = async (
   req: Request,
@@ -33,28 +35,51 @@ export const createAnalyze = async (
       })
     }
 
-    const sanitizedTextResult = await parseAndSanitize(buffer)
-    const analysedFile = await analyseFile(sanitizedTextResult)
+    const sanitizedTextResult = await parseFileAndSanitize(buffer)
 
-    const parsedAnalysedFile: AiAnalysis | AiAnalysisError =
-      JSON.parse(analysedFile)
+    const analysisResult: AiAnalysis | AiAnalysisError =
+      await analyseFile(sanitizedTextResult)
 
-    if ('error' in JSON.parse(analysedFile)) {
+    if ('error' in analysisResult) {
       return res.status(StatusCodes.BAD_REQUEST).json({
-        ...(parsedAnalysedFile as AiAnalysisError)
+        status: StatusCodes.BAD_REQUEST,
+        ...analysisResult
       })
     }
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
-      ...(parsedAnalysedFile as AiAnalysis)
+      ...(analysisResult as AiAnalysis)
     })
   } catch (error) {
     console.error('Error while processing the file:', error)
 
     return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
       status: StatusCodes.INTERNAL_SERVER_ERROR,
-      error: 'The file could not be processed.'
+      error: 'The file could not be processed due to an internal server error.'
     })
   }
+}
+
+export const getAnalysys = async (req: Request, res: Response) => {
+  const { id } = req.params
+  let response
+
+  try {
+    response = await openAiClient.responses.retrieve(id)
+  } catch (error) {
+    console.error('Error while retrieving analysis from OpenAI:', error)
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      status: StatusCodes.INTERNAL_SERVER_ERROR,
+      error:
+        'The analysis could not be retrieved due to an internal server error.'
+    })
+  }
+
+  const parsedResponse = parseOpenAiApiResponse(response)
+
+  return res
+    .status(StatusCodes.OK)
+    .json({ status: StatusCodes.OK, ...parsedResponse })
 }

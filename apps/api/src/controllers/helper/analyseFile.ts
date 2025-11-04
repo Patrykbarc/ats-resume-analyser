@@ -1,26 +1,39 @@
-import OpenAI from 'openai'
+import { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { EasyInputMessage } from 'openai/resources/responses/responses.mjs'
 import jsonPrompt from '../../prompt/prompt.json'
+import { openAiClient } from '../../server'
+import { parseOpenAiApiResponse } from './parseOpenAiApiResponse'
 
 const PROMPT_VAR = '{{CV_TEXT}}'
 
-export const analyseFile = async (extractedText: string) => {
-  const apiKey = process.env.OPENAI_API_KEY
-  const client = new OpenAI({ apiKey })
+export type AnalyseApiResponse = { id: string; output_text: string }
 
-  const response = await client.responses.create({
-    model: 'gpt-4.1-nano',
-    input: [
-      { role: 'developer', content: getPrompt('developer') },
-      {
-        role: 'assistant',
-        content: getPrompt('assistant').replace(PROMPT_VAR, extractedText)
-      },
-      { role: 'user', content: extractedText }
-    ]
-  })
+export const analyseFile = async (
+  extractedText: string
+): Promise<AiAnalysis | AiAnalysisError> => {
+  let response: AnalyseApiResponse
 
-  return response.output_text
+  try {
+    response = await openAiClient.responses
+      .create({
+        model: 'gpt-4.1-nano',
+        input: [
+          { role: 'developer', content: getPrompt('developer') },
+          {
+            role: 'assistant',
+            content: getPrompt('assistant').replace(PROMPT_VAR, extractedText)
+          },
+          { role: 'user', content: extractedText }
+        ]
+      })
+      .then((res) => {
+        return { id: res.id, output_text: res.output_text }
+      })
+  } catch (error: unknown) {
+    return { error: `OpenAI API Error: ${error || 'Unknown error'}` }
+  }
+
+  return parseOpenAiApiResponse(response)
 }
 
 const getPrompt = (role: EasyInputMessage['role']) => {
@@ -33,3 +46,5 @@ const getPrompt = (role: EasyInputMessage['role']) => {
       throw new Error(`Role not supported: ${role}`)
   }
 }
+
+export type { AiAnalysis, AiAnalysisError }

@@ -9,7 +9,7 @@ import { Progress } from './ui/progress'
 
 type AnalysisResultsProps = {
   analysis: AiAnalysis
-  onReset: () => void
+  onReset?: () => void
 }
 
 export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
@@ -19,9 +19,11 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold text-foreground">Analysis Results</h2>
-        <Button onClick={onReset} variant="outline">
-          Analyze Another
-        </Button>
+        {onReset && (
+          <Button onClick={onReset} variant="outline">
+            Analyze Another
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-1">

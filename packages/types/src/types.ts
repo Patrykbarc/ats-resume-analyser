@@ -1,4 +1,5 @@
 type AiAnalysis = {
+	id: string
 	title: string
 	overall_score: {
 		label: string

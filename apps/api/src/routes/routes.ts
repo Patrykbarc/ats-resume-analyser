@@ -8,5 +8,5 @@ const multipartParser = upload.single('file')
 
 export const routes = (app: Application) => {
   app.use(multipartParser)
-  app.use('/api/analyze', analyzeRoutes)
+  app.use('/api/cv', analyzeRoutes)
 }

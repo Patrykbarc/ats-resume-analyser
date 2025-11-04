@@ -4,7 +4,7 @@ import { AnalysisResults } from '@/components/analysis-results'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { analyseResume } from '@/services/analyseService'
-import { FileSchema } from '@monorepo/schemas'
+import { FileSchemaInput } from '@monorepo/schemas'
 import type { AiAnalysis } from '@monorepo/types'
 import { FileText, Sparkles, Upload } from 'lucide-react'
 import { type ChangeEvent, useId, useState } from 'react'
@@ -32,7 +32,7 @@ export function ResumeAnalyser() {
       return
     }
 
-    const { success, error } = FileSchema.safeParse(file)
+    const { success, error } = FileSchemaInput.safeParse(file)
 
     if (!success) {
       setErrorMessage(error.issues[0].message)

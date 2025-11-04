@@ -1,7 +1,8 @@
-import { getEnv } from '@/lib/getEnv'
-import type { AiAnalysis, AiAnalysisError } from '@monorepo/types'
-import axios, { type AxiosError } from 'axios'
+import { apiClient } from '@/api/apiClient'
+import type { AiAnalysis } from '@monorepo/types'
+import { AxiosResponse } from 'axios'
 import { StatusCodes } from 'http-status-codes'
+import { errorHandler } from './helper/errorHandler'
 
 export type AnalyseResult =
   | { success: true; data: AiAnalysis }
@@ -9,8 +10,6 @@ export type AnalyseResult =
 
 export const analyseResume = async (file: File): Promise<AnalyseResult> => {
   try {
-    const env = getEnv()
-
     if (!file) {
       return {
         success: false,
@@ -25,65 +24,41 @@ export const analyseResume = async (file: File): Promise<AnalyseResult> => {
       }
     }
 
-    const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
-    if (file.size > MAX_FILE_SIZE) {
-      return {
-        success: false,
-        error: 'The file is too large. The maximum size is 10MB.'
-      }
-    }
-
     const formData = new FormData()
     formData.append('file', file)
 
-    const response = await axios.post<AiAnalysis>(
-      `${env.API_URL}/api/analyze`,
-      formData,
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+    const response = await apiClient.post<AiAnalysis>('/cv/analyze', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
       }
-    )
+    })
 
-    if (response.status === StatusCodes.OK) {
-      return {
-        success: true,
-        data: response.data
-      }
-    }
-
-    return {
-      success: false,
-      error: 'Unexpected response status'
-    }
+    return handleResponse(response)
   } catch (error) {
-    const axiosError = error as AxiosError<AiAnalysisError>
+    return errorHandler(error)
+  }
+}
 
-    if (axiosError.response?.data?.error) {
-      return {
-        success: false,
-        error: axiosError.response.data.error
-      }
-    }
+export const getAnalysis = async (id: string): Promise<AnalyseResult> => {
+  try {
+    const response = await apiClient.get<AiAnalysis>(`/cv/analysis/${id}`)
 
-    if (axiosError.code === 'ECONNREFUSED') {
-      return {
-        success: false,
-        error: 'Unable to connect to the API server'
-      }
-    }
+    return handleResponse(response)
+  } catch (error) {
+    return errorHandler(error)
+  }
+}
 
-    if (axiosError.code === 'ECONNABORTED') {
-      return {
-        success: false,
-        error: 'Connection timeout exceeded'
-      }
-    }
-
+const handleResponse = (response: AxiosResponse): AnalyseResult => {
+  if (response.status === StatusCodes.OK) {
     return {
-      success: false,
-      error: axiosError.message || 'An unexpected error has occurred'
+      success: true,
+      data: response.data
     }
+  }
+
+  return {
+    success: false,
+    error: 'Unexpected response status'
   }
 }

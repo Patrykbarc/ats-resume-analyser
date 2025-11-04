@@ -13,12 +13,12 @@
   "scripts": {
     "build": "tsup"
   },
+  "dependencies": {
+    "zod": "catalog:"
+  },
   "devDependencies": {
     "@tsconfig/node20": "20.1.4",
     "@types/node": "20.14.1",
-    "tsup": "8.1.0"
-  },
-  "dependencies": {
-    "zod": "3.23.8"
+    "tsup": "catalog:"
   }
 }
