@@ -2,7 +2,7 @@ type NodeEnv = 'development' | 'production'
 
 export const getEnv = () => {
   const API_URL = import.meta.env.VITE_API_URL
-  const NODE_ENV: NodeEnv = import.meta.env.NODE_ENV
+  const NODE_ENV: NodeEnv = import.meta.env.VITE_NODE_ENV
 
   if (!API_URL) {
     throw new Error('Missing API_KEY env variable')
