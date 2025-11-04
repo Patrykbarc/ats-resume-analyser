@@ -1,14 +1,14 @@
 import type { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import { UnknownKeysParam, ZodError, ZodRawShape, type z } from 'zod'
+import { ZodError, type z } from 'zod/v4'
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File
 }
 
-export function validateFile(
-  schema: z.ZodObject<ZodRawShape, UnknownKeysParam>
-) {
+type Schema = z.ZodObject
+
+export function validateFile(schema: Schema) {
   return (req: MulterRequest, res: Response, next: NextFunction) => {
     if (!req.file) {
       return res.status(StatusCodes.BAD_REQUEST).json({
@@ -24,6 +24,18 @@ export function validateFile(
 
     try {
       schema.parse(req.file)
+      next()
+    } catch (error) {
+      errorHandler(error, res)
+    }
+  }
+}
+
+export function validateData(schema: Schema) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    try {
+      schema.parse(req.body ?? req.params)
+
       next()
     } catch (error) {
       errorHandler(error, res)
