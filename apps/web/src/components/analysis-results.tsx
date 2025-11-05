@@ -26,7 +26,7 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
         )}
       </div>
 
-      <div className="grid gap-6 md:grid-cols-1">
+      <div className="space-y-6">
         {sections.map(([key, value], index) => {
           const title = capitalize(key.replaceAll('_', ' '))
           const description = value.map((i) => i.replaceAll('.', '. '))

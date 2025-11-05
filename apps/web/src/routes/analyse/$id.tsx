@@ -1,4 +1,5 @@
 import { AnalysisResults } from '@/components/analysis-results'
+import { Skeleton } from '@/components/ui/skeleton'
 import { queryClient } from '@/main'
 import { getAnalysis } from '@/services/analyseService'
 import { AnalysisParamsSchema } from '@monorepo/schemas'
@@ -21,13 +22,12 @@ export const Route = createFileRoute('/analyse/$id')({
     const analysisIdQueryOptions = getAnalysisOptions(id)
     return queryClient.ensureQueryData(analysisIdQueryOptions)
   },
-
+  pendingComponent: LoadingSkeleton,
   component: Analysis
 })
 
 function Analysis() {
   const { id } = useParams({ from: '/analyse/$id' })
-
   const { data: queryData } = useQuery(getAnalysisOptions(id))
 
   if (!queryData) {
@@ -35,7 +35,12 @@ function Analysis() {
   }
 
   if (!queryData.success) {
-    return <div className="text-red-500">{queryData.error}</div>
+    console.warn(queryData.error)
+    return (
+      <div className="text-rose-500">
+        An error has occurred. Please try again.
+      </div>
+    )
   }
 
   return (
@@ -46,6 +51,21 @@ function Analysis() {
         </Link>
       </div>
       <AnalysisResults analysis={queryData.data} />
+    </div>
+  )
+}
+
+function LoadingSkeleton() {
+  const commonClasses = 'h-[456px] md:h-64 w-full'
+
+  return (
+    <div className="space-y-6">
+      <Skeleton className="h-6 pb-4 w-[70px]" />
+      <Skeleton className="h-8 w-[183px]" />
+      <Skeleton className={commonClasses} />
+      <Skeleton className={commonClasses} />
+      <Skeleton className={commonClasses} />
+      <Skeleton className={commonClasses} />
     </div>
   )
 }
