@@ -1,10 +1,9 @@
-'use client'
-
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import type { AiAnalysis } from '@monorepo/types'
 import { capitalize } from 'lodash'
 import { AlertCircle, CheckCircle2, Lightbulb } from 'lucide-react'
+import { ShareButton } from './share-button'
 import { Progress } from './ui/progress'
 
 type AnalysisResultsProps = {
@@ -64,6 +63,8 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
         score={analysis.overall_score.score}
         justification={analysis.overall_score.justification}
       />
+
+      <ShareButton id={analysis.id} />
     </div>
   )
 }

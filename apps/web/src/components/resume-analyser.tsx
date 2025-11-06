@@ -1,5 +1,3 @@
-'use client'
-
 import { AnalysisResults } from '@/components/analysis-results'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
@@ -106,7 +104,7 @@ function UploadFile({ handleFileChange }: UploadFileProps) {
       </div>
 
       <label htmlFor={id}>
-        <Button asChild>
+        <Button variant="secondary" asChild>
           <span>Choose File</span>
         </Button>
         <input

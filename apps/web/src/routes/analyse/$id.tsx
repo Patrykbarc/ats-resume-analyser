@@ -1,6 +1,5 @@
 import { AnalysisResults } from '@/components/analysis-results'
 import { Skeleton } from '@/components/ui/skeleton'
-import { queryClient } from '@/main'
 import { getAnalysis } from '@/services/analyseService'
 import { AnalysisParamsSchema } from '@monorepo/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
@@ -16,26 +15,22 @@ const getAnalysisOptions = (id: string) =>
 
 export const Route = createFileRoute('/analyse/$id')({
   parseParams: (params) => AnalysisParamsSchema.parse(params),
-  loader: ({ params }) => {
-    const { id } = params
-
-    const analysisIdQueryOptions = getAnalysisOptions(id)
-    return queryClient.ensureQueryData(analysisIdQueryOptions)
-  },
-  pendingComponent: LoadingSkeleton,
   component: Analysis
 })
 
 function Analysis() {
   const { id } = useParams({ from: '/analyse/$id' })
-  const { data: queryData } = useQuery(getAnalysisOptions(id))
+  const {
+    data: queryData,
+    isLoading,
+    isError
+  } = useQuery(getAnalysisOptions(id))
 
-  if (!queryData) {
-    return null
+  if (isLoading) {
+    return <LoadingSkeleton />
   }
 
-  if (!queryData.success) {
-    console.warn(queryData.error)
+  if (isError) {
     return (
       <div className="text-rose-500">
         An error has occurred. Please try again.
@@ -50,7 +45,7 @@ function Analysis() {
           <ArrowLeft size={16} /> Home
         </Link>
       </div>
-      <AnalysisResults analysis={queryData.data} />
+      {queryData.success && <AnalysisResults analysis={queryData.data} />}
     </div>
   )
 }
