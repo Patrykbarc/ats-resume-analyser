@@ -5,5 +5,5 @@ const env = getEnv()
 
 export const apiClient = axios.create({
   baseURL: `${env.API_URL}/api`,
-  timeout: 20_000
+  timeout: 60_000
 })
