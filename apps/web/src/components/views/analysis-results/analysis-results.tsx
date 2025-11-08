@@ -13,7 +13,7 @@ const TABS = {
     value: 'analyse'
   },
   preview: {
-    trigger: 'Parsed CV',
+    trigger: 'Parse preview',
     value: 'preview'
   }
 }
@@ -89,7 +89,7 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
       </TabsContent>
 
       <TabsContent className="space-y-6" value={TABS.preview.value}>
-        Parsed CV mock
+        <p className="whitespace-pre-line">{analysis.parsed_file}</p>
       </TabsContent>
 
       <ShareButton id={analysis.id} />

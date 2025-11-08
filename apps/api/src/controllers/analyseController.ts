@@ -49,7 +49,8 @@ export const createAnalyze = async (
 
     return res.status(StatusCodes.OK).json({
       status: StatusCodes.OK,
-      ...(analysisResult as AiAnalysis)
+      ...(analysisResult as AiAnalysis),
+      parsed_file: sanitizedTextResult
     })
   } catch (error) {
     console.error('Error while processing the file:', error)
