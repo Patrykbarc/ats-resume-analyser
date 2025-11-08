@@ -1,5 +1,5 @@
-import { AnalysisResults } from '@/components/analysis-results'
 import { Skeleton } from '@/components/ui/skeleton'
+import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
 import { getAnalysis } from '@/services/analyseService'
 import { AnalysisParamsSchema } from '@monorepo/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'

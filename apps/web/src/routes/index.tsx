@@ -1,4 +1,4 @@
-import { ResumeAnalyser } from '@/components/resume-analyser'
+import { ResumeAnalyser } from '@/components/views/resume-analyser'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({

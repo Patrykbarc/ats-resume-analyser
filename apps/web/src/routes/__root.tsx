@@ -1,4 +1,4 @@
-import { Devtools } from '@/components/devtools'
+import { Devtools } from '@/components/views/devtools'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Toaster } from 'react-hot-toast'
 import '../index.css'

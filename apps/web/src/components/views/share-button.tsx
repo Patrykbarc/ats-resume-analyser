@@ -2,13 +2,13 @@ import { getEnv } from '@/lib/getEnv'
 import { Check, Copy, Share } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
-import { Button } from './ui/button'
+import { Button } from '../ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger
-} from './ui/dropdown-menu'
+} from '../ui/dropdown-menu'
 
 const TITLE = 'Stop letting ATS systems reject your resume!'
 const TEXT =

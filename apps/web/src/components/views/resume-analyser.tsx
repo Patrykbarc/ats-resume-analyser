@@ -1,6 +1,6 @@
-import { AnalysisResults } from '@/components/analysis-results'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
 import { analyseResume } from '@/services/analyseService'
 import { FileSchemaInput } from '@monorepo/schemas'
 import type { AiAnalysis } from '@monorepo/types'
