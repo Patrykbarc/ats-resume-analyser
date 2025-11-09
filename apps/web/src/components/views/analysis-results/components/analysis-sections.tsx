@@ -1,0 +1,54 @@
+import { Card } from '@/components/ui/card'
+import { AiAnalysis } from '@monorepo/types'
+import { capitalize } from 'lodash'
+import { AlertCircle, CheckCircle2, Lightbulb } from 'lucide-react'
+
+type Section<T extends keyof AiAnalysis['sections']> = T[]
+
+type AiAnalysisSectionObject = {
+  strengths: Section<'strengths'>
+  areas_for_improvement: Section<'areas_for_improvement'>
+  recommendations: Section<'recommendations'>
+}
+
+type TypedSectionArray = [keyof AiAnalysisSectionObject, string[]][]
+
+export function AnalysisSections({
+  sections
+}: {
+  sections: AiAnalysis['sections']
+}) {
+  const sectionsArr = Object.entries(sections) as TypedSectionArray
+
+  return sectionsArr.map(([key, value], index) => {
+    const title = capitalize(key.replaceAll('_', ' '))
+    const description = value.map((i) => i.replaceAll('.', '. '))
+
+    const iconsData = [
+      { icon: CheckCircle2, color: 'text-green-500' },
+      { icon: AlertCircle, color: 'text-yellow-500' },
+      { icon: Lightbulb, color: 'text-blue-500' }
+    ]
+
+    const sectionIconData = iconsData[index % iconsData.length]
+
+    const IconComponent = sectionIconData.icon
+    const iconColor = sectionIconData.color
+
+    if (description.length === 0) {
+      return null
+    }
+
+    return (
+      <Card key={key} className="border-border bg-card p-6">
+        <div className="mb-4 flex items-center gap-3">
+          <div>
+            <IconComponent className={`h-6 w-6 ${iconColor}`} />
+          </div>
+          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
+        </div>
+        <p className="leading-relaxed text-muted-foreground">{description}</p>
+      </Card>
+    )
+  })
+}
