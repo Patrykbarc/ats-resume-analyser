@@ -29,7 +29,7 @@ export const analyseFile = async (
       .then((res) => {
         return { id: res.id, output_text: res.output_text }
       })
-  } catch (error: unknown) {
+  } catch (error) {
     return { error: `OpenAI API Error: ${error || 'Unknown error'}` }
   }
 

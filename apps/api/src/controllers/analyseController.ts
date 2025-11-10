@@ -4,13 +4,11 @@ import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
 import { openAiClient } from '../server'
 import { analyseFile } from './helper/analyseFile'
+import { handleOpenAIError } from './helper/handleOpenAIError'
 import { parseFileAndSanitize } from './helper/parseFileAndSanitize'
 import { parseOpenAiApiResponse } from './helper/parseOpenAiApiResponse'
 
-export const createAnalyze = async (
-  req: Request,
-  res: Response
-): Promise<Response> => {
+export const createAnalyze = async (req: Request, res: Response) => {
   const file = req.file
 
   if (!file) {
@@ -53,12 +51,7 @@ export const createAnalyze = async (
       parsed_file: sanitizedTextResult
     })
   } catch (error) {
-    console.error('Error while processing the file:', error)
-
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      error: 'The file could not be processed due to an internal server error.'
-    })
+    handleOpenAIError(error, res)
   }
 }
 
@@ -68,19 +61,13 @@ export const getAnalysys = async (req: Request, res: Response) => {
 
   try {
     response = await openAiClient.responses.retrieve(id)
+
+    const parsedResponse = parseOpenAiApiResponse(response)
+
+    return res
+      .status(StatusCodes.OK)
+      .json({ status: StatusCodes.OK, ...parsedResponse })
   } catch (error) {
-    console.error('Error while retrieving analysis from OpenAI:', error)
-
-    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
-      status: StatusCodes.INTERNAL_SERVER_ERROR,
-      error:
-        'The analysis could not be retrieved due to an internal server error.'
-    })
+    handleOpenAIError(error, res)
   }
-
-  const parsedResponse = parseOpenAiApiResponse(response)
-
-  return res
-    .status(StatusCodes.OK)
-    .json({ status: StatusCodes.OK, ...parsedResponse })
 }
