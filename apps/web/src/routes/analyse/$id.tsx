@@ -1,41 +1,23 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
-import { getAnalysis } from '@/services/analyseService'
-import { AnalysisParamsSchema } from '@monorepo/schemas'
-import { queryOptions, useQuery } from '@tanstack/react-query'
+import { useGetAnalyseById } from '@/hooks/useGetAnalyseById'
 import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 import { ArrowLeft } from 'lucide-react'
 
-const getAnalysisOptions = (id: string) =>
-  queryOptions({
-    queryKey: ['analysis', id],
-    queryFn: () => getAnalysis(id),
-    staleTime: Infinity
-  })
-
 export const Route = createFileRoute('/analyse/$id')({
-  parseParams: (params) => AnalysisParamsSchema.parse(params),
   component: Analysis
 })
 
 function Analysis() {
   const { id } = useParams({ from: '/analyse/$id' })
-  const {
-    data: queryData,
-    isLoading,
-    isError
-  } = useQuery(getAnalysisOptions(id))
+  const { data, isLoading, isError, error } = useGetAnalyseById(id)
 
   if (isLoading) {
     return <LoadingSkeleton />
   }
 
   if (isError) {
-    return (
-      <div className="text-rose-500">
-        An error has occurred. Please try again.
-      </div>
-    )
+    return <div className="text-rose-500">{error.message}</div>
   }
 
   return (
@@ -45,7 +27,7 @@ function Analysis() {
           <ArrowLeft size={16} /> Home
         </Link>
       </div>
-      {queryData.success && <AnalysisResults analysis={queryData.data} />}
+      <AnalysisResults analysis={data.data} />
     </div>
   )
 }
