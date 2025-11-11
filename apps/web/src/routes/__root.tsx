@@ -7,8 +7,8 @@ const RootLayout = () => (
   <>
     <Toaster />
 
-    <main className="bg-background">
-      <div className="mx-auto h-dvh max-w-5xl px-4 py-12 sm:px-6 lg:px-8">
+    <main className="bg-background py-12">
+      <div className="mx-auto min-h-dvh max-w-5xl px-4 sm:px-6 lg:px-8">
         <Outlet />
         <Devtools />
       </div>
