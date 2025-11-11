@@ -86,7 +86,7 @@ export function ResumeAnalyser() {
         />
       )
     }
-    return <RequestLimitError description={error.message} />
+    return <p className="text-rose-500 text-center">{error.message}</p>
   }
 
   return (
