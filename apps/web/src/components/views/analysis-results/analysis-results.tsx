@@ -11,7 +11,7 @@ const TABS = {
     value: 'analyse'
   },
   preview: {
-    trigger: 'Parse preview',
+    trigger: 'Parsed file preview',
     value: 'preview'
   }
 }

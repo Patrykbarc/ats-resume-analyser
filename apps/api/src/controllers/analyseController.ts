@@ -55,18 +55,44 @@ export const createAnalyze = async (req: Request, res: Response) => {
   }
 }
 
+// It's typed manually due to a lack of types from OpenAi
+// Type structure is coming from: https://platform.openai.com/docs/api-reference/responses/input-items
+type ParsedFile = {
+  object: string
+  data: [
+    {
+      id: string
+      type: string
+      role: string
+      content: [
+        {
+          type: string
+          text: string
+        }
+      ]
+    }
+  ]
+  first_id: string
+  last_id: string
+  has_more: boolean
+}
+
 export const getAnalysys = async (req: Request, res: Response) => {
   const { id } = req.params
-  let response
 
   try {
-    response = await openAiClient.responses.retrieve(id)
+    const response = await openAiClient.responses.retrieve(id)
 
+    const responseList = (await openAiClient.responses.inputItems.list(
+      id
+    )) as unknown as ParsedFile
+
+    const parsed_file = responseList.data[0].content[0].text
     const parsedResponse = parseOpenAiApiResponse(response)
 
     return res
       .status(StatusCodes.OK)
-      .json({ status: StatusCodes.OK, ...parsedResponse })
+      .json({ status: StatusCodes.OK, ...parsedResponse, parsed_file })
   } catch (error) {
     handleOpenAIError(error, res)
   }
