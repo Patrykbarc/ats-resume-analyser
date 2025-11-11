@@ -1,4 +1,4 @@
-import { Card } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { AiAnalysis } from '@monorepo/types'
 import { capitalize } from 'lodash'
 import { AlertCircle, CheckCircle2, Lightbulb } from 'lucide-react'
@@ -40,14 +40,16 @@ export function AnalysisSections({
     }
 
     return (
-      <Card key={key} className="border-border bg-card p-6">
-        <div className="mb-4 flex items-center gap-3">
-          <div>
-            <IconComponent className={`h-6 w-6 ${iconColor}`} />
+      <Card key={key}>
+        <CardContent>
+          <div className="mb-4 flex items-center gap-3">
+            <div>
+              <IconComponent className={`h-6 w-6 ${iconColor}`} />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground">{title}</h3>
           </div>
-          <h3 className="text-lg font-semibold text-foreground">{title}</h3>
-        </div>
-        <p className="leading-relaxed text-muted-foreground">{description}</p>
+          <p className="leading-relaxed text-muted-foreground">{description}</p>
+        </CardContent>
       </Card>
     )
   })

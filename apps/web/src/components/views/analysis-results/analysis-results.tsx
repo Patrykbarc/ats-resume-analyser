@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 import type { AiAnalysis } from '@monorepo/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { ShareButton } from '../share-button'
@@ -56,7 +57,21 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
       </TabsContent>
 
       <TabsContent className="space-y-6" value={TABS.preview.value}>
-        <p className="whitespace-pre-line">{analysis.parsed_file}</p>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-foreground">Preview</h2>
+          <p className="text-muted-foreground max-w-3xl text-pretty">
+            This is the raw, unformatted text extracted from your document. ATS
+            systems analyze this exact content, meaning any errors in parsing
+            (like missing formatting or broken line breaks) can severely impact
+            their ability to read key information.
+          </p>
+        </div>
+
+        <Card>
+          <CardContent>
+            <p className="whitespace-pre-line">{analysis.parsed_file}</p>
+          </CardContent>
+        </Card>
       </TabsContent>
 
       <ShareButton id={analysis.id} />
