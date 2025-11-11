@@ -3,7 +3,9 @@ import { AnalysisResults } from '@/components/views/analysis-results/analysis-re
 import { useAnalyseResumeMutation } from '@/hooks/useAnalyseResumeMutation'
 import { FileSchemaInput } from '@monorepo/schemas'
 import type { AiAnalysis } from '@monorepo/types'
+import { StatusCodes } from 'http-status-codes'
 import { type ChangeEvent, useState } from 'react'
+import { RequestLimitError } from '../request-limit-error'
 import { AnalyseFile } from './components/analyse-file'
 import { UploadFile } from './components/upload-file'
 
@@ -17,7 +19,8 @@ export function ResumeAnalyser() {
   const {
     mutate,
     isPending,
-    error: mutationError
+    error: mutationError,
+    error
   } = useAnalyseResumeMutation({
     onSuccess: (data) => {
       setAnalysis(data.data)
@@ -66,6 +69,25 @@ export function ResumeAnalyser() {
     : mutationError instanceof Error
       ? mutationError.message
       : undefined
+
+  if (error) {
+    if (error.status === StatusCodes.TOO_MANY_REQUESTS) {
+      const resetTimestampInSeconds =
+        +error.response?.headers['x-ratelimit-reset']
+
+      const resetTimeInMilliseconds = resetTimestampInSeconds * 1000
+
+      const resetDate = new Date(resetTimeInMilliseconds)
+      const resetTimeOnly = resetDate.toLocaleTimeString('pl-PL')
+
+      return (
+        <RequestLimitError
+          message={`The limit will be renewed at ${resetTimeOnly} next day`}
+        />
+      )
+    }
+    return <RequestLimitError description={error.message} />
+  }
 
   return (
     <div className="space-y-8">
