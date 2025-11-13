@@ -13,7 +13,7 @@ const requestLimiter = rateLimit({
 
 const analyzeLimiter = rateLimit({
   windowMs: DAY,
-  max: 5,
+  max: process.env.NODE_ENV === 'development' ? 100 : 5,
   message: {
     error: 'The limit of analyses has been reached.'
   }

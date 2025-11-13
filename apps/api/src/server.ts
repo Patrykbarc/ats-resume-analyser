@@ -2,13 +2,13 @@ import OpenAI from 'openai'
 import app from './app'
 import config from './config/config'
 
-const apiKey = process.env.OPENAI_API_KEY
+const openAiApiKey = process.env.OPENAI_API_KEY
 
-if (!apiKey) {
+if (!openAiApiKey) {
   throw new Error('OPENAI_API_KEY is not set in environment variables.')
 }
 
-export const openAiClient = new OpenAI({ apiKey })
+export const openAiClient = new OpenAI({ apiKey: openAiApiKey })
 
 app.get('/health', (_, res) => {
   res.status(200).json({
