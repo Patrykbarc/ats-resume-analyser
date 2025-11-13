@@ -2,7 +2,7 @@ import { Card } from '@/components/ui/card'
 import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
 import { useAnalyseResumeMutation } from '@/hooks/useAnalyseResumeMutation'
 import { FileSchemaInput } from '@monorepo/schemas'
-import type { AiAnalysis } from '@monorepo/types'
+import { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import { type ChangeEvent, useState } from 'react'
 import { RequestLimitError } from '../request-limit-error'
@@ -11,33 +11,22 @@ import { UploadFile } from './components/upload-file'
 
 export function ResumeAnalyser() {
   const [file, setFile] = useState<File | null>(null)
-  const [localValidationError, setLocalValidationError] = useState<
-    string | null
-  >(null)
-  const [analysis, setAnalysis] = useState<AiAnalysis | null>(null)
+  const [validationError, setValidationError] = useState<string | null>(null)
 
-  const {
-    mutate,
-    isPending,
-    error: mutationError,
-    error
-  } = useAnalyseResumeMutation({
-    onSuccess: (data) => {
-      setAnalysis(data.data)
-      setLocalValidationError(null)
-    },
-    onError: (error) => {
-      console.error('CV analysis error from API:', error.message)
+  const { mutate, isPending, data, error } = useAnalyseResumeMutation({
+    onSuccess: () => {
+      setValidationError(null)
     }
   })
+
+  const analysis = data?.data ?? null
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
 
     if (selectedFile) {
       setFile(selectedFile)
-      setAnalysis(null)
-      setLocalValidationError(null)
+      setValidationError(null)
     }
   }
 
@@ -46,47 +35,55 @@ export function ResumeAnalyser() {
       return
     }
 
-    const { success, error } = FileSchemaInput.safeParse(file)
+    const { success, error: validationError } = FileSchemaInput.safeParse(file)
 
     if (!success) {
-      setLocalValidationError(error.issues[0].message)
+      setValidationError(validationError.issues[0].message)
       return
     }
 
-    setLocalValidationError(null)
-
+    setValidationError(null)
     mutate(file)
   }
 
   const handleReset = () => {
     setFile(null)
-    setAnalysis(null)
-    setLocalValidationError(null)
+    setValidationError(null)
   }
 
-  const currentErrorMessage = localValidationError
-    ? localValidationError
-    : mutationError instanceof Error
-      ? mutationError.message
-      : undefined
+  let currentErrorMessage: string | undefined
 
-  if (error) {
-    if (error.status === StatusCodes.TOO_MANY_REQUESTS) {
-      const resetTimestampInSeconds =
-        +error.response?.headers['x-ratelimit-reset']
+  if (validationError) {
+    currentErrorMessage = validationError
+  } else if (error) {
+    if (isAxiosError(error) && error.response) {
+      const responseStatus = error.response.status
+      const responseHeaders = error.response.headers
 
-      const resetTimeInMilliseconds = resetTimestampInSeconds * 1000
+      if (responseStatus === StatusCodes.TOO_MANY_REQUESTS) {
+        const resetTimestampInSeconds = +responseHeaders?.['x-ratelimit-reset']
 
-      const resetDate = new Date(resetTimeInMilliseconds)
-      const resetTimeOnly = resetDate.toLocaleTimeString('pl-PL')
+        if (resetTimestampInSeconds) {
+          const resetTimeInMilliseconds = resetTimestampInSeconds * 1000
+          const resetDate = new Date(resetTimeInMilliseconds)
+          const resetTimeOnly = resetDate.toLocaleTimeString('pl-PL')
 
-      return (
-        <RequestLimitError
-          message={`The limit will be renewed at ${resetTimeOnly} next day`}
-        />
-      )
+          return (
+            <RequestLimitError
+              message={`Limit zostanie odnowiony o ${resetTimeOnly} następnego dnia`}
+            />
+          )
+        }
+      }
+
+      currentErrorMessage = error.message
+    } else {
+      currentErrorMessage = error.message
     }
-    return <p className="text-rose-500 text-center">{error.message}</p>
+
+    if (currentErrorMessage) {
+      return <p className="text-rose-500 text-center">{currentErrorMessage}</p>
+    }
   }
 
   return (

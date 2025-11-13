@@ -1,6 +1,7 @@
 import { getEnv } from '@/lib/getEnv'
 import { QueryClient } from '@tanstack/query-core'
-import axios, { AxiosError } from 'axios'
+import axios, { isAxiosError } from 'axios'
+import { StatusCodes } from 'http-status-codes'
 
 const env = getEnv()
 
@@ -11,7 +12,7 @@ export const queryClient = new QueryClient({
       retryOnMount: false,
       refetchOnWindowFocus: false,
       retry: (failureCount, error) => {
-        if (error instanceof AxiosError && error.message.includes('404')) {
+        if (isAxiosError(error) && error.status === StatusCodes.NOT_FOUND) {
           return false
         }
         return failureCount < 3
