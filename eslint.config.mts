@@ -76,7 +76,8 @@ export default defineConfig([
       'prefer-template': 'error',
 
       // if you use 'new jsx transform' don't have to import React from 'react'
-      'react/react-in-jsx-scope': 'off'
+      'react/react-in-jsx-scope': 'off',
+      'react/no-children-prop': 'off'
     }
   }
 ])
