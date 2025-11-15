@@ -19,6 +19,7 @@
   "dependencies": {},
   "devDependencies": {
     "prisma": "6.19.0",
-    "tsup": "catalog:"
+    "tsup": "catalog:",
+    "dotenv": "catalog:"
   }
 }

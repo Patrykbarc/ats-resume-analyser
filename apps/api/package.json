@@ -13,7 +13,6 @@
     "@monorepo/schemas": "workspace:*",
     "@monorepo/types": "workspace:*",
     "cors": "^2.8.5",
-    "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "express-rate-limit": "^8.1.0",
     "helmet": "^8.1.0",
@@ -22,6 +21,7 @@
     "multer": "^2.0.2",
     "openai": "^6.3.0",
     "sanitize-html": "^2.17.0",
+    "dotenv": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
