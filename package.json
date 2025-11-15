@@ -10,7 +10,10 @@
     "build": "pnpm --recursive run build",
     "prepare": "husky",
     "prettier": "npx prettier apps/*/** --write --verbose",
-    "lint": "eslint \"apps/**/*.{js,ts,jsx,tsx}\""
+    "lint": "eslint \"apps/**/*.{js,ts,jsx,tsx}\"",
+    "prisma:generate": "pnpm --filter @monorepo/prisma run prisma:generate",
+    "prisma:migrate": "pnpm --filter @monorepo/prisma run prisma:migrate",
+    "prisma:studio": "pnpm --filter @monorepo/prisma run prisma:studio"
   },
   "keywords": [],
   "author": "",
