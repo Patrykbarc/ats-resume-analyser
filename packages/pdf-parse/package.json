@@ -20,8 +20,8 @@
     "pdf-parse": "^2.3.12"
   },
   "devDependencies": {
-    "@tsconfig/node20": "20.1.4",
-    "@types/node": "20.14.1",
+    "@tsconfig/node20": "catalog:",
+    "@types/node": "catalog:",
     "tsup": "catalog:"
   }
 }
