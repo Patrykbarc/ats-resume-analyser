@@ -1,0 +1,10 @@
+{
+  "extends": ["@tsconfig/node20/tsconfig.json", "../../tsconfig.base.json"],
+  "compilerOptions": {
+    "outDir": "dist",
+    "declaration": true,
+    "sourceMap": true,
+    "composite": true
+  },
+  "include": ["src/**/*.ts", "prisma", "tsup.config.ts"]
+}
