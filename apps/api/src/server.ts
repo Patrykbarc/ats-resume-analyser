@@ -1,3 +1,4 @@
+import * as database from '@monorepo/database'
 import OpenAI from 'openai'
 import app from './app'
 import config from './config/config'
@@ -9,6 +10,7 @@ if (!openAiApiKey) {
 }
 
 export const openAiClient = new OpenAI({ apiKey: openAiApiKey })
+export const prisma = new database.PrismaClient()
 
 app.get('/health', (_, res) => {
   res.status(200).json({

@@ -5,6 +5,6 @@ export default defineConfig((options) => {
     format: ['esm'],
     entryPoints: ['src/server.ts'],
     onSuccess: options.watch ? 'node dist/server.js' : undefined,
-    minify: !options.watch
+    minify: !options.watch,
   }
 })

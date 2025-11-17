@@ -2,7 +2,7 @@ import { Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import OpenAI from 'openai'
 
-export function handleOpenAIError(error: unknown, res: Response) {
+export function handleError(error: unknown, res: Response) {
   console.error('Error during interaction with OpenAI:', error)
 
   if (error instanceof OpenAI.APIError) {

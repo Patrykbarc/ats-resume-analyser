@@ -6,5 +6,5 @@
     "sourceMap": true,
     "composite": true
   },
-  "include": ["src/**/*.ts", "prisma", "tsup.config.ts"]
+  "include": ["src/**/*.ts", "prisma", "prisma.config.ts", "tsup.config.ts"]
 }

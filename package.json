@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "packageManager": "pnpm@10.11.0",
   "scripts": {
     "dev": "pnpm --recursive --parallel run dev",
     "dev:web": "pnpm --filter @monorepo/web run dev",
@@ -11,9 +12,9 @@
     "prepare": "husky",
     "prettier": "npx prettier apps/*/** --write --verbose",
     "lint": "eslint \"apps/**/*.{js,ts,jsx,tsx}\"",
-    "prisma:generate": "pnpm --filter @monorepo/prisma run prisma:generate",
-    "prisma:migrate": "pnpm --filter @monorepo/prisma run prisma:migrate",
-    "prisma:studio": "pnpm --filter @monorepo/prisma run prisma:studio"
+    "db:generate": "pnpm --filter @monorepo/database run db:generate",
+    "db:migrate": "pnpm --filter @monorepo/database run db:migrate",
+    "db:studio": "pnpm --filter @monorepo/database run db:studio"
   },
   "keywords": [],
   "author": "",

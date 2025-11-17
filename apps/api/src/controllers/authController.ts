@@ -1,0 +1,80 @@
+import * as bcrypt from 'bcryptjs'
+import type { Request, Response } from 'express'
+import { StatusCodes } from 'http-status-codes'
+import * as jwt from 'jsonwebtoken'
+import { prisma } from '../server'
+import { handleError } from './helper/handleError'
+
+export const loginUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body
+
+  const JWT_SECRET = process.env.JWT_SECRET
+
+  if (!JWT_SECRET) {
+    throw new Error('Missing JWT_SECRET env')
+  }
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email, password }
+    })
+
+    if (!user) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        message: 'Invalid credentials.'
+      })
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordValid) {
+      return res
+        .status(StatusCodes.UNAUTHORIZED)
+        .json({ message: 'Invalid credentials.' })
+    }
+
+    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+      expiresIn: '1h'
+    })
+
+    res.status(StatusCodes.OK).json({
+      user_id: user.id,
+      token: token
+    })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
+
+export const registerUser = async (req: Request, res: Response) => {
+  const { email, password } = req.body
+
+  const SALT_ROUNDS = 10
+
+  try {
+    const existingUser = await prisma.user.findUnique({ where: email })
+
+    if (existingUser) {
+      return res
+        .status(StatusCodes.CONFLICT)
+        .json({ message: 'User already exists.' })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword
+      },
+      select: { id: true, email: true }
+    })
+
+    res.status(StatusCodes.CREATED).json({
+      user_id: user.id,
+      message: 'User created successfully.'
+    })
+  } catch (error) {
+    handleError(error, res)
+  }
+}

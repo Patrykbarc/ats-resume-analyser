@@ -4,7 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
 import { openAiClient } from '../server'
 import { analyseFile } from './helper/analyseFile'
-import { handleOpenAIError } from './helper/handleOpenAIError'
+import { handleError } from './helper/handleError'
 import { parseFileAndSanitize } from './helper/parseFileAndSanitize'
 import { parseOpenAiApiResponse } from './helper/parseOpenAiApiResponse'
 
@@ -51,7 +51,7 @@ export const createAnalyze = async (req: Request, res: Response) => {
       parsed_file: sanitizedTextResult
     })
   } catch (error) {
-    handleOpenAIError(error, res)
+    handleError(error, res)
   }
 }
 
@@ -94,6 +94,6 @@ export const getAnalysys = async (req: Request, res: Response) => {
       .status(StatusCodes.OK)
       .json({ status: StatusCodes.OK, ...parsedResponse, parsed_file })
   } catch (error) {
-    handleOpenAIError(error, res)
+    handleError(error, res)
   }
 }
