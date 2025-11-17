@@ -1,15 +1,12 @@
 import * as database from '@monorepo/database'
 import OpenAI from 'openai'
 import app from './app'
-import config from './config/config'
+import config from './config/server.config'
+import { getEnvs } from './lib/getEnv'
 
-const openAiApiKey = process.env.OPENAI_API_KEY
+const { OPENAI_API_KEY } = getEnvs()
 
-if (!openAiApiKey) {
-  throw new Error('OPENAI_API_KEY is not set in environment variables.')
-}
-
-export const openAiClient = new OpenAI({ apiKey: openAiApiKey })
+export const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY })
 export const prisma = new database.PrismaClient()
 
 app.get('/health', (_, res) => {
