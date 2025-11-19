@@ -1,25 +1,27 @@
-type NodeEnv = 'development' | 'production'
-
-export const getEnv = () => {
-  const API_URL: string = import.meta.env.VITE_API_URL
-  const NODE_ENV: NodeEnv = import.meta.env.VITE_NODE_ENV
-  const FRONTEND_URL: string = import.meta.env.VITE_FRONTEND_URL
-
-  if (!API_URL) {
-    throwError('API_URL')
-  }
-
-  if (!NODE_ENV) {
-    throwError('NODE_ENV')
-  }
-
-  if (!FRONTEND_URL) {
-    throwError('FRONTEND_URL')
-  }
-
-  return { API_URL, NODE_ENV, FRONTEND_URL }
+type IEnvironmentVariables = {
+  VITE_NODE_ENV: string
+  VITE_API_URL: string
+  VITE_FRONTEND_URL: string
 }
 
-const throwError = (env: string) => {
-  throw new Error(`Missing ${env} env variable`)
+const ENV_NAMES = [
+  'VITE_NODE_ENV',
+  'VITE_API_URL',
+  'VITE_FRONTEND_URL'
+] as const
+
+export const getEnvs = (): IEnvironmentVariables => {
+  const envEntries = ENV_NAMES.map((variable) => {
+    const value = import.meta.env[variable]
+
+    if (value === undefined || value === '') {
+      throw new Error(
+        `CONFIG ERROR: Required environment variable “${variable}” is not set or is empty.`
+      )
+    }
+
+    return [variable, value] as [typeof variable, string]
+  })
+
+  return Object.fromEntries(envEntries) as IEnvironmentVariables
 }
