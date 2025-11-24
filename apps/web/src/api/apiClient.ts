@@ -1,9 +1,7 @@
-import { getEnv } from '@/lib/getEnv'
+import { getEnvs } from '@/lib/getEnv'
 import { QueryClient } from '@tanstack/query-core'
 import axios, { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
-
-const env = getEnv()
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -22,6 +20,6 @@ export const queryClient = new QueryClient({
 })
 
 export const apiClient = axios.create({
-  baseURL: `${env.API_URL}/api`,
+  baseURL: `${getEnvs().VITE_API_URL}/api`,
   timeout: 60_000
 })

@@ -1,4 +1,4 @@
-import { getEnv } from '@/lib/getEnv'
+import { getEnvs } from '@/lib/getEnv'
 import { Check, Copy, Share } from 'lucide-react'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -17,8 +17,7 @@ const TEXT =
 export function ShareButton({ id }: { id: string }) {
   const [copied, setCopied] = useState(false)
 
-  const env = getEnv()
-  const url = `${env.FRONTEND_URL}/analyse/${id}`
+  const url = `${getEnvs().VITE_FRONTEND_URL}/analyse/${id}`
 
   const handleCopyLink = async () => {
     try {
