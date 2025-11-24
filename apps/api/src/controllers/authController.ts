@@ -2,17 +2,14 @@ import * as bcrypt from 'bcryptjs'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import * as jwt from 'jsonwebtoken'
+import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'
 import { handleError } from './helper/handleError'
 
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
-  const JWT_SECRET = process.env.JWT_SECRET
-
-  if (!JWT_SECRET) {
-    throw new Error('Missing JWT_SECRET env')
-  }
+  const { JWT_SECRET } = getEnvs()
 
   try {
     const user = await prisma.user.findUnique({
