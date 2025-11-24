@@ -11,14 +11,15 @@
     "build": "tsup",
     "db:generate": "prisma generate --no-engine",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "catalog:prisma"
   },
   "devDependencies": {
     "prisma": "catalog:prisma",
-    "tsup": "^6.0.0",
+    "tsup": "catalog:",
     "typescript": "catalog:"
   }
 }
