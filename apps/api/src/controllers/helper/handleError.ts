@@ -1,14 +1,15 @@
 import { Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import OpenAI from 'openai'
+import { logger } from '../../server'
 
 export function handleError(error: unknown, res: Response) {
-  console.error('Error during interaction with OpenAI:', error)
+  logger.error(`Error during interaction with OpenAI: ${error}`)
 
   if (error instanceof OpenAI.APIError) {
     const { status, message } = error
 
-    console.error(message)
+    logger.error(message)
 
     const statusCode = status || StatusCodes.INTERNAL_SERVER_ERROR
 

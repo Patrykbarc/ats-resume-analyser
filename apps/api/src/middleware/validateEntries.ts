@@ -45,7 +45,7 @@ export function validateData(schema: Schema) {
 
 const errorHandler = (error: unknown, res: Response) => {
   if (error instanceof ZodError) {
-    const errorMessages = error.issues.map((issue: any) => ({
+    const errorMessages = error.issues.map((issue) => ({
       ...issue,
       path: issue.path[0]
     }))

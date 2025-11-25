@@ -1,4 +1,5 @@
 import { AiAnalysis } from '@monorepo/types'
+import { logger } from '../../server'
 import { AnalyseApiResponse } from './analyseFile'
 
 export const parseOpenAiApiResponse = (response: AnalyseApiResponse) => {
@@ -15,8 +16,8 @@ export const parseOpenAiApiResponse = (response: AnalyseApiResponse) => {
 
     return finalAnalysis
   } catch (parseError: unknown) {
-    console.error('JSON Parsing Error:', parseError)
-    console.error('Raw Response:', response.output_text)
+    logger.error(`JSON Parsing Error: ${parseError}`)
+    logger.error(`Raw Response: ${response.output_text}`)
 
     return {
       error: `Failed to parse AI response as JSON. Raw data: ${response.output_text.substring(0, 200)}...`
