@@ -1,23 +1,51 @@
 import * as database from '@monorepo/database'
+import axios, { isAxiosError } from 'axios'
+import { StatusCodes } from 'http-status-codes'
 import OpenAI from 'openai'
+import pino from 'pino'
 import app from './app'
+import pinoConfig from './config/pino.config'
 import config from './config/server.config'
 import { getEnvs } from './lib/getEnv'
 
 const { OPENAI_API_KEY } = getEnvs()
 
+export const logger = pino({ ...pinoConfig })
 export const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY })
 export const prisma = new database.PrismaClient()
 
 app.get('/health', (_, res) => {
-  res.status(200).json({
+  res.status(StatusCodes.OK).json({
     status: 'healthy',
     timestamp: new Date().toISOString(),
     uptime: process.uptime()
   })
 })
 
-app.listen(config.port, () => {
-  // eslint-disable-next-line no-console
-  console.log(`Server running on http://localhost:${config.port}`)
+app.listen(config.port, async () => {
+  const apiUrl = `http://localhost:${config.port}`
+
+  try {
+    const healthCheckUrl = `${apiUrl}/health`
+    const res = await axios(healthCheckUrl)
+
+    if (res.status === StatusCodes.OK) {
+      logger.info(`Server running on http://localhost:${config.port}`)
+    } else {
+      logger.error(
+        `Server responded to /health with a non-OK status code. ${{
+          status: res.status,
+          url: healthCheckUrl
+        }}`
+      )
+    }
+  } catch (err) {
+    if (isAxiosError(err)) {
+      logger.fatal(
+        `${err.status} ${err.code}: Health check failed due to connection error or exception.`
+      )
+    } else {
+      logger.fatal(`An unknown error occured. ${err}`)
+    }
+  }
 })
