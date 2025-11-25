@@ -10,7 +10,7 @@ clean_monorepo() {
     echo "3/3: Removing all lock files (pnpm-lock.yaml, package-lock.json, yarn.lock)..."
     find . -type f \( -name "pnpm-lock.yaml" -o -name "package-lock.json" -o -name "yarn.lock" \) -delete
 
-    echo "--- Cleanup Complete! You can now run 'pnpm install' ---"
+    echo "--- Cleanup Complete! You can now run 'pnpm install' & 'pnpm build' ---"
 }
 
 read -r -p "⚠️ WARNING: This will permanently delete all node_modules, dist, build, and lock files in the current directory and its subdirectories. Are you sure you want to proceed? (y/N) " response

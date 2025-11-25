@@ -6,5 +6,6 @@ export default defineConfig((options) => {
     entryPoints: ['src/server.ts'],
     onSuccess: options.watch ? 'node dist/server.js' : undefined,
     minify: !options.watch,
+    external: ['pino']
   }
 })

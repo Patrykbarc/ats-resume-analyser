@@ -13,10 +13,10 @@ export const middleware = (app: Application) => {
   app.use(cors(corsOptions))
   app.use(logger('dev'))
 
+  app.use(express.json())
+
   app.use('/api/cv/analyze', analyzeLimiter)
   app.use('/api/cv/analysis/:id', requestLimiter)
-
-  app.use(express.json())
 
   routes(app)
 
