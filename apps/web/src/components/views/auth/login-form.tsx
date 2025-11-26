@@ -1,3 +1,4 @@
+import { apiClient } from '@/api/apiClient'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -35,10 +36,10 @@ export function LoginForm() {
       password: ''
     },
     validators: {
-      onSubmit: LoginUserSchema
+      onChange: LoginUserSchema
     },
     onSubmit: async ({ value }) => {
-      console.log(value)
+      await apiClient.post('/auth/login', { ...value })
     }
   })
 

@@ -5,6 +5,17 @@ const PasswordLoginSchema = z
   .min(1, { message: 'Please enter a password' })
   .min(6, { message: 'Password must be at least 6 characters' })
 
+const RegisterPasswordSchema = PasswordLoginSchema.min(8, {
+  message: 'Password must be at least 8 characters'
+})
+  .regex(/[A-Z]/, {
+    message: 'Password must contain at least one uppercase letter'
+  })
+  .regex(/[a-z]/, {
+    message: 'Password must contain at least one lowercase letter'
+  })
+  .regex(/[0-9]/, { message: 'Password must contain at least one number' })
+
 const RegisterUserSchema = z
   .object({
     email: z
@@ -17,31 +28,7 @@ const RegisterUserSchema = z
           message: 'Invalid email format'
         })
       ),
-    password: PasswordLoginSchema.min(8, {
-      message: 'Password must be at least 8 characters'
-    }).superRefine((value, ctx) => {
-      if (!/[A-Z]/.test(value)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Password must contain at least one uppercase letter',
-          path: ['password']
-        })
-      }
-      if (!/[a-z]/.test(value)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Password must contain at least one lowercase letter',
-          path: ['password']
-        })
-      }
-      if (!/[0-9]/.test(value)) {
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Password must contain at least one number',
-          path: ['password']
-        })
-      }
-    }),
+    password: RegisterPasswordSchema,
     confirmPassword: z
       .string()
       .min(1, { message: 'Please confirm your password' })

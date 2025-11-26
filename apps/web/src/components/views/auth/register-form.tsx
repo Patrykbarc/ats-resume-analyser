@@ -1,3 +1,4 @@
+import { apiClient } from '@/api/apiClient'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -44,7 +45,7 @@ export function RegisterForm() {
       onSubmit: RegisterUserSchema
     },
     onSubmit: async ({ value }) => {
-      console.log(value)
+      await apiClient.post('/auth/register', { ...value })
     }
   })
 
@@ -65,6 +66,7 @@ export function RegisterForm() {
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
+
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>{item.label}</FieldLabel>
