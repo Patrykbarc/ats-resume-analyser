@@ -14,4 +14,5 @@ catalog:
   'tsup': '8.1.0'
   'dotenv': '17.2.3'
   '@tsconfig/node20': '20.1.4'
+  'http-status-codes': '^2.3.0'
   '@types/node': '20.19.0'

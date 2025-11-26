@@ -4,5 +4,5 @@ import authRoutes from './authRoutes'
 
 export const routes = (app: Application) => (
   app.use('/api/cv', analyzeRoutes),
-  app.use('/auth', authRoutes)
+  app.use('/api/auth', authRoutes)
 )
