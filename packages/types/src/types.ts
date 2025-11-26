@@ -22,4 +22,6 @@ type AiAnalysis = {
 
 type AiAnalysisError = { error: string }
 
-export type { AiAnalysis, AiAnalysisError }
+type AuthType = { token: string; user_id: string }
+
+export type { AiAnalysis, AiAnalysisError, AuthType }

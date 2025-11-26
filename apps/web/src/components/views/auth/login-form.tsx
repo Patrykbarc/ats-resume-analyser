@@ -1,4 +1,3 @@
-import { apiClient } from '@/api/apiClient'
 import { Button } from '@/components/ui/button'
 import {
   Field,
@@ -7,39 +6,53 @@ import {
   FieldLabel
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { useLoginMutation } from '@/hooks/useLoginMutation'
 import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
+import { useNavigate } from '@tanstack/react-router'
+import { StatusCodes } from 'http-status-codes'
+import { HTMLInputTypeAttribute } from 'react'
 
 type FormFields = {
   fieldName: keyof LoginUserSchemaType
   label: string
   placeholder: string
+  type: HTMLInputTypeAttribute
 }
 
 const FORM_FIELDS: FormFields[] = [
   {
     fieldName: 'email',
     label: 'Email address',
-    placeholder: 'you@example.com'
+    placeholder: 'you@example.com',
+    type: 'email'
   },
   {
     fieldName: 'password',
     label: 'Password',
-    placeholder: '******'
+    placeholder: '******',
+    type: 'password'
   }
 ]
 
 export function LoginForm() {
+  const navigate = useNavigate()
+  const { mutate, isPending, isSuccess, error } = useLoginMutation({
+    onSuccess: () => {
+      navigate({ to: '/' })
+    }
+  })
+
   const form = useForm({
     defaultValues: {
       email: '',
       password: ''
     },
     validators: {
-      onChange: LoginUserSchema
+      onSubmit: LoginUserSchema
     },
     onSubmit: async ({ value }) => {
-      await apiClient.post('/auth/login', { ...value })
+      mutate(value)
     }
   })
 
@@ -71,6 +84,8 @@ export function LoginForm() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder={item.placeholder}
+                      disabled={isPending || isSuccess}
+                      type={item.type}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -84,6 +99,12 @@ export function LoginForm() {
       </FieldGroup>
 
       <Button type="submit">Login</Button>
+
+      {error?.status === StatusCodes.UNAUTHORIZED ? (
+        <FieldError>Invalid login or password</FieldError>
+      ) : (
+        <FieldError>{error?.message}</FieldError>
+      )}
     </form>
   )
 }

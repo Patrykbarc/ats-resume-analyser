@@ -1,5 +1,5 @@
-import { apiClient } from '@/api/apiClient'
 import { Button } from '@/components/ui/button'
+import { CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import {
   Field,
   FieldError,
@@ -7,34 +7,50 @@ import {
   FieldLabel
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { useRegisterMutation } from '@/hooks/useRegisterMutation'
 import { RegisterUserSchema, RegisterUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
+import { StatusCodes } from 'http-status-codes'
+import { HTMLInputTypeAttribute } from 'react'
 
 type FormFields = {
   fieldName: keyof RegisterUserSchemaType
   label: string
   placeholder: string
+  type: HTMLInputTypeAttribute
 }
 
 const FORM_FIELDS: FormFields[] = [
   {
     fieldName: 'email',
     label: 'Email address',
-    placeholder: 'you@example.com'
+    placeholder: 'you@example.com',
+    type: 'email'
   },
   {
     fieldName: 'password',
     label: 'Password',
-    placeholder: '******'
+    placeholder: '******',
+    type: 'password'
   },
   {
     fieldName: 'confirmPassword',
     label: 'Confirm passsword',
-    placeholder: '******'
+    placeholder: '******',
+    type: 'password'
   }
 ]
 
 export function RegisterForm() {
+  const { mutate, isPending, isSuccess, error } = useRegisterMutation({
+    onSuccess: () => {
+      console.log('New user registered')
+    },
+    onError: () => {
+      console.error('An error ocurred')
+    }
+  })
+
   const form = useForm({
     defaultValues: {
       email: '',
@@ -45,9 +61,25 @@ export function RegisterForm() {
       onSubmit: RegisterUserSchema
     },
     onSubmit: async ({ value }) => {
-      await apiClient.post('/auth/register', { ...value })
+      mutate(value)
     }
   })
+
+  const emailAddress = form.state.values['email']
+
+  if (isSuccess) {
+    return (
+      <>
+        <hr className="mb-8" />
+        <CardHeader className="text-center">
+          <CardTitle>Check Your Inbox</CardTitle>
+          <CardDescription>
+            We&apos;ve sent a confirmation link to {emailAddress}.
+          </CardDescription>
+        </CardHeader>
+      </>
+    )
+  }
 
   return (
     <form
@@ -78,6 +110,8 @@ export function RegisterForm() {
                       onChange={(e) => field.handleChange(e.target.value)}
                       aria-invalid={isInvalid}
                       placeholder={item.placeholder}
+                      disabled={isPending}
+                      type={item.type}
                     />
                     {isInvalid && (
                       <FieldError errors={field.state.meta.errors} />
@@ -91,6 +125,14 @@ export function RegisterForm() {
       </FieldGroup>
 
       <Button type="submit">Register</Button>
+
+      {error?.status === StatusCodes.CONFLICT ? (
+        <FieldError>
+          An account with the specified email address already exists.
+        </FieldError>
+      ) : (
+        <FieldError>{error?.message}</FieldError>
+      )}
     </form>
   )
 }
