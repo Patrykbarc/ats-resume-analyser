@@ -1,7 +1,7 @@
 import { AnalysisParamsSchema, FileSchema } from '@monorepo/schemas'
 import { Router } from 'express'
 import multer from 'multer'
-import { createAnalyze, getAnalysys } from '../controllers/analyseController'
+import { createAnalyze, getAnalysys } from '../controllers/analyse.controller'
 import { validateData, validateFile } from '../middleware/validateEntries'
 
 const upload = multer({ storage: multer.memoryStorage() })

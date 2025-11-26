@@ -1,6 +1,6 @@
 import { LoginUserSchema, RegisterUserSchema } from '@monorepo/schemas'
 import { Router } from 'express'
-import { loginUser, registerUser } from '../controllers/authController'
+import { loginUser, registerUser } from '../controllers/auth.controller'
 import { validateData } from '../middleware/validateEntries'
 
 const router: Router = Router()

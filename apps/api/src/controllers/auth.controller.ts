@@ -1,7 +1,7 @@
 import * as bcrypt from 'bcryptjs'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import * as jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'
 import { handleError } from './helper/handleError'
@@ -30,7 +30,7 @@ export const loginUser = async (req: Request, res: Response) => {
         .json({ message: 'Invalid credentials.' })
     }
 
-    const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
+    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
       expiresIn: '1h'
     })
 

@@ -4,7 +4,7 @@ import OpenAI from 'openai'
 import { logger } from '../../server'
 
 export function handleError(error: unknown, res: Response) {
-  logger.error(`Error during interaction with OpenAI: ${error}`)
+  logger.error(`An error occured: ${error}`)
 
   if (error instanceof OpenAI.APIError) {
     const { status, message } = error
