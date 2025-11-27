@@ -16,7 +16,10 @@
     "db:generate": "pnpm --filter @monorepo/database run db:generate",
     "db:migrate": "pnpm --filter @monorepo/database run db:migrate",
     "db:studio": "pnpm --filter @monorepo/database run db:studio",
-    "db:reset": "pnpm --filter @monorepo/database run db:reset"
+    "db:reset": "pnpm --filter @monorepo/database run db:reset",
+    "generate:env-api": "node ./scripts/generate-env-types.js ./apps/api",
+    "generate:env-web": "node ./scripts/generate-env-types.js ./apps/web",
+    "gen-envs": "pnpm generate:env-api && pnpm generate:env-web"
   },
   "keywords": [],
   "author": "",

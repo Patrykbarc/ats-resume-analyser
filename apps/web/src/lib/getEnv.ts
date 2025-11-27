@@ -1,14 +1,4 @@
-type IEnvironmentVariables = {
-  VITE_NODE_ENV: string
-  VITE_API_URL: string
-  VITE_FRONTEND_URL: string
-}
-
-const ENV_NAMES = [
-  'VITE_NODE_ENV',
-  'VITE_API_URL',
-  'VITE_FRONTEND_URL'
-] as const
+import { ENV_NAMES, IEnvironmentVariables } from '@/constants/env.generated'
 
 export const getEnvs = (): IEnvironmentVariables => {
   const envEntries = ENV_NAMES.map((variable) => {

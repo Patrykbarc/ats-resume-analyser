@@ -12,7 +12,8 @@ const IGNORES = {
     'eslint.config.mjs',
     'postcss.config.js',
     'eslint.config.mts',
-    'tsup.config.ts'
+    'tsup.config.ts',
+    'scripts'
   ]
 }
 
