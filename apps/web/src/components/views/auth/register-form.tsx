@@ -42,14 +42,7 @@ const FORM_FIELDS: FormFields[] = [
 ]
 
 export function RegisterForm() {
-  const { mutate, isPending, isSuccess, error } = useRegisterMutation({
-    onSuccess: () => {
-      console.log('New user registered')
-    },
-    onError: () => {
-      console.error('An error ocurred')
-    }
-  })
+  const { mutate, isPending, isSuccess, error } = useRegisterMutation()
 
   const form = useForm({
     defaultValues: {
@@ -131,7 +124,7 @@ export function RegisterForm() {
           An account with the specified email address already exists.
         </FieldError>
       ) : (
-        <FieldError>{error?.message}</FieldError>
+        <FieldError>Something went wrong. Please try again.</FieldError>
       )}
     </form>
   )

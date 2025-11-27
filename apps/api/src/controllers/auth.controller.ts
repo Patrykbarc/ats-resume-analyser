@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
 import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'
+import { sendRegisterConfirmationEmail } from '../services/email.service'
 import { handleError } from './helper/handleError'
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -59,18 +60,22 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
 
-    const user = await prisma.user.create({
-      data: {
-        email,
-        password: hashedPassword
-      },
-      select: { id: true, email: true }
-    })
+    const { status } = await sendRegisterConfirmationEmail({ reciever: email })
 
-    res.status(StatusCodes.CREATED).json({
-      user_id: user.id,
-      message: 'User created successfully.'
-    })
+    if (status === StatusCodes.OK) {
+      const user = await prisma.user.create({
+        data: {
+          email,
+          password: hashedPassword
+        },
+        select: { id: true, email: true }
+      })
+
+      res.status(StatusCodes.CREATED).json({
+        user_id: user.id,
+        message: 'User created successfully.'
+      })
+    }
   } catch (error) {
     handleError(error, res)
   }
