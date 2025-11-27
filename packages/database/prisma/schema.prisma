@@ -20,4 +20,18 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  isEmailConfirmed        Boolean   @default(false)
+  confirmationToken       String?   @unique
+  confirmationTokenExpiry DateTime?
+
+  resetPasswordToken  String?   @unique
+  resetPasswordExpiry DateTime?
+
+  username  String? @unique
+  firstName String?
+  lastName  String?
+
+  lastLogin DateTime?
+  status    String    @default("active")
 }

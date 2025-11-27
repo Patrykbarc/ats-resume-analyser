@@ -1,14 +1,14 @@
 import { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { EasyInputMessage } from 'openai/resources/responses/responses.mjs'
-import jsonPrompt from '../../prompt/prompt.json'
-import { openAiClient } from '../../server'
+import jsonPrompt from '../../../prompt/prompt.json'
+import { openAiClient } from '../../../server'
 import { parseOpenAiApiResponse } from './parseOpenAiApiResponse'
 
 const PROMPT_VAR = '{{CV_TEXT}}'
 
 export type AnalyseApiResponse = { id: string; output_text: string }
 
-export const analyseFile = async (
+export const analyzeFile = async (
   extractedText: string
 ): Promise<AiAnalysis | AiAnalysisError> => {
   let response: AnalyseApiResponse

@@ -1,6 +1,6 @@
 import { AiAnalysis } from '@monorepo/types'
-import { logger } from '../../server'
-import { AnalyseApiResponse } from './analyseFile'
+import { logger } from '../../../server'
+import { AnalyseApiResponse } from './analyzeFile'
 
 export const parseOpenAiApiResponse = (response: AnalyseApiResponse) => {
   try {

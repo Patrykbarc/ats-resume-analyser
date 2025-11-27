@@ -3,10 +3,10 @@ import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
 import { openAiClient } from '../server'
-import { analyseFile } from './helper/analyseFile'
+import { analyzeFile } from './helper/analyze/analyzeFile'
+import { parseFileAndSanitize } from './helper/analyze/parseFileAndSanitize'
+import { parseOpenAiApiResponse } from './helper/analyze/parseOpenAiApiResponse'
 import { handleError } from './helper/handleError'
-import { parseFileAndSanitize } from './helper/parseFileAndSanitize'
-import { parseOpenAiApiResponse } from './helper/parseOpenAiApiResponse'
 
 export const createAnalyze = async (req: Request, res: Response) => {
   const file = req.file
@@ -36,7 +36,7 @@ export const createAnalyze = async (req: Request, res: Response) => {
     const sanitizedTextResult = await parseFileAndSanitize(buffer)
 
     const analysisResult: AiAnalysis | AiAnalysisError =
-      await analyseFile(sanitizedTextResult)
+      await analyzeFile(sanitizedTextResult)
 
     if ('error' in analysisResult) {
       return res.status(StatusCodes.BAD_REQUEST).json({

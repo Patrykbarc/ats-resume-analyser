@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken'
 import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'
 import { sendRegisterConfirmationEmail } from '../services/email.service'
+import { createNewUser } from './helper/auth/createNewUser'
 import { handleError } from './helper/handleError'
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -47,8 +48,6 @@ export const loginUser = async (req: Request, res: Response) => {
 export const registerUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
 
-  const SALT_ROUNDS = 10
-
   try {
     const existingUser = await prisma.user.findUnique({ where: { email } })
 
@@ -58,24 +57,14 @@ export const registerUser = async (req: Request, res: Response) => {
         .json({ message: 'User already exists.' })
     }
 
-    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+    const { user } = await createNewUser({ email, password })
 
-    const { status } = await sendRegisterConfirmationEmail({ reciever: email })
+    await sendRegisterConfirmationEmail({ reciever: email })
 
-    if (status === StatusCodes.OK) {
-      const user = await prisma.user.create({
-        data: {
-          email,
-          password: hashedPassword
-        },
-        select: { id: true, email: true }
-      })
-
-      res.status(StatusCodes.CREATED).json({
-        user_id: user.id,
-        message: 'User created successfully.'
-      })
-    }
+    res.status(StatusCodes.CREATED).json({
+      user_id: user.id,
+      message: 'User created successfully.'
+    })
   } catch (error) {
     handleError(error, res)
   }
