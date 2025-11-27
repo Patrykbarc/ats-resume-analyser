@@ -119,13 +119,14 @@ export function RegisterForm() {
 
       <Button type="submit">Register</Button>
 
-      {error?.status === StatusCodes.CONFLICT ? (
-        <FieldError>
-          An account with the specified email address already exists.
-        </FieldError>
-      ) : (
-        <FieldError>Something went wrong. Please try again.</FieldError>
-      )}
+      {error &&
+        (error?.status === StatusCodes.CONFLICT ? (
+          <FieldError>
+            An account with the specified email address already exists.
+          </FieldError>
+        ) : (
+          <FieldError>Something went wrong. Please try again.</FieldError>
+        ))}
     </form>
   )
 }

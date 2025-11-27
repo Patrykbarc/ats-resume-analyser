@@ -57,9 +57,9 @@ export const registerUser = async (req: Request, res: Response) => {
         .json({ message: 'User already exists.' })
     }
 
-    const { user } = await createNewUser({ email, password })
+    const { user, confirmationToken } = await createNewUser({ email, password })
 
-    await sendRegisterConfirmationEmail({ reciever: email })
+    await sendRegisterConfirmationEmail({ reciever: email, confirmationToken })
 
     res.status(StatusCodes.CREATED).json({
       user_id: user.id,

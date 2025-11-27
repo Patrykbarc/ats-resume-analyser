@@ -26,5 +26,5 @@ export const createNewUser = async ({
     select: { id: true, email: true }
   })
 
-  return { user }
+  return { user, confirmationToken }
 }
