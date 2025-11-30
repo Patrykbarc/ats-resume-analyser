@@ -19,7 +19,7 @@ const getEmailHtmlTemplate = ({
     dirname,
     '../src/templates/email.template.html'
   )
-  const confirmationAddress = `${FRONTEND_URL}/verify?t=${confirmationToken}`
+  const confirmationAddress = `${FRONTEND_URL}/verify/${confirmationToken}`
   const currentYear = new Date().getFullYear()
   const htmlTemplate = readFileSync(templatePath, 'utf-8')
 

@@ -3,9 +3,10 @@ import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
 import { getEnvs } from '../lib/getEnv'
-import { prisma } from '../server'
+import { logger, prisma } from '../server'
 import { sendRegisterConfirmationEmail } from '../services/email.service'
 import { createNewUser } from './helper/auth/createNewUser'
+import { verifyIsTokenExpired } from './helper/auth/verifyIsTokenExpired'
 import { handleError } from './helper/handleError'
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -65,6 +66,56 @@ export const registerUser = async (req: Request, res: Response) => {
       user_id: user.id,
       message: 'User created successfully.'
     })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
+
+export const verifyUser = async (req: Request, res: Response) => {
+  const { token } = req.body
+
+  try {
+    const userRecord = await prisma.user.findUnique({
+      where: {
+        confirmationToken: token
+      },
+      select: {
+        id: true,
+        confirmationTokenExpiry: true
+      }
+    })
+
+    if (!userRecord) {
+      logger.warn(`Attempt to verify with an unknown token.`)
+      return res
+        .status(StatusCodes.NOT_FOUND)
+        .json({ message: 'Verification token not found.' })
+    }
+
+    const isExpired = verifyIsTokenExpired(userRecord.confirmationTokenExpiry)
+
+    if (isExpired) {
+      logger.warn(`The token for user ${userRecord.id} has expired.`)
+
+      return res
+        .status(StatusCodes.GONE)
+        .json({ message: 'Verification token has expired.' })
+    }
+
+    await prisma.user.update({
+      where: {
+        id: userRecord.id
+      },
+      data: {
+        confirmationToken: null,
+        confirmationTokenExpiry: null
+      }
+    })
+
+    logger.info(`User ${userRecord.id} successfully verified.`)
+    return res
+      .status(StatusCodes.OK)
+      .json({ message: 'Account successfully verified.' })
   } catch (error) {
     handleError(error, res)
   }

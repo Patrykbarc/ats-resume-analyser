@@ -38,16 +38,23 @@ const RegisterUserSchema = z
     path: ['confirmPassword']
   })
 
+const VerifyUserSchema = z.object({
+  token: z.string().optional()
+})
+
 const LoginUserSchema = RegisterUserSchema.pick({ email: true }).extend({
   password: PasswordLoginSchema
 })
 
 type RegisterUserSchemaType = z.infer<typeof RegisterUserSchema>
 type LoginUserSchemaType = z.infer<typeof LoginUserSchema>
+type VerifyUserSchemaType = z.infer<typeof VerifyUserSchema>
 
 export {
   LoginUserSchema,
   RegisterUserSchema,
+  VerifyUserSchema,
   type LoginUserSchemaType,
-  type RegisterUserSchemaType
+  type RegisterUserSchemaType,
+  type VerifyUserSchemaType
 }
