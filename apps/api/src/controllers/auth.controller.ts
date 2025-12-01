@@ -3,9 +3,11 @@ import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import jwt from 'jsonwebtoken'
 import { getEnvs } from '../lib/getEnv'
-import { logger, prisma } from '../server'
+import { prisma } from '../server'
 import { sendRegisterConfirmationEmail } from '../services/email.service'
 import { createNewUser } from './helper/auth/createNewUser'
+import { generateRegistrationToken } from './helper/auth/generateRegistrationToken'
+import { getConfirmationTokenExpiry } from './helper/auth/getConfirmationTokenExpiry'
 import { verifyIsTokenExpired } from './helper/auth/verifyIsTokenExpired'
 import { handleError } from './helper/handleError'
 
@@ -86,7 +88,6 @@ export const verifyUser = async (req: Request, res: Response) => {
     })
 
     if (!userRecord) {
-      logger.warn(`Attempt to verify with an unknown token.`)
       return res
         .status(StatusCodes.NOT_FOUND)
         .json({ message: 'Verification token not found.' })
@@ -95,8 +96,6 @@ export const verifyUser = async (req: Request, res: Response) => {
     const isExpired = verifyIsTokenExpired(userRecord.confirmationTokenExpiry)
 
     if (isExpired) {
-      logger.warn(`The token for user ${userRecord.id} has expired.`)
-
       return res
         .status(StatusCodes.GONE)
         .json({ message: 'Verification token has expired.' })
@@ -112,10 +111,48 @@ export const verifyUser = async (req: Request, res: Response) => {
       }
     })
 
-    logger.info(`User ${userRecord.id} successfully verified.`)
     return res
       .status(StatusCodes.OK)
       .json({ message: 'Account successfully verified.' })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
+
+export const resendVerificationLink = async (req: Request, res: Response) => {
+  const { token } = req.body
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { confirmationToken: token },
+      select: { id: true, email: true }
+    })
+
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: 'User not found'
+      })
+    }
+
+    const confirmationToken = generateRegistrationToken()
+    const confirmationTokenExpiry = getConfirmationTokenExpiry()
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        confirmationToken,
+        confirmationTokenExpiry
+      }
+    })
+
+    await sendRegisterConfirmationEmail({
+      reciever: user.email,
+      confirmationToken
+    })
+
+    res.status(StatusCodes.OK).json({
+      message: 'A new verification link has been sent.'
+    })
   } catch (error) {
     handleError(error, res)
   }

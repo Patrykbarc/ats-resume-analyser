@@ -6,7 +6,7 @@ import {
   useLocation
 } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/(auth)')({
+export const Route = createFileRoute('/_auth')({
   component: AuthPage
 })
 

@@ -9,12 +9,12 @@ import {
 } from '@tanstack/react-router'
 import { StatusCodes } from 'http-status-codes'
 import { ArrowLeft } from 'lucide-react'
-export const Route = createFileRoute('/analyse/$id')({
+export const Route = createFileRoute('/(app)/analyse/$id')({
   component: Analysis
 })
 
 function Analysis() {
-  const { id } = useParams({ from: '/analyse/$id' })
+  const { id } = useParams({ from: '/(app)/analyse/$id' })
   const navigate = useNavigate()
   const { data, isLoading, isError, error } = useGetAnalyseById(id)
 

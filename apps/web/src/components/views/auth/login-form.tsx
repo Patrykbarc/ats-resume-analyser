@@ -98,7 +98,9 @@ export function LoginForm() {
         })}
       </FieldGroup>
 
-      <Button type="submit">Login</Button>
+      <Button type="submit" disabled={isPending}>
+        Login
+      </Button>
 
       {error?.status === StatusCodes.UNAUTHORIZED ? (
         <FieldError>Invalid login or password</FieldError>

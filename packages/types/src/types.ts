@@ -24,4 +24,8 @@ type AiAnalysisError = { error: string }
 
 type AuthType = { token: string; user_id: string }
 
-export type { AiAnalysis, AiAnalysisError, AuthType }
+type VerifyUserApiResponse = {
+  message: string
+}
+
+export type { AiAnalysis, AiAnalysisError, AuthType, VerifyUserApiResponse }

@@ -10,19 +10,20 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as R404RouteImport } from './routes/404'
-import { Route as authRouteRouteImport } from './routes/(auth)/route'
+import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as AnalyseIdRouteImport } from './routes/analyse/$id'
-import { Route as authRegisterRouteImport } from './routes/(auth)/register'
-import { Route as authLoginRouteImport } from './routes/(auth)/login'
+import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/index'
+import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
+import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
 
 const R404Route = R404RouteImport.update({
   id: '/404',
   path: '/404',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authRouteRoute = authRouteRouteImport.update({
-  id: '/(auth)',
+const AuthRouteRoute = AuthRouteRouteImport.update({
+  id: '/_auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -30,65 +31,81 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AnalyseIdRoute = AnalyseIdRouteImport.update({
-  id: '/analyse/$id',
-  path: '/analyse/$id',
+const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
+  id: '/register/',
+  path: '/register/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const appVerifyTokenRoute = appVerifyTokenRouteImport.update({
+  id: '/(app)/verify/$token',
+  path: '/verify/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
-const authRegisterRoute = authRegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
-  getParentRoute: () => authRouteRoute,
-} as any)
-const authLoginRoute = authLoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => authRouteRoute,
+const appAnalyseIdRoute = appAnalyseIdRouteImport.update({
+  id: '/(app)/analyse/$id',
+  path: '/analyse/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/404': typeof R404Route
-  '/login': typeof authLoginRoute
-  '/register': typeof authRegisterRoute
-  '/analyse/$id': typeof AnalyseIdRoute
+  '/analyse/$id': typeof appAnalyseIdRoute
+  '/verify/$token': typeof appVerifyTokenRoute
+  '/login': typeof AuthLoginIndexRoute
+  '/register': typeof AuthRegisterIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/404': typeof R404Route
-  '/login': typeof authLoginRoute
-  '/register': typeof authRegisterRoute
-  '/analyse/$id': typeof AnalyseIdRoute
+  '/analyse/$id': typeof appAnalyseIdRoute
+  '/verify/$token': typeof appVerifyTokenRoute
+  '/login': typeof AuthLoginIndexRoute
+  '/register': typeof AuthRegisterIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/(auth)': typeof authRouteRouteWithChildren
+  '/_auth': typeof AuthRouteRouteWithChildren
   '/404': typeof R404Route
-  '/(auth)/login': typeof authLoginRoute
-  '/(auth)/register': typeof authRegisterRoute
-  '/analyse/$id': typeof AnalyseIdRoute
+  '/(app)/analyse/$id': typeof appAnalyseIdRoute
+  '/(app)/verify/$token': typeof appVerifyTokenRoute
+  '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_auth/register/': typeof AuthRegisterIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/404' | '/login' | '/register' | '/analyse/$id'
+  fullPaths:
+    | '/'
+    | '/404'
+    | '/analyse/$id'
+    | '/verify/$token'
+    | '/login'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/404' | '/login' | '/register' | '/analyse/$id'
+  to: '/' | '/404' | '/analyse/$id' | '/verify/$token' | '/login' | '/register'
   id:
     | '__root__'
     | '/'
-    | '/(auth)'
+    | '/_auth'
     | '/404'
-    | '/(auth)/login'
-    | '/(auth)/register'
-    | '/analyse/$id'
+    | '/(app)/analyse/$id'
+    | '/(app)/verify/$token'
+    | '/_auth/login/'
+    | '/_auth/register/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  authRouteRoute: typeof authRouteRouteWithChildren
+  AuthRouteRoute: typeof AuthRouteRouteWithChildren
   R404Route: typeof R404Route
-  AnalyseIdRoute: typeof AnalyseIdRoute
+  appAnalyseIdRoute: typeof appAnalyseIdRoute
+  appVerifyTokenRoute: typeof appVerifyTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -100,11 +117,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof R404RouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/(auth)': {
-      id: '/(auth)'
+    '/_auth': {
+      id: '/_auth'
       path: ''
       fullPath: ''
-      preLoaderRoute: typeof authRouteRouteImport
+      preLoaderRoute: typeof AuthRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -114,49 +131,57 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/analyse/$id': {
-      id: '/analyse/$id'
-      path: '/analyse/$id'
-      fullPath: '/analyse/$id'
-      preLoaderRoute: typeof AnalyseIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/(auth)/register': {
-      id: '/(auth)/register'
+    '/_auth/register/': {
+      id: '/_auth/register/'
       path: '/register'
       fullPath: '/register'
-      preLoaderRoute: typeof authRegisterRouteImport
-      parentRoute: typeof authRouteRoute
+      preLoaderRoute: typeof AuthRegisterIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
     }
-    '/(auth)/login': {
-      id: '/(auth)/login'
+    '/_auth/login/': {
+      id: '/_auth/login/'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authLoginRouteImport
-      parentRoute: typeof authRouteRoute
+      preLoaderRoute: typeof AuthLoginIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/(app)/verify/$token': {
+      id: '/(app)/verify/$token'
+      path: '/verify/$token'
+      fullPath: '/verify/$token'
+      preLoaderRoute: typeof appVerifyTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(app)/analyse/$id': {
+      id: '/(app)/analyse/$id'
+      path: '/analyse/$id'
+      fullPath: '/analyse/$id'
+      preLoaderRoute: typeof appAnalyseIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface authRouteRouteChildren {
-  authLoginRoute: typeof authLoginRoute
-  authRegisterRoute: typeof authRegisterRoute
+interface AuthRouteRouteChildren {
+  AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
 }
 
-const authRouteRouteChildren: authRouteRouteChildren = {
-  authLoginRoute: authLoginRoute,
-  authRegisterRoute: authRegisterRoute,
+const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
 }
 
-const authRouteRouteWithChildren = authRouteRoute._addFileChildren(
-  authRouteRouteChildren,
+const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
+  AuthRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  authRouteRoute: authRouteRouteWithChildren,
+  AuthRouteRoute: AuthRouteRouteWithChildren,
   R404Route: R404Route,
-  AnalyseIdRoute: AnalyseIdRoute,
+  appAnalyseIdRoute: appAnalyseIdRoute,
+  appVerifyTokenRoute: appVerifyTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
