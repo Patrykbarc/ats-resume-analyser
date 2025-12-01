@@ -22,7 +22,7 @@ type AiAnalysis = {
 
 type AiAnalysisError = { error: string }
 
-type AuthType = { token: string; user_id: string }
+type AuthType = { token: string; refresh_token: string }
 
 type VerifyUserApiResponse = {
   message: string

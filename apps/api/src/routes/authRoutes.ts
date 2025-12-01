@@ -16,6 +16,7 @@ const router: Router = Router()
 
 router.post('/login', validateData(LoginUserSchema), loginUser)
 router.post('/register', validateData(RegisterUserSchema), registerUser)
+router.post('/refresh', validateData(VerifyUserSchema), registerUser)
 router.post('/verify', validateData(VerifyUserSchema), verifyUser)
 router.post(
   '/verify/resend',

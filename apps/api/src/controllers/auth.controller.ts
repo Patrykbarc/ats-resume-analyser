@@ -1,20 +1,20 @@
 import * as bcrypt from 'bcryptjs'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
-import jwt from 'jsonwebtoken'
 import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'
 import { sendRegisterConfirmationEmail } from '../services/email.service'
 import { createNewUser } from './helper/auth/createNewUser'
 import { generateRegistrationToken } from './helper/auth/generateRegistrationToken'
 import { getConfirmationTokenExpiry } from './helper/auth/getConfirmationTokenExpiry'
+import { handleNewJwtTokens } from './helper/auth/handleNewJwtTokens'
 import { verifyIsTokenExpired } from './helper/auth/verifyIsTokenExpired'
 import { handleError } from './helper/handleError'
 
+import jwt from 'jsonwebtoken'
+
 export const loginUser = async (req: Request, res: Response) => {
   const { email, password } = req.body
-
-  const { JWT_SECRET } = getEnvs()
 
   try {
     const user = await prisma.user.findUnique({
@@ -35,13 +35,10 @@ export const loginUser = async (req: Request, res: Response) => {
         .json({ message: 'Invalid credentials.' })
     }
 
-    const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
-      expiresIn: '1h'
-    })
+    const token = handleNewJwtTokens({ res, userId: user.id })
 
     res.status(StatusCodes.OK).json({
-      user_id: user.id,
-      token: token
+      token
     })
   } catch (error) {
     handleError(error, res)
@@ -60,16 +57,57 @@ export const registerUser = async (req: Request, res: Response) => {
         .json({ message: 'User already exists.' })
     }
 
-    const { user, confirmationToken } = await createNewUser({ email, password })
+    const { confirmationToken } = await createNewUser({ email, password })
 
     await sendRegisterConfirmationEmail({ reciever: email, confirmationToken })
 
     res.status(StatusCodes.CREATED).json({
-      user_id: user.id,
       message: 'User created successfully.'
     })
   } catch (error) {
     handleError(error, res)
+  }
+}
+
+export const refreshToken = async (req: Request, res: Response) => {
+  const { JWT_REFRESH_SECRET } = getEnvs()
+  const refreshToken = req.cookies.jwt_refresh
+
+  if (!refreshToken) {
+    return res
+      .status(StatusCodes.UNAUTHORIZED)
+      .json({ message: 'Refresh token missing.' })
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as {
+      userId: string
+    }
+    const userId = decoded.userId
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId, refreshToken: refreshToken }
+    })
+
+    if (!user) {
+      res.clearCookie('jwt_refresh')
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        message: 'Invalid or revoked refresh token. Please log in again.'
+      })
+    }
+
+    const newAccessToken = await handleNewJwtTokens({ userId, res })
+
+    res.status(StatusCodes.OK).json({
+      token: newAccessToken
+    })
+  } catch (error) {
+    handleError(error, res)
+
+    res.clearCookie('jwt_refresh')
+    return res.status(StatusCodes.FORBIDDEN).json({
+      message: 'Refresh session expired or invalid. Please log in again.'
+    })
   }
 }
 

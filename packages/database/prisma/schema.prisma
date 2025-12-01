@@ -34,4 +34,6 @@ model User {
 
   lastLogin DateTime?
   status    String    @default("active")
+
+  refreshToken String? @unique
 }

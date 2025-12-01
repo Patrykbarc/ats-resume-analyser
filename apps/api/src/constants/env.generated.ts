@@ -6,6 +6,7 @@ export type IEnvironmentVariables = {
   OPENAI_API_KEY: string
   FRONTEND_URL: string
   JWT_SECRET: string
+  JWT_REFRESH_SECRET: string
   SMTP_HOST: string
   SMTP_PORT: string
   SMTP_USER: string
@@ -18,6 +19,7 @@ export const ENV_NAMES = [
   'OPENAI_API_KEY',
   'FRONTEND_URL',
   'JWT_SECRET',
+  'JWT_REFRESH_SECRET',
   'SMTP_HOST',
   'SMTP_PORT',
   'SMTP_USER',

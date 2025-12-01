@@ -6,7 +6,7 @@ import logger from 'morgan'
 import { corsOptions } from '../config/cors.config'
 import { analyzeLimiter, requestLimiter } from '../config/limiter.config'
 import { routes } from '../routes/routes'
-import { errorHandler } from './errorHandler'
+import { middlewareErrorHandler } from './middlewareErrorHandler'
 
 export const middleware = (app: Application) => {
   app.use(helmet())
@@ -20,7 +20,7 @@ export const middleware = (app: Application) => {
 
   routes(app)
 
-  app.use(errorHandler)
+  app.use(middlewareErrorHandler)
 }
 
 export default middleware

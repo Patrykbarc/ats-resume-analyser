@@ -14,7 +14,6 @@ export const loginService = async (value: LoginUserSchemaType) => {
   })
 
   sessionStorage.setItem('jwtToken', response.data.token)
-  sessionStorage.setItem('user_id', response.data.user_id)
 
   return response
 }
