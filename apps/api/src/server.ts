@@ -8,11 +8,13 @@ import pinoConfig from './config/pino.config'
 import config from './config/server.config'
 import { getEnvs } from './lib/getEnv'
 
-const { OPENAI_API_KEY } = getEnvs()
+const { OPENAI_API_KEY, DATABASE_URL } = getEnvs()
 
 export const logger = pino({ ...pinoConfig })
 export const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY })
-export const prisma = new database.PrismaClient()
+export const prisma = new database.PrismaClient({
+  datasourceUrl: DATABASE_URL
+})
 
 app.get('/health', (_, res) => {
   res.status(StatusCodes.OK).json({
