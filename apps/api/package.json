@@ -6,10 +6,12 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch './src'",
-    "gen-key": "openssl rand -hex 32"
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
-    "@monorepo/database": "workspace:*",
     "@monorepo/pdf-parse": "workspace:*",
     "@monorepo/schemas": "workspace:*",
     "@monorepo/types": "workspace:*",
@@ -31,7 +33,9 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.17.0",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "@prisma/client": "catalog:prisma",
+    "prisma": "catalog:prisma"
   },
   "devDependencies": {
     "@tsconfig/node20": "catalog:",

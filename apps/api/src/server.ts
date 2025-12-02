@@ -1,4 +1,3 @@
-import * as database from '@monorepo/database'
 import axios, { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import OpenAI from 'openai'
@@ -6,13 +5,14 @@ import pino from 'pino'
 import app from './app'
 import pinoConfig from './config/pino.config'
 import config from './config/server.config'
+import { PrismaClient } from './generated/prisma/client'
 import { getEnvs } from './lib/getEnv'
 
 const { OPENAI_API_KEY } = getEnvs()
 
 export const logger = pino({ ...pinoConfig })
 export const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY })
-export const prisma = new database.PrismaClient()
+export const prisma = new PrismaClient()
 
 app.get('/health', (_, res) => {
   res.status(StatusCodes.OK).json({
