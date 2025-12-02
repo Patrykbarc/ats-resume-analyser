@@ -34,10 +34,10 @@
     "passport-jwt": "^4.0.1",
     "sanitize-html": "^2.17.0",
     "zod": "catalog:",
-    "@prisma/client": "catalog:prisma",
-    "prisma": "catalog:prisma"
+    "@prisma/client": "catalog:prisma"
   },
   "devDependencies": {
+    "prisma": "catalog:prisma",
     "@tsconfig/node20": "catalog:",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
