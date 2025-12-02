@@ -12,6 +12,7 @@ const { OPENAI_API_KEY } = getEnvs()
 
 export const logger = pino({ ...pinoConfig })
 export const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY })
+
 export const prisma = new PrismaClient()
 
 app.get('/health', (_, res) => {
