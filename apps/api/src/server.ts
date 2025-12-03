@@ -18,14 +18,6 @@ export const prisma = new database.PrismaClient({
 
 app.set('trust proxy', true)
 
-app.get('/health', (_, res) => {
-  res.status(StatusCodes.OK).json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    uptime: process.uptime()
-  })
-})
-
 app.listen(config.port, async () => {
   const apiUrl = `http://localhost:${config.port}`
 
