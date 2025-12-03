@@ -5,12 +5,15 @@ import {
 } from '@monorepo/schemas'
 import { Router } from 'express'
 import {
+  getCurrentUser,
   loginUser,
+  logoutUser,
   refreshToken,
   registerUser,
   resendVerificationLink,
   verifyUser
 } from '../controllers/auth.controller'
+import { requireAuth } from '../middleware/auth.middleware'
 import { validateData } from '../middleware/validateEntries'
 
 const router: Router = Router()
@@ -24,5 +27,7 @@ router.post(
   validateData(VerifyUserSchema),
   resendVerificationLink
 )
+router.post('/logout', logoutUser)
+router.get('/me', requireAuth, getCurrentUser)
 
 export default router

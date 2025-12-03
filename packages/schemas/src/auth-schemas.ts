@@ -46,15 +46,24 @@ const LoginUserSchema = RegisterUserSchema.pick({ email: true }).extend({
   password: PasswordLoginSchema
 })
 
+const UserSchema = z.object({
+  id: z.uuid(),
+  email: z.email(),
+  createdAt: z.date()
+})
+
 type RegisterUserSchemaType = z.infer<typeof RegisterUserSchema>
 type LoginUserSchemaType = z.infer<typeof LoginUserSchema>
 type VerifyUserSchemaType = z.infer<typeof VerifyUserSchema>
+type UserSchemaType = z.infer<typeof UserSchema>
 
 export {
   LoginUserSchema,
   RegisterUserSchema,
+  UserSchema,
   VerifyUserSchema,
   type LoginUserSchemaType,
   type RegisterUserSchemaType,
+  type UserSchemaType,
   type VerifyUserSchemaType
 }

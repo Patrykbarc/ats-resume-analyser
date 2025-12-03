@@ -1,4 +1,4 @@
-import * as passport from 'passport'
+import passport from 'passport'
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt'
 import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'

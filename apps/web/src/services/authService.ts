@@ -2,6 +2,7 @@ import { apiClient } from '@/api/apiClient'
 import {
   LoginUserSchemaType,
   RegisterUserSchemaType,
+  UserSchemaType,
   VerifyUserSchemaType
 } from '@monorepo/schemas'
 import { AuthType, VerifyUserApiResponse } from '@monorepo/types'
@@ -51,6 +52,12 @@ export const resendVerificationLink = async (token: VerifyUserSchemaType) => {
     '/auth/verify/resend',
     { ...token }
   )
+
+  return response.data
+}
+
+export const getCurrentUserService = async () => {
+  const response = await apiClient.get<UserSchemaType>('/auth/me')
 
   return response.data
 }

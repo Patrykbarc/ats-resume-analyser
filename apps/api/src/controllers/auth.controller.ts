@@ -196,3 +196,70 @@ export const resendVerificationLink = async (req: Request, res: Response) => {
     handleError(error, res)
   }
 }
+
+export const logoutUser = async (req: Request, res: Response) => {
+  const { JWT_REFRESH_SECRET } = getEnvs()
+  const refreshToken = req.cookies.jwt_refresh
+
+  if (!refreshToken) {
+    return res.status(StatusCodes.OK).json({
+      message: 'Already logged out.'
+    })
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, JWT_REFRESH_SECRET) as {
+      userId: string
+    }
+
+    await prisma.user.update({
+      where: { id: decoded.userId },
+      data: { refreshToken: null }
+    })
+
+    res.clearCookie('jwt_refresh')
+
+    res.status(StatusCodes.OK).json({
+      message: 'Logged out successfully.'
+    })
+  } catch (error) {
+    handleError(error, res)
+    res.clearCookie('jwt_refresh')
+    res.status(StatusCodes.OK).json({
+      message: 'Logged out successfully.'
+    })
+  }
+}
+
+export const getCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const userId = (req.user as { id: string })?.id
+
+    if (!userId) {
+      return res.status(StatusCodes.UNAUTHORIZED).json({
+        message: 'Unauthorized'
+      })
+    }
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: {
+        id: true,
+        email: true,
+        createdAt: true
+      }
+    })
+
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: 'User not found'
+      })
+    }
+
+    res.status(StatusCodes.OK).json({
+      user
+    })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
