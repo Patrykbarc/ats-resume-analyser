@@ -1,9 +1,11 @@
 import { getEnvs } from '@/lib/getEnv'
+import { AuthErrorCodes } from '@monorepo/types'
 import axios, {
   AxiosError,
   InternalAxiosRequestConfig,
   isAxiosError
 } from 'axios'
+import { StatusCodes } from 'http-status-codes'
 
 export const apiClient = axios.create({
   baseURL: `${getEnvs().VITE_API_URL}/api`,
@@ -54,10 +56,22 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config as InternalAxiosRequestConfig & {
       _retry?: boolean
     }
-
     const { response } = error
+    const errorCode = (response?.data as { message?: string })?.message
 
-    if (response?.status === 401 && !originalRequest._retry) {
+    const isStatusCodeUnauthorizedOrForbidden =
+      response?.status === StatusCodes.UNAUTHORIZED ||
+      response?.status === StatusCodes.FORBIDDEN
+
+    const isAccessTokenExpired =
+      errorCode === AuthErrorCodes.ACCESS_TOKEN_EXPIRED
+
+    const shouldRefreshToken =
+      isStatusCodeUnauthorizedOrForbidden &&
+      isAccessTokenExpired &&
+      !originalRequest._retry
+
+    if (shouldRefreshToken) {
       originalRequest._retry = true
 
       if (isRefreshing) {
@@ -88,15 +102,13 @@ apiClient.interceptors.response.use(
 
         if (isAxiosError(refreshError)) {
           processQueue(refreshError)
-
-          window.location.href = '/login'
-          return Promise.reject(refreshError)
+        } else {
+          processQueue(null)
         }
 
-        processQueue(null)
         window.location.href = '/login'
 
-        return Promise.reject(error)
+        return Promise.reject(refreshError || error)
       }
     }
 
