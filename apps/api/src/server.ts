@@ -16,6 +16,8 @@ export const prisma = new database.PrismaClient({
   datasourceUrl: DATABASE_URL
 })
 
+app.set('trust proxy', true)
+
 app.get('/health', (_, res) => {
   res.status(StatusCodes.OK).json({
     status: 'healthy',

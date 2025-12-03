@@ -38,7 +38,7 @@ export function handleError(error: unknown, res: Response) {
       default:
         return res.status(statusCode).json({
           status: statusCode,
-          error: 'An unexpected error occurred in the OpenAI API.'
+          error: 'An unexpected error occurred.'
         })
     }
   }

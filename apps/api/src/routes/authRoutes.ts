@@ -6,6 +6,7 @@ import {
 import { Router } from 'express'
 import {
   loginUser,
+  refreshToken,
   registerUser,
   resendVerificationLink,
   verifyUser
@@ -16,7 +17,7 @@ const router: Router = Router()
 
 router.post('/login', validateData(LoginUserSchema), loginUser)
 router.post('/register', validateData(RegisterUserSchema), registerUser)
-router.post('/refresh', validateData(VerifyUserSchema), registerUser)
+router.post('/refresh', validateData(VerifyUserSchema), refreshToken)
 router.post('/verify', validateData(VerifyUserSchema), verifyUser)
 router.post(
   '/verify/resend',

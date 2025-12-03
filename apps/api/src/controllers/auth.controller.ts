@@ -11,6 +11,7 @@ import { handleNewJwtTokens } from './helper/auth/handleNewJwtTokens'
 import { verifyIsTokenExpired } from './helper/auth/verifyIsTokenExpired'
 import { handleError } from './helper/handleError'
 
+import { AuthErrorCodes } from '@monorepo/types'
 import jwt from 'jsonwebtoken'
 
 export const loginUser = async (req: Request, res: Response) => {
@@ -23,7 +24,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
     if (!user) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: 'Invalid credentials.'
+        message: AuthErrorCodes.INVALID_CREDENTIALS
       })
     }
 
@@ -32,10 +33,10 @@ export const loginUser = async (req: Request, res: Response) => {
     if (!isPasswordValid) {
       return res
         .status(StatusCodes.UNAUTHORIZED)
-        .json({ message: 'Invalid credentials.' })
+        .json({ message: AuthErrorCodes.INVALID_CREDENTIALS })
     }
 
-    const token = handleNewJwtTokens({ res, userId: user.id })
+    const token = await handleNewJwtTokens({ res, userId: user.id })
 
     res.status(StatusCodes.OK).json({
       token
@@ -92,7 +93,7 @@ export const refreshToken = async (req: Request, res: Response) => {
     if (!user) {
       res.clearCookie('jwt_refresh')
       return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: 'Invalid or revoked refresh token. Please log in again.'
+        message: AuthErrorCodes.REFRESH_TOKEN_EXPIRED
       })
     }
 
@@ -106,7 +107,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     res.clearCookie('jwt_refresh')
     return res.status(StatusCodes.FORBIDDEN).json({
-      message: 'Refresh session expired or invalid. Please log in again.'
+      message: AuthErrorCodes.REFRESH_TOKEN_EXPIRED
     })
   }
 }
