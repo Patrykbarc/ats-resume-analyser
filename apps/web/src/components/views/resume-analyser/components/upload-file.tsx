@@ -24,7 +24,7 @@ export function UploadFile({ handleFileChange }: UploadFileProps) {
       </div>
 
       <label htmlFor={id}>
-        <Button variant="secondary" asChild>
+        <Button asChild>
           <span>Choose File</span>
         </Button>
         <input

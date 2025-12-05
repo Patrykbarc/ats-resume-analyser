@@ -26,11 +26,13 @@ export default function AuthPage() {
             <p className="text-muted-foreground">
               {isLoginPage ? (
                 <Link to="/register">
-                  Don&apos;t have an account? <strong>Register now</strong>
+                  Don&apos;t have an account?{' '}
+                  <span className="text-primary font-medium">Register now</span>
                 </Link>
               ) : (
                 <Link to="/login">
-                  Already have an account? <strong>Sign In</strong>
+                  Already registered?{' '}
+                  <span className="text-primary font-medium">Sign In</span>
                 </Link>
               )}
             </p>

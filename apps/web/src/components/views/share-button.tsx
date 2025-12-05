@@ -53,7 +53,7 @@ export function ShareButton({ id }: { id: string }) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="lg">
+        <Button variant="default" size="lg">
           <Share className="size-4" />
           Share
         </Button>

@@ -1,5 +1,5 @@
 import { Devtools } from '@/components/views/devtools'
-import { Navigation } from '@/components/views/navigation'
+import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Toaster } from 'react-hot-toast'

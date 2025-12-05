@@ -2,7 +2,7 @@ import { getEnvs } from '@/lib/getEnv'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 
-export const Devtools = () => {
+export function Devtools() {
   if (getEnvs().VITE_NODE_ENV === 'production') {
     return
   }
