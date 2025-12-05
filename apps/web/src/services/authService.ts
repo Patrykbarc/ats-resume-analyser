@@ -57,7 +57,16 @@ export const resendVerificationLink = async (token: VerifyUserSchemaType) => {
 }
 
 export const getCurrentUserService = async () => {
-  const response = await apiClient.get<UserSchemaType>('/auth/me')
-
-  return response.data
+  try {
+    const response = await apiClient.get<UserSchemaType>('/auth/me')
+    return response.data
+  } catch (error) {
+    if (
+      isAxiosError(error) &&
+      error.response?.status === StatusCodes.UNAUTHORIZED
+    ) {
+      return null
+    }
+    throw error
+  }
 }

@@ -2,11 +2,16 @@ import { getCurrentUserService } from '@/services/authService'
 import { UserSchemaType } from '@monorepo/schemas'
 import { useQuery } from '@tanstack/react-query'
 
+const FIVE_MINUTES = 5 * 60 * 1000
+
 export const useGetCurrentUser = () => {
-  return useQuery<UserSchemaType>({
+  const token = sessionStorage.getItem('jwtToken')
+
+  return useQuery<UserSchemaType | null>({
     queryKey: ['currentUser'],
     queryFn: getCurrentUserService,
     retry: false,
-    staleTime: 5 * 60 * 1000 // 5 minutes
+    staleTime: FIVE_MINUTES,
+    enabled: !!token
   })
 }
