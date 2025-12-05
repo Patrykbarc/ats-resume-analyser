@@ -1,20 +1,29 @@
+import { useSessionState } from '@/stores/session/useSessionState'
+import { isAxiosError } from 'axios'
+import { StatusCodes } from 'http-status-codes'
+import { useEffect } from 'react'
 import { useGetCurrentUser } from './useGetCurrentUser'
 
 export const useAuth = () => {
-  const isAuthenticated = isUserAuthenticated()
-  const { data, isLoading, error } = useGetCurrentUser()
+  const { data, isLoading, error, isSuccess } = useGetCurrentUser()
+  const { setUser, setIsUserLoggedIn, setIsLoading } = useSessionState()
 
-  return {
-    isAuthenticated,
-    user: data,
-    isLoading,
-    error,
-    isUserLoggedIn: isAuthenticated && !!data
-  }
-}
+  const isAuthenticated = !!sessionStorage.getItem('jwtToken')
 
-const isUserAuthenticated = (): boolean => {
-  const token = sessionStorage.getItem('jwtToken')
+  useEffect(() => {
+    if (isSuccess) {
+      setUser(data)
+      setIsUserLoggedIn(isAuthenticated && !!data)
+      setIsLoading(isLoading)
+    }
 
-  return !!token
+    const isUnauthorizedError =
+      isAxiosError(error) && error.response?.status === StatusCodes.UNAUTHORIZED
+
+    if (isUnauthorizedError) {
+      setUser(null)
+      setIsUserLoggedIn(false)
+      setIsLoading(isLoading)
+    }
+  }, [isSuccess, data, setUser, setIsUserLoggedIn, isAuthenticated])
 }

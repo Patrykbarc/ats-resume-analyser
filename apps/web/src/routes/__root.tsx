@@ -1,11 +1,14 @@
 import { Devtools } from '@/components/views/devtools'
 import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
+import { useAuth } from '@/hooks/useAuth'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
 import { Toaster } from 'react-hot-toast'
 import '../index.css'
 
 const RootLayout = () => {
+  useAuth()
+
   return (
     <>
       <Toaster />
