@@ -7,8 +7,10 @@ import {
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useLoginMutation } from '@/hooks/useLoginMutation'
+import { useSessionState } from '@/stores/session/useSessionState'
 import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
+import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { StatusCodes } from 'http-status-codes'
 import { HTMLInputTypeAttribute } from 'react'
@@ -37,8 +39,14 @@ const FORM_FIELDS: FormFields[] = [
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
+  const { setAuthToken } = useSessionState()
+
   const { mutate, isPending, isSuccess, error } = useLoginMutation({
-    onSuccess: () => {
+    onSuccess: (response) => {
+      const token = response.data.token
+      setAuthToken(token)
+      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
       navigate({ to: '/' })
     }
   })

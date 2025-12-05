@@ -1,7 +1,7 @@
 import { UserSchemaType } from '@monorepo/schemas'
 import { create } from 'zustand'
 
-type AuthState = {
+export type SessionState = {
   user: UserSchemaType | null
   setUser: (user: UserSchemaType | null) => void
   authToken: string | null
@@ -20,7 +20,7 @@ const state = {
 } as const
 
 export const useSessionState = create(
-  (set): AuthState => ({
+  (set): SessionState => ({
     ...state,
 
     setUser: (user) => set({ user }),

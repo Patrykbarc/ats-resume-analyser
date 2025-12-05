@@ -11,10 +11,10 @@ export const useAuth = () => {
   const isAuthenticated = !!sessionStorage.getItem('jwtToken')
 
   useEffect(() => {
-    if (isSuccess) {
+    if (isSuccess && data) {
       setUser(data)
       setIsUserLoggedIn(isAuthenticated && !!data)
-      setIsLoading(isLoading)
+      setIsLoading(false)
     }
 
     const isUnauthorizedError =
@@ -23,7 +23,20 @@ export const useAuth = () => {
     if (isUnauthorizedError) {
       setUser(null)
       setIsUserLoggedIn(false)
-      setIsLoading(isLoading)
+      setIsLoading(false)
     }
-  }, [isSuccess, data, setUser, setIsUserLoggedIn, isAuthenticated])
+
+    if (isLoading) {
+      setIsLoading(true)
+    }
+  }, [
+    isSuccess,
+    data,
+    setUser,
+    setIsUserLoggedIn,
+    setIsLoading,
+    isAuthenticated,
+    isLoading,
+    error
+  ])
 }
