@@ -1,12 +1,8 @@
-import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { Link } from '@tanstack/react-router'
+import { buttonVariants } from '../ui/button'
 
-export const Route = createFileRoute('/404')({
-  component: NotFound
-})
-
-function NotFound() {
+export function NotFound() {
   return (
     <div className="grid h-full items-center pb-18">
       <div>

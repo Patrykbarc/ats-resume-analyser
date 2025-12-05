@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as R404RouteImport } from './routes/404'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/index'
@@ -17,11 +16,6 @@ import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
 
-const R404Route = R404RouteImport.update({
-  id: '/404',
-  path: '/404',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
   getParentRoute: () => rootRouteImport,
@@ -54,7 +48,6 @@ const appAnalyseIdRoute = appAnalyseIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/404': typeof R404Route
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/login': typeof AuthLoginIndexRoute
@@ -62,7 +55,6 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/404': typeof R404Route
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/login': typeof AuthLoginIndexRoute
@@ -72,7 +64,6 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
-  '/404': typeof R404Route
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
@@ -80,20 +71,13 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/404'
-    | '/analyse/$id'
-    | '/verify/$token'
-    | '/login'
-    | '/register'
+  fullPaths: '/' | '/analyse/$id' | '/verify/$token' | '/login' | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/404' | '/analyse/$id' | '/verify/$token' | '/login' | '/register'
+  to: '/' | '/analyse/$id' | '/verify/$token' | '/login' | '/register'
   id:
     | '__root__'
     | '/'
     | '/_auth'
-    | '/404'
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
     | '/_auth/login/'
@@ -103,20 +87,12 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
-  R404Route: typeof R404Route
   appAnalyseIdRoute: typeof appAnalyseIdRoute
   appVerifyTokenRoute: typeof appVerifyTokenRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/404': {
-      id: '/404'
-      path: '/404'
-      fullPath: '/404'
-      preLoaderRoute: typeof R404RouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/_auth': {
       id: '/_auth'
       path: ''
@@ -179,7 +155,6 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
-  R404Route: R404Route,
   appAnalyseIdRoute: appAnalyseIdRoute,
   appVerifyTokenRoute: appVerifyTokenRoute,
 }

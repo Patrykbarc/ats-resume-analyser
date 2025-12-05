@@ -1,12 +1,8 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
+import { NotFound } from '@/components/views/not-found'
 import { useGetAnalyseById } from '@/hooks/useGetAnalyseById'
-import {
-  createFileRoute,
-  Link,
-  useNavigate,
-  useParams
-} from '@tanstack/react-router'
+import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 import { StatusCodes } from 'http-status-codes'
 import { ArrowLeft } from 'lucide-react'
 export const Route = createFileRoute('/(app)/analyse/$id')({
@@ -15,7 +11,6 @@ export const Route = createFileRoute('/(app)/analyse/$id')({
 
 function Analysis() {
   const { id } = useParams({ from: '/(app)/analyse/$id' })
-  const navigate = useNavigate()
   const { data, isLoading, isError, error } = useGetAnalyseById(id)
 
   if (isLoading) {
@@ -24,7 +19,7 @@ function Analysis() {
 
   if (isError) {
     if (error.status === StatusCodes.NOT_FOUND) {
-      navigate({ to: '/404' })
+      return <NotFound />
     }
 
     return <div className="text-rose-500">{error.message}</div>

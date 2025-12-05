@@ -3,9 +3,13 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { queryClient } from './api/queryClient'
+import { NotFound } from './components/views/not-found'
 import { routeTree } from './routeTree.gen'
 
-const router = createRouter({ routeTree })
+const router = createRouter({
+  routeTree,
+  defaultNotFoundComponent: NotFound
+})
 
 // Register the router instance for type safety
 declare module '@tanstack/react-router' {
