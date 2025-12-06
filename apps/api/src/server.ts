@@ -16,7 +16,7 @@ export const prisma = new database.PrismaClient({
   datasourceUrl: DATABASE_URL
 })
 
-app.set('trust proxy', true)
+app.set('trust proxy', 1)
 
 app.listen(config.port, async () => {
   const apiUrl = `http://localhost:${config.port}`

@@ -12,15 +12,17 @@ const requestLimiter = rateLimit({
   max: 100,
   message: {
     error: 'Too many requests, please try again later.'
-  }
+  },
+  validate: { trustProxy: false }
 })
 
 const analyzeLimiter = rateLimit({
   windowMs: DAY,
-  max: NODE_ENV === 'development' ? 100 : 5,
+  max: NODE_ENV === 'development' ? Infinity : 5,
   message: {
     error: 'The limit of analyses has been reached.'
-  }
+  },
+  validate: { trustProxy: false }
 })
 
 const authAttemptLimiter = rateLimit({
@@ -28,7 +30,8 @@ const authAttemptLimiter = rateLimit({
   max: 5,
   message: {
     error: 'Too many attempts, please try again later.'
-  }
+  },
+  validate: { trustProxy: false }
 })
 
 export { analyzeLimiter, authAttemptLimiter, requestLimiter }
