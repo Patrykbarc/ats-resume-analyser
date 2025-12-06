@@ -10,8 +10,8 @@ import { Input } from '@/components/ui/input'
 import { useRegisterMutation } from '@/hooks/useRegisterMutation'
 import { RegisterUserSchema, RegisterUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
-import { StatusCodes } from 'http-status-codes'
 import { HTMLInputTypeAttribute } from 'react'
+import { AuthErrorMessages } from './components/auth-error-messages'
 
 type FormFields = {
   fieldName: keyof RegisterUserSchemaType
@@ -117,16 +117,11 @@ export function RegisterForm() {
         })}
       </FieldGroup>
 
-      <Button type="submit">Register</Button>
+      <Button type="submit" disabled={isPending}>
+        Register
+      </Button>
 
-      {error &&
-        (error?.status === StatusCodes.CONFLICT ? (
-          <FieldError>
-            An account with the specified email address already exists.
-          </FieldError>
-        ) : (
-          <FieldError>Something went wrong. Please try again.</FieldError>
-        ))}
+      {error && <AuthErrorMessages error={error} />}
     </form>
   )
 }

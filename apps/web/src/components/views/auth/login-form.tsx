@@ -12,8 +12,9 @@ import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
-import { StatusCodes } from 'http-status-codes'
 import { HTMLInputTypeAttribute } from 'react'
+import toast from 'react-hot-toast'
+import { AuthErrorMessages } from './components/auth-error-messages'
 
 type FormFields = {
   fieldName: keyof LoginUserSchemaType
@@ -47,6 +48,7 @@ export function LoginForm() {
       const token = response.data.token
       setAuthToken(token)
       queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+      toast.success('Logged in successfully!')
       navigate({ to: '/' })
     }
   })
@@ -81,6 +83,7 @@ export function LoginForm() {
               children={(field) => {
                 const isInvalid =
                   field.state.meta.isTouched && !field.state.meta.isValid
+
                 return (
                   <Field data-invalid={isInvalid}>
                     <FieldLabel htmlFor={field.name}>{item.label}</FieldLabel>
@@ -110,11 +113,7 @@ export function LoginForm() {
         Login
       </Button>
 
-      {error?.status === StatusCodes.UNAUTHORIZED ? (
-        <FieldError>Invalid login or password</FieldError>
-      ) : (
-        <FieldError>{error?.message}</FieldError>
-      )}
+      {error && <AuthErrorMessages error={error} />}
     </form>
   )
 }

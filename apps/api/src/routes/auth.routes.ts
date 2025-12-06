@@ -4,6 +4,7 @@ import {
   VerifyUserSchema
 } from '@monorepo/schemas'
 import { Router } from 'express'
+import { authAttemptLimiter } from '../config/limiter.config'
 import {
   getCurrentUser,
   loginUser,
@@ -18,8 +19,18 @@ import { validateData } from '../middleware/validateEntries'
 
 const router: Router = Router()
 
-router.post('/login', validateData(LoginUserSchema), loginUser)
-router.post('/register', validateData(RegisterUserSchema), registerUser)
+router.post(
+  '/login',
+  validateData(LoginUserSchema),
+  authAttemptLimiter,
+  loginUser
+)
+router.post(
+  '/register',
+  validateData(RegisterUserSchema),
+  authAttemptLimiter,
+  registerUser
+)
 router.post('/refresh', validateData(VerifyUserSchema), refreshToken)
 router.post('/verify', validateData(VerifyUserSchema), verifyUser)
 router.post(
