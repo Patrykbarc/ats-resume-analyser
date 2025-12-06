@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/index'
+import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
@@ -28,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
   id: '/register/',
   path: '/register/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthLogoutIndexRoute = AuthLogoutIndexRouteImport.update({
+  id: '/logout/',
+  path: '/logout/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/login': typeof AuthLoginIndexRoute
+  '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
 }
 export interface FileRoutesByTo {
@@ -58,6 +65,7 @@ export interface FileRoutesByTo {
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/login': typeof AuthLoginIndexRoute
+  '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
 }
 export interface FileRoutesById {
@@ -67,13 +75,26 @@ export interface FileRoutesById {
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
+  '/_auth/logout/': typeof AuthLogoutIndexRoute
   '/_auth/register/': typeof AuthRegisterIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/analyse/$id' | '/verify/$token' | '/login' | '/register'
+  fullPaths:
+    | '/'
+    | '/analyse/$id'
+    | '/verify/$token'
+    | '/login'
+    | '/logout'
+    | '/register'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/analyse/$id' | '/verify/$token' | '/login' | '/register'
+  to:
+    | '/'
+    | '/analyse/$id'
+    | '/verify/$token'
+    | '/login'
+    | '/logout'
+    | '/register'
   id:
     | '__root__'
     | '/'
@@ -81,6 +102,7 @@ export interface FileRouteTypes {
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
     | '/_auth/login/'
+    | '/_auth/logout/'
     | '/_auth/register/'
   fileRoutesById: FileRoutesById
 }
@@ -114,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRegisterIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/logout/': {
+      id: '/_auth/logout/'
+      path: '/logout'
+      fullPath: '/logout'
+      preLoaderRoute: typeof AuthLogoutIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/_auth/login/': {
       id: '/_auth/login/'
       path: '/login'
@@ -140,11 +169,13 @@ declare module '@tanstack/react-router' {
 
 interface AuthRouteRouteChildren {
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
+  AuthLogoutIndexRoute: typeof AuthLogoutIndexRoute
   AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginIndexRoute: AuthLoginIndexRoute,
+  AuthLogoutIndexRoute: AuthLogoutIndexRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,
 }
 

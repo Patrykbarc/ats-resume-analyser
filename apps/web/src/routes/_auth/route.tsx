@@ -14,6 +14,15 @@ export default function AuthPage() {
   const location = useLocation()
 
   const isLoginPage = location.href === '/login'
+  const isLogoutPage = location.href === '/logout'
+
+  if (isLogoutPage) {
+    return (
+      <div>
+        <Outlet />
+      </div>
+    )
+  }
 
   return (
     <div className="w-full max-w-md mx-auto">

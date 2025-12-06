@@ -16,6 +16,7 @@
     "@types/passport-jwt": "^4.0.1",
     "axios": "catalog:",
     "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "date-fns": "catalog:",
     "dotenv": "catalog:",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@tsconfig/node20": "catalog:",
+    "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",

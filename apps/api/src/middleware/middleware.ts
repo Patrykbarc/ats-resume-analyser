@@ -1,3 +1,4 @@
+import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import type { Application } from 'express'
 import express from 'express'
@@ -14,6 +15,7 @@ export const middleware = (app: Application) => {
   app.use(logger('dev'))
 
   app.use(express.json())
+  app.use(cookieParser())
 
   app.use('/api/cv/analyze', analyzeLimiter)
   app.use('/api/cv/analysis/:id', requestLimiter)

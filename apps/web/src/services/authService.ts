@@ -27,6 +27,10 @@ export const registerService = async (value: RegisterUserSchemaType) => {
   return response
 }
 
+export const logoutService = async () => {
+  return await apiClient.post('/auth/logout')
+}
+
 export const verifyUserService = async (token: VerifyUserSchemaType) => {
   try {
     await apiClient.post<VerifyUserApiResponse>('/auth/verify', { ...token })
