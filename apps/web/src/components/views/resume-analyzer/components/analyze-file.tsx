@@ -10,7 +10,7 @@ type AnalyseFileProps = {
   }
 }
 
-export function AnalyseFile({
+export function AnalyzeFile({
   file,
   analyzing,
   handlers: { handleReset, handleAnalyse }

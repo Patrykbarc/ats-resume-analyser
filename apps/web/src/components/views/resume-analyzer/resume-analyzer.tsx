@@ -1,25 +1,25 @@
 import { Card } from '@/components/ui/card'
-import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
 import { useAnalyseResumeMutation } from '@/hooks/useAnalyseResumeMutation'
 import { FileSchemaInput } from '@monorepo/schemas'
+import { useNavigate } from '@tanstack/react-router'
 import { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import { type ChangeEvent, useState } from 'react'
 import { RequestLimitError } from '../request-limit-error'
-import { AnalyseFile } from './components/analyse-file'
+import { AnalyzeFile } from './components/analyze-file'
 import { UploadFile } from './components/upload-file'
 
-export function ResumeAnalyser() {
+export function ResumeAnalyzer() {
   const [file, setFile] = useState<File | null>(null)
   const [validationError, setValidationError] = useState<string | null>(null)
+  const navigate = useNavigate()
 
   const { mutate, isPending, data, error } = useAnalyseResumeMutation({
-    onSuccess: () => {
+    onSuccess: (data) => {
       setValidationError(null)
+      navigate({ to: `/analyse/${data?.data.id}` })
     }
   })
-
-  const analysis = data?.data ?? null
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
@@ -56,45 +56,38 @@ export function ResumeAnalyser() {
   if (validationError) {
     currentErrorMessage = validationError
   } else if (error) {
-    if (isAxiosError(error) && error.response) {
-      const responseStatus = error.response.status
-      const responseHeaders = error.response.headers
+    if (
+      isAxiosError(error) &&
+      error.response?.status === StatusCodes.TOO_MANY_REQUESTS
+    ) {
+      const resetTimestampInSeconds = +(
+        error.response.headers?.['x-ratelimit-reset'] ?? 0
+      )
 
-      if (responseStatus === StatusCodes.TOO_MANY_REQUESTS) {
-        const resetTimestampInSeconds = +responseHeaders?.['x-ratelimit-reset']
+      if (resetTimestampInSeconds) {
+        const resetDate = new Date(resetTimestampInSeconds * 1000)
+        const resetTime = resetDate.toLocaleString('pl-PL')
 
-        if (resetTimestampInSeconds) {
-          const resetTimeInMilliseconds = resetTimestampInSeconds * 1000
-          const resetDate = new Date(resetTimeInMilliseconds)
-          const resetTimeOnly = resetDate.toLocaleTimeString('pl-PL')
-
-          return (
-            <RequestLimitError
-              message={`Limit zostanie odnowiony o ${resetTimeOnly} następnego dnia`}
-            />
-          )
-        }
+        return <RequestLimitError resetTime={resetTime} />
       }
-
-      currentErrorMessage = error.message
-    } else {
-      currentErrorMessage = error.message
     }
 
-    if (currentErrorMessage) {
-      return <p className="text-rose-500 text-center">{currentErrorMessage}</p>
-    }
+    currentErrorMessage = error.message
+  }
+
+  if (currentErrorMessage) {
+    return <p className="text-rose-500 text-center">{currentErrorMessage}</p>
   }
 
   return (
-    <div className="space-y-8">
-      {!analysis ? (
+    !data && (
+      <div className="space-y-8">
         <Card className="border-border bg-card p-8">
           <div className="flex flex-col items-center justify-center space-y-6">
             {!file ? (
               <UploadFile handleFileChange={handleFileChange} />
             ) : (
-              <AnalyseFile
+              <AnalyzeFile
                 file={file}
                 analyzing={isPending}
                 handlers={{ handleReset, handleAnalyse }}
@@ -105,9 +98,7 @@ export function ResumeAnalyser() {
             <p className="text-center text-rose-400">{currentErrorMessage}</p>
           )}
         </Card>
-      ) : (
-        <AnalysisResults analysis={analysis} onReset={handleReset} />
-      )}
-    </div>
+      </div>
+    )
   )
 }
