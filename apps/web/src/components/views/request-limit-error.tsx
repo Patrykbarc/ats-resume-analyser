@@ -1,18 +1,9 @@
+import { cn } from '@/lib/utils'
+import { Link } from '@tanstack/react-router'
 import { AlertCircle } from 'lucide-react'
+import { buttonVariants } from '../ui/button'
 
-type RequestLimitErrorProps = {
-  title?: string
-  message?: string
-  description?: string
-}
-
-export function RequestLimitError({
-  title = 'Rate Limit Exceeded',
-  message = 'You have reached your request limit',
-  description = 'Or upgrade your plan for higher limits.'
-}: RequestLimitErrorProps) {
-  // const navigate = useNavigate()
-
+export function RequestLimitError({ resetTime }: { resetTime: string }) {
   return (
     <div className="w-full mx-auto max-w-md space-y-8 rounded-lg border border-border bg-card p-8 text-center">
       <div className="flex justify-center">
@@ -22,26 +13,18 @@ export function RequestLimitError({
       </div>
 
       <div className="space-y-3">
-        <h1 className="text-2xl font-bold text-foreground">{title}</h1>
-        {message && (
-          <p className="text-lg font-semibold text-card-foreground">
-            {message}
-          </p>
-        )}
-        {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
-        )}
-      </div>
+        <h1 className="text-2xl font-bold text-foreground">
+          Rate Limit Exceeded
+        </h1>
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-        {/* TODO: Implement paywall */}
-        {/* <Button
-          onClick={() => navigate({ to: '/' })}
-          variant="outline"
-          className="w-full border-border text-foreground hover:bg-secondary sm:w-auto"
-        >
-          Back to Home
-        </Button> */}
+        <p className="text-sm text-card-foreground max-w-80 mx-auto">
+          The limit will be renewed at <strong>{resetTime}</strong> on the next
+          day.
+        </p>
+
+        <Link to="/pricing" className={cn(buttonVariants(), 'mt-3')}>
+          Or upgrade your plan for higher limits.
+        </Link>
       </div>
     </div>
   )
