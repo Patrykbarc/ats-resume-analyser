@@ -5,7 +5,7 @@ import { transporter } from '../config/nodemailer.config'
 import { getEnvs } from '../lib/getEnv'
 import { logger } from '../server'
 
-const { NODE_ENV, SMTP_USER, FRONTEND_URL } = getEnvs()
+const { SMTP_USER, FRONTEND_URL } = getEnvs()
 
 const getEmailHtmlTemplate = ({
   confirmationToken
@@ -51,10 +51,8 @@ export const sendRegisterConfirmationEmail = async ({
     html: template
   }
 
-  if (NODE_ENV === 'development') {
-    await transporter.verify()
-    logger.info('Server is ready to take our messages')
-  }
+  await transporter.verify()
+  logger.info('Server is ready to take our messages')
 
   transporter.sendMail(message, (err) => {
     if (err) {
