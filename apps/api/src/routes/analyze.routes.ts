@@ -3,7 +3,7 @@ import { Router } from 'express'
 import multer from 'multer'
 import { createAnalyze, getAnalysys } from '../controllers/analyse.controller'
 import { requireAuth } from '../middleware/auth.middleware'
-import { requirePremium } from '../middleware/requirePremium.middleware'
+import { requirePremium } from '../middleware/require-premium.middleware'
 import { validateData, validateFile } from '../middleware/validateEntries'
 
 const upload = multer({ storage: multer.memoryStorage() })
