@@ -73,10 +73,14 @@ type AiAnalysis = {
     areas_for_improvement: string[]
     recommendations: string[]
   }
-  premium_modules: PremiumModules
+  premium_modules?: PremiumModules
   parsed_file: string
 }
 
+enum PremiumPlan {
+  PRO = 'PRO'
+}
 type AiAnalysisError = { error: string }
 
+export { PremiumPlan }
 export type { AiAnalysis, AiAnalysisError, PremiumModules }

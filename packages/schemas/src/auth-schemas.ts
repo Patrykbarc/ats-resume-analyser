@@ -49,7 +49,12 @@ const LoginUserSchema = RegisterUserSchema.pick({ email: true }).extend({
 const UserSchema = z.object({
   id: z.uuid(),
   email: z.email(),
-  createdAt: z.date()
+  createdAt: z.date(),
+  isPremium: z.boolean(),
+  premiumStartedAt: z.date().nullable(),
+  premiumExpiresAt: z.date().nullable(),
+  premiumPlan: z.string().nullable(),
+  premiumCustomerId: z.string().nullable()
 })
 
 type RegisterUserSchemaType = z.infer<typeof RegisterUserSchema>

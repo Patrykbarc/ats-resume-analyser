@@ -6,14 +6,15 @@ import { useGetCurrentUser } from './useGetCurrentUser'
 
 export const useAuth = () => {
   const { data, isLoading, error, isSuccess } = useGetCurrentUser()
-  const { setUser, setIsUserLoggedIn, setIsLoading } = useSessionState()
+  const { setUser, setIsUserLoggedIn, setIsLoading, setIsPremium } =
+    useSessionState()
 
   const isAuthenticated = !!sessionStorage.getItem('jwtToken')
-
   useEffect(() => {
     if (isSuccess && data) {
-      setUser(data)
+      setUser({ ...data })
       setIsUserLoggedIn(isAuthenticated && !!data)
+      setIsPremium(data.isPremium)
       setIsLoading(false)
     }
 
@@ -23,6 +24,7 @@ export const useAuth = () => {
     if (isUnauthorizedError) {
       setUser(null)
       setIsUserLoggedIn(false)
+      setIsPremium(false)
       setIsLoading(false)
     }
 

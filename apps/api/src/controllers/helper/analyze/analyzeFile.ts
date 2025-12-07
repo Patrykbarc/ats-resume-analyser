@@ -1,6 +1,7 @@
 import { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { EasyInputMessage } from 'openai/resources/responses/responses.mjs'
-import premiumPrompt from '../../../prompt/permium_prompt.json'
+import proPrompt from '../../../prompt/pro_prompt.json'
+import basePrompt from '../../../prompt/prompt.json'
 import { openAiClient } from '../../../server'
 import { parseOpenAiApiResponse } from './parseOpenAiApiResponse'
 
@@ -8,20 +9,29 @@ const PROMPT_VAR = '{{CV_TEXT}}'
 
 export type AnalyseApiResponse = { id: string; output_text: string }
 
+type AnalyzeOptions = { premium?: boolean }
+
 export const analyzeFile = async (
-  extractedText: string
+  extractedText: string,
+  options?: AnalyzeOptions
 ): Promise<AiAnalysis | AiAnalysisError> => {
   let response: AnalyseApiResponse
+
+  const isPremium = options?.premium ?? false
+  const prompt = isPremium ? proPrompt : basePrompt
 
   try {
     response = await openAiClient.responses
       .create({
-        model: 'gpt-4.1-nano',
+        model: isPremium ? 'o3' : 'gpt-4.1-nano',
         input: [
-          { role: 'developer', content: getPrompt('developer') },
+          { role: 'developer', content: getPrompt('developer', prompt) },
           {
             role: 'assistant',
-            content: getPrompt('assistant').replace(PROMPT_VAR, extractedText)
+            content: getPrompt('assistant', prompt).replace(
+              PROMPT_VAR,
+              extractedText
+            )
           },
           { role: 'user', content: extractedText }
         ]
@@ -36,12 +46,15 @@ export const analyzeFile = async (
   return parseOpenAiApiResponse(response)
 }
 
-const getPrompt = (role: EasyInputMessage['role']) => {
+const getPrompt = (
+  role: EasyInputMessage['role'],
+  promptConfig: typeof proPrompt | typeof basePrompt
+) => {
   switch (role) {
     case 'developer':
-      return JSON.stringify(premiumPrompt.developer_prompt)
+      return JSON.stringify(promptConfig.developer_prompt)
     case 'assistant':
-      return JSON.stringify(premiumPrompt.assistant_prompt)
+      return JSON.stringify(promptConfig.assistant_prompt)
     default:
       throw new Error(`Role not supported: ${role}`)
   }

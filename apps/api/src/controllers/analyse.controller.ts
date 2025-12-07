@@ -1,9 +1,11 @@
+import { UserSchemaType } from '@monorepo/schemas'
 import type { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
 import { openAiClient } from '../server'
 import { analyzeFile } from './helper/analyze/analyzeFile'
+import { isPremiumUser } from './helper/analyze/isPremiumUser'
 import { parseFileAndSanitize } from './helper/analyze/parseFileAndSanitize'
 import { parseOpenAiApiResponse } from './helper/analyze/parseOpenAiApiResponse'
 import { handleError } from './helper/handleError'
@@ -35,8 +37,12 @@ export const createAnalyze = async (req: Request, res: Response) => {
 
     const sanitizedTextResult = await parseFileAndSanitize(buffer)
 
-    const analysisResult: AiAnalysis | AiAnalysisError =
-      await analyzeFile(sanitizedTextResult)
+    const user = req.user as UserSchemaType | undefined
+
+    const analysisResult: AiAnalysis | AiAnalysisError = await analyzeFile(
+      sanitizedTextResult,
+      { premium: isPremiumUser(user) }
+    )
 
     if ('error' in analysisResult) {
       return res.status(StatusCodes.BAD_REQUEST).json({

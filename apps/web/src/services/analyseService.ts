@@ -3,13 +3,10 @@ import type { AiAnalysis } from '@monorepo/types'
 import { AxiosResponse } from 'axios'
 export type AnalyseResult = AxiosResponse<AiAnalysis>
 
-export const submitAnalyseResume = async ({
-  file,
-  isPremium = false
-}: {
-  file: File
-  isPremium?: boolean
-}): Promise<AnalyseResult> => {
+export const submitAnalyseResume = async (
+  file: File,
+  isPremium: boolean
+): Promise<AnalyseResult> => {
   const formData = new FormData()
   formData.append('file', file)
 

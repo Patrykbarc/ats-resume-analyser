@@ -14,6 +14,10 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
+enum PremiumPlans {
+  PRO
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -34,6 +38,12 @@ model User {
 
   lastLogin DateTime?
   status    String    @default("active")
+
+  isPremium         Boolean       @default(false)
+  premiumStartedAt  DateTime?
+  premiumExpiresAt  DateTime?
+  premiumPlan       PremiumPlans?
+  premiumCustomerId String        @unique() @default(uuid())
 
   refreshToken String? @unique
 }

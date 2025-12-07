@@ -14,7 +14,12 @@ const jwtStrategy = new JwtStrategy(options, async (jwt_payload, done) => {
   try {
     const user = await prisma.user.findUnique({
       where: { id: jwt_payload.userId },
-      select: { id: true }
+      select: {
+        id: true,
+        email: true,
+        isPremium: true,
+        premiumExpiresAt: true
+      }
     })
 
     if (user) {

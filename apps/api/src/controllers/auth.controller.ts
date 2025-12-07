@@ -246,7 +246,12 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       select: {
         id: true,
         email: true,
-        createdAt: true
+        createdAt: true,
+        isPremium: true,
+        premiumStartedAt: true,
+        premiumExpiresAt: true,
+        premiumPlan: true,
+        premiumCustomerId: true
       }
     })
 
@@ -257,7 +262,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
     }
 
     res.status(StatusCodes.OK).json({
-      user
+      ...user
     })
   } catch (error) {
     handleError(error, res)
