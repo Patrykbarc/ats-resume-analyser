@@ -1,6 +1,6 @@
 import { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { EasyInputMessage } from 'openai/resources/responses/responses.mjs'
-import jsonPrompt from '../../../prompt/prompt.json'
+import premiumPrompt from '../../../prompt/permium_prompt.json'
 import { openAiClient } from '../../../server'
 import { parseOpenAiApiResponse } from './parseOpenAiApiResponse'
 
@@ -39,9 +39,9 @@ export const analyzeFile = async (
 const getPrompt = (role: EasyInputMessage['role']) => {
   switch (role) {
     case 'developer':
-      return JSON.stringify(jsonPrompt.developer_prompt)
+      return JSON.stringify(premiumPrompt.developer_prompt)
     case 'assistant':
-      return JSON.stringify(jsonPrompt.assistant_prompt)
+      return JSON.stringify(premiumPrompt.assistant_prompt)
     default:
       throw new Error(`Role not supported: ${role}`)
   }

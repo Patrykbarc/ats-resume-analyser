@@ -5,11 +5,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { ShareButton } from '../share-button'
 import { AnalysisSections } from './components/analysis-sections'
 import { AnalysisSummary } from './components/analysis-summary'
+import { PremiumModules } from './components/premium/premium-modules'
 
 const TABS = {
   analyse: {
     trigger: 'Analysis',
     value: 'analyse'
+  },
+  premium: {
+    trigger: 'Premium',
+    value: 'premium'
   },
   preview: {
     trigger: 'Parsed file preview',
@@ -28,6 +33,9 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
       <TabsList>
         <TabsTrigger value={TABS.analyse.value}>
           {TABS.analyse.trigger}
+        </TabsTrigger>
+        <TabsTrigger value={TABS.premium.value}>
+          {TABS.premium.trigger}
         </TabsTrigger>
         <TabsTrigger value={TABS.preview.value}>
           {TABS.preview.trigger}
@@ -54,6 +62,21 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
           score={analysis.overall_score.score}
           justification={analysis.overall_score.justification}
         />
+      </TabsContent>
+
+      <TabsContent className="space-y-6" value={TABS.premium.value}>
+        <div className="space-y-2">
+          <h2 className="text-2xl font-bold text-foreground">
+            Premium Modules
+          </h2>
+          <p className="text-muted-foreground max-w-3xl text-pretty">
+            ATS keyword coverage, cover letter support, interview prep, LinkedIn
+            tuning, skills gap planning, salary strategies, career paths, and a
+            ready-to-export PDF outline.
+          </p>
+        </div>
+
+        <PremiumModules premium={analysis.premium_modules} />
       </TabsContent>
 
       <TabsContent className="space-y-6" value={TABS.preview.value}>
