@@ -28,6 +28,12 @@ export const loginUser = async (req: Request, res: Response) => {
       })
     }
 
+    if (!user.isEmailConfirmed) {
+      return res.status(StatusCodes.FORBIDDEN).json({
+        message: AuthErrorCodes.NOT_CONFIRMED
+      })
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password)
 
     if (!isPasswordValid) {

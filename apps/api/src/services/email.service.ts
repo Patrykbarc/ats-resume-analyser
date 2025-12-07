@@ -1,7 +1,7 @@
 import { readFileSync } from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { transporter } from '../config/nodemailer.config'
+import { resend } from '../config/email.config'
 import { getEnvs } from '../lib/getEnv'
 import { logger } from '../server'
 
@@ -51,12 +51,12 @@ export const sendRegisterConfirmationEmail = async ({
     html: template
   }
 
-  await transporter.verify()
-  logger.info('Server is ready to take our messages')
-
-  transporter.sendMail(message, (err) => {
-    if (err) {
-      logger.error(err)
-    }
-  })
+  resend.emails
+    .send(message)
+    .then(() => {
+      logger.info('Email sent successfully')
+    })
+    .catch((err) => {
+      logger.error('Error sending email:', err)
+    })
 }

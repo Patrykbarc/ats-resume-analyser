@@ -13,6 +13,7 @@ export type IEnvironmentVariables = {
   SMTP_PASS: string
   DATABASE_URL: string
   DIRECT_URL: string
+  RESEND_API_KEY: string
 }
 
 export const ENV_NAMES = [
@@ -28,5 +29,6 @@ export const ENV_NAMES = [
   'SMTP_PASS',
   'DATABASE_URL',
   'DIRECT_URL',
+  'RESEND_API_KEY',
 ] as const
 

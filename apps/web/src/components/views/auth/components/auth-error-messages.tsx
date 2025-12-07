@@ -13,6 +13,16 @@ export function AuthErrorMessages({ error }: { error: AxiosError }) {
     )
   }
 
+  if (error?.status === StatusCodes.FORBIDDEN) {
+    return (
+      <FieldError>
+        Your account is not confirmed.
+        <br />
+        Check your email for the verification link.
+      </FieldError>
+    )
+  }
+
   if (error?.status === StatusCodes.CONFLICT) {
     return (
       <FieldError>
