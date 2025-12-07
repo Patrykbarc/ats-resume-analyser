@@ -11,8 +11,8 @@ export function UploadFile({ handleFileChange }: UploadFileProps) {
 
   return (
     <>
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary">
-        <Upload className="h-10 w-10 text-muted-foreground" />
+      <div className="flex size-24 items-center justify-center rounded-full bg-secondary">
+        <Upload className="size-10 text-muted-foreground" />
       </div>
 
       <div className="text-center">

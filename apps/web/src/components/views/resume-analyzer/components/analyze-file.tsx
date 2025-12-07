@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
-import { FileText, Sparkles } from 'lucide-react'
+import { useSessionState } from '@/stores/session/useSessionState'
+import { FileSearchIcon, Sparkles } from 'lucide-react'
 
 type AnalyseFileProps = {
   file: File
@@ -15,10 +16,12 @@ export function AnalyzeFile({
   analyzing,
   handlers: { handleReset, handleAnalyse }
 }: AnalyseFileProps) {
+  const { isPremium } = useSessionState()
+
   return (
     <>
-      <div className="flex h-24 w-24 items-center justify-center rounded-full bg-secondary">
-        <FileText className="h-10 w-10 text-accent" />
+      <div className="flex size-24 items-center justify-center rounded-full bg-secondary">
+        <FileSearchIcon className="size-10  text-muted-foreground" />
       </div>
 
       <div className="text-center">
@@ -38,13 +41,13 @@ export function AnalyzeFile({
         >
           {analyzing ? (
             <>
-              <Sparkles className="mr-2 h-4 w-4 animate-spin" />
+              <Sparkles className="mr-2 size-4 animate-spin" />
               <p>Analyzing...</p>
             </>
           ) : (
             <>
-              <Sparkles className="mr-2 h-4 w-4" />
-              <p>Analyze Resume</p>
+              <Sparkles className="mr-2 size-4" />
+              {isPremium ? <p>Pro Analyze</p> : <p>Analyze</p>}
             </>
           )}
         </Button>

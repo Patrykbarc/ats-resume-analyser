@@ -1,5 +1,6 @@
 import { Card } from '@/components/ui/card'
 import { useAnalyseResumeMutation } from '@/hooks/useAnalyseResumeMutation'
+import { useSessionState } from '@/stores/session/useSessionState'
 import { FileSchemaInput } from '@monorepo/schemas'
 import { useNavigate } from '@tanstack/react-router'
 import { isAxiosError } from 'axios'
@@ -12,6 +13,7 @@ import { UploadFile } from './components/upload-file'
 export function ResumeAnalyzer() {
   const [file, setFile] = useState<File | null>(null)
   const [validationError, setValidationError] = useState<string | null>(null)
+  const { isPremium } = useSessionState()
   const navigate = useNavigate()
 
   const { mutate, isPending, data, error } = useAnalyseResumeMutation({
@@ -43,7 +45,7 @@ export function ResumeAnalyzer() {
     }
 
     setValidationError(null)
-    mutate(file)
+    mutate({ file, isPremium })
   }
 
   const handleReset = () => {
@@ -84,6 +86,7 @@ export function ResumeAnalyzer() {
       <div className="space-y-8">
         <Card className="border-border bg-card p-8">
           <div className="flex flex-col items-center justify-center space-y-6">
+            
             {!file ? (
               <UploadFile handleFileChange={handleFileChange} />
             ) : (
