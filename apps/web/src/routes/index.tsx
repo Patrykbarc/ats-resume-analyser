@@ -1,4 +1,4 @@
-import { ResumeAnalyser } from '@/components/views/resume-analyser/resume-analyser'
+import { ResumeAnalyzer } from '@/components/views/resume-analyzer/resume-analyzer'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
@@ -17,7 +17,7 @@ function RouteComponent() {
         </p>
       </header>
 
-      <ResumeAnalyser />
+      <ResumeAnalyzer />
     </>
   )
 }

@@ -2,16 +2,21 @@ import { Spinner } from '@/components/ui/spinner'
 import { logoutService } from '@/services/authService'
 import { useSessionState } from '@/stores/session/useSessionState'
 import { createFileRoute, redirect } from '@tanstack/react-router'
+import toast from 'react-hot-toast'
 
 export const Route = createFileRoute('/_auth/logout/')({
   beforeLoad: async () => {
     await logoutService()
+
     const { setUser, setAuthToken, setIsUserLoggedIn } =
       useSessionState.getState()
+
     setUser(null)
     setAuthToken(null)
     setIsUserLoggedIn(false)
-    throw redirect({ to: '/login' })
+    toast.success('Logged out successfully!')
+
+    throw redirect({ to: '/' })
   },
   component: LogoutComponent,
   errorComponent: ErrorComponent

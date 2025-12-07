@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/index'
 import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as appPricingIndexRouteImport } from './routes/(app)/pricing/index'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
 
@@ -41,6 +42,11 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const appPricingIndexRoute = appPricingIndexRouteImport.update({
+  id: '/(app)/pricing/',
+  path: '/pricing/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const appVerifyTokenRoute = appVerifyTokenRouteImport.update({
   id: '/(app)/verify/$token',
   path: '/verify/$token',
@@ -56,6 +62,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
+  '/pricing': typeof appPricingIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
+  '/pricing': typeof appPricingIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
@@ -74,6 +82,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteRouteWithChildren
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
+  '/(app)/pricing/': typeof appPricingIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/logout/': typeof AuthLogoutIndexRoute
   '/_auth/register/': typeof AuthRegisterIndexRoute
@@ -84,6 +93,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analyse/$id'
     | '/verify/$token'
+    | '/pricing'
     | '/login'
     | '/logout'
     | '/register'
@@ -92,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analyse/$id'
     | '/verify/$token'
+    | '/pricing'
     | '/login'
     | '/logout'
     | '/register'
@@ -101,6 +112,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
+    | '/(app)/pricing/'
     | '/_auth/login/'
     | '/_auth/logout/'
     | '/_auth/register/'
@@ -111,6 +123,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   appAnalyseIdRoute: typeof appAnalyseIdRoute
   appVerifyTokenRoute: typeof appVerifyTokenRoute
+  appPricingIndexRoute: typeof appPricingIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -150,6 +163,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/(app)/pricing/': {
+      id: '/(app)/pricing/'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof appPricingIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/(app)/verify/$token': {
       id: '/(app)/verify/$token'
       path: '/verify/$token'
@@ -188,6 +208,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   appAnalyseIdRoute: appAnalyseIdRoute,
   appVerifyTokenRoute: appVerifyTokenRoute,
+  appPricingIndexRoute: appPricingIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
