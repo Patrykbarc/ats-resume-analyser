@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs'
-import { prisma } from '../../../server'
+import { logger, prisma } from '../../../server'
 import { generateRegistrationToken } from './generateRegistrationToken'
 import { getConfirmationTokenExpiry } from './getConfirmationTokenExpiry'
 
@@ -12,19 +12,27 @@ export const createNewUser = async ({
   email: string
   password: string
 }) => {
-  const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
-  const confirmationToken = generateRegistrationToken()
-  const confirmationTokenExpiry = getConfirmationTokenExpiry()
+  try {
+    logger.info(`Creating new user for email: ${email}`)
 
-  const user = await prisma.user.create({
-    data: {
-      email,
-      password: hashedPassword,
-      confirmationToken,
-      confirmationTokenExpiry
-    },
-    select: { email: true }
-  })
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS)
+    const confirmationToken = generateRegistrationToken()
+    const confirmationTokenExpiry = getConfirmationTokenExpiry()
 
-  return { user, confirmationToken }
+    const user = await prisma.user.create({
+      data: {
+        email,
+        password: hashedPassword,
+        confirmationToken,
+        confirmationTokenExpiry
+      },
+      select: { email: true }
+    })
+
+    logger.info(`User created successfully: ${email}`)
+    return { user, confirmationToken }
+  } catch (err) {
+    logger.error(`Failed to create user: ${err}`)
+    throw err
+  }
 }

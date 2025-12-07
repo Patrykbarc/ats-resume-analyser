@@ -66,7 +66,19 @@ export const registerUser = async (req: Request, res: Response) => {
 
     const { confirmationToken } = await createNewUser({ email, password })
 
-    await sendRegisterConfirmationEmail({ reciever: email, confirmationToken })
+    try {
+      await sendRegisterConfirmationEmail({
+        reciever: email,
+        confirmationToken
+      })
+    } catch (emailError) {
+      console.error('Failed to send confirmation email:', emailError)
+
+      return res.status(StatusCodes.CREATED).json({
+        message:
+          'User created successfully but confirmation email failed to send. Please try resending.'
+      })
+    }
 
     res.status(StatusCodes.CREATED).json({
       message: 'User created successfully.'
