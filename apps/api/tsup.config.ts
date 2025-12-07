@@ -11,13 +11,6 @@ export default defineConfig((options) => {
         recursive: true,
         force: true
       })
-
-      if (options.watch) {
-        const { exec } = await import('child_process')
-        return () => {
-          exec('node dist/server.js')
-        }
-      }
     },
     minify: !options.watch,
     external: ['pino']
