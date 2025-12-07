@@ -5,7 +5,7 @@ import { resend } from '../config/email.config'
 import { getEnvs } from '../lib/getEnv'
 import { logger } from '../server'
 
-const { SMTP_USER, FRONTEND_URL } = getEnvs()
+const { FRONTEND_URL, EMAIL_SENDER } = getEnvs()
 
 const getEmailHtmlTemplate = ({
   confirmationToken
@@ -44,7 +44,7 @@ export const sendRegisterConfirmationEmail = async ({
   const template = getEmailHtmlTemplate({ confirmationToken })
 
   const message = {
-    from: SMTP_USER,
+    from: EMAIL_SENDER,
     to: reciever,
     subject: 'Welcome to ATS Resume Analyzer',
     text: `Click the verification link we've sent to confirm your email address.`,

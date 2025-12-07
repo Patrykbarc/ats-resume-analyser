@@ -7,13 +7,10 @@ export type IEnvironmentVariables = {
   FRONTEND_URL: string
   JWT_SECRET: string
   JWT_REFRESH_SECRET: string
-  SMTP_HOST: string
-  SMTP_PORT: string
-  SMTP_USER: string
-  SMTP_PASS: string
   DATABASE_URL: string
   DIRECT_URL: string
   RESEND_API_KEY: string
+  EMAIL_SENDER: string
 }
 
 export const ENV_NAMES = [
@@ -23,12 +20,9 @@ export const ENV_NAMES = [
   'FRONTEND_URL',
   'JWT_SECRET',
   'JWT_REFRESH_SECRET',
-  'SMTP_HOST',
-  'SMTP_PORT',
-  'SMTP_USER',
-  'SMTP_PASS',
   'DATABASE_URL',
   'DIRECT_URL',
   'RESEND_API_KEY',
+  'EMAIL_SENDER',
 ] as const
 
