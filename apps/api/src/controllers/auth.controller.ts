@@ -164,7 +164,8 @@ export const verifyUser = async (req: Request, res: Response) => {
       },
       data: {
         confirmationToken: null,
-        confirmationTokenExpiry: null
+        confirmationTokenExpiry: null,
+        isEmailConfirmed: true
       }
     })
 
