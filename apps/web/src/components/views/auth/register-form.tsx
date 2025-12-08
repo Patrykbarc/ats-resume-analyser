@@ -67,7 +67,8 @@ export function RegisterForm() {
         <CardHeader className="text-center">
           <CardTitle>Check Your Inbox</CardTitle>
           <CardDescription>
-            We&apos;ve sent a confirmation link to {emailAddress}.
+            We&apos;ve sent a confirmation link to{' '}
+            <span className="font-medium">{emailAddress}</span>.
           </CardDescription>
         </CardHeader>
       </>

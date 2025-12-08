@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import type { AiAnalysis } from '@monorepo/types'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
@@ -24,10 +23,9 @@ const TABS = {
 
 type AnalysisResultsProps = {
   analysis: AiAnalysis
-  onReset?: () => void
 }
 
-export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
+export function AnalysisResults({ analysis }: AnalysisResultsProps) {
   return (
     <Tabs className="space-y-6" defaultValue={TABS.analyse.value}>
       <TabsList>
@@ -47,11 +45,6 @@ export function AnalysisResults({ analysis, onReset }: AnalysisResultsProps) {
           <h2 className="text-2xl font-bold text-foreground">
             Analysis Results
           </h2>
-          {onReset && (
-            <Button onClick={onReset} variant="outline">
-              Analyze Another
-            </Button>
-          )}
         </div>
 
         <div className="space-y-6">
