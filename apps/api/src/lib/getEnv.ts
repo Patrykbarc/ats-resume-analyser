@@ -1,6 +1,8 @@
 import dotenv from 'dotenv'
+import { resolve } from 'path'
 import { ENV_NAMES, IEnvironmentVariables } from '../constants/env.generated'
 
+dotenv.config({ path: resolve(process.cwd(), 'apps/api/.env') })
 dotenv.config()
 
 export const getEnvs = (): IEnvironmentVariables => {
