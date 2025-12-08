@@ -1,6 +1,6 @@
-import { ENV_NAMES, IEnvironmentVariables } from '@/constants/env.generated'
+import { ENV_NAMES, EnvironmentVariables } from '@/constants/env.generated'
 
-export const getEnvs = (): IEnvironmentVariables => {
+export const getEnvs = (): EnvironmentVariables => {
   const envEntries = ENV_NAMES.map((variable) => {
     const value = import.meta.env[variable]
 
@@ -13,5 +13,5 @@ export const getEnvs = (): IEnvironmentVariables => {
     return [variable, value] as [typeof variable, string]
   })
 
-  return Object.fromEntries(envEntries) as IEnvironmentVariables
+  return Object.fromEntries(envEntries) as EnvironmentVariables
 }

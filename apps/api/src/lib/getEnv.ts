@@ -1,11 +1,11 @@
 import dotenv from 'dotenv'
 import { resolve } from 'path'
-import { ENV_NAMES, IEnvironmentVariables } from '../constants/env.generated'
+import { ENV_NAMES, EnvironmentVariables } from '../constants/env.generated'
 
 dotenv.config({ path: resolve(process.cwd(), 'apps/api/.env') })
 dotenv.config()
 
-export const getEnvs = (): IEnvironmentVariables => {
+export const getEnvs = (): EnvironmentVariables => {
   const envEntries = ENV_NAMES.map((variable) => {
     const value = process.env[variable]
 
@@ -18,5 +18,5 @@ export const getEnvs = (): IEnvironmentVariables => {
     return [variable, value] as [typeof variable, string]
   })
 
-  return Object.fromEntries(envEntries) as unknown as IEnvironmentVariables
+  return Object.fromEntries(envEntries) as unknown as EnvironmentVariables
 }

@@ -53,7 +53,7 @@ function generateEnvTypes() {
       console.warn(`Warning: No variables found in file ${templatePath}.`)
     }
 
-    let typeDefinition = `export type IEnvironmentVariables = {
+    let typeDefinition = `export type EnvironmentVariables = {
 `
     let envNamesArray = `export const ENV_NAMES = [
 `
