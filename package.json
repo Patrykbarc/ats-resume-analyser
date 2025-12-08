@@ -10,7 +10,7 @@
     "dev:api": "pnpm --filter @monorepo/api run dev",
     "build": "pnpm --recursive run build",
     "build:api": "pnpm --filter !./apps/web --recursive run build",
-    "start:api": "node apps/api/dist/server.js",
+    "start:api": "pnpm --filter @monorepo/api run start",
     "prepare": "husky",
     "clear": "bash scripts/prune.sh",
     "prettier": "npx prettier apps/*/** --write --verbose",

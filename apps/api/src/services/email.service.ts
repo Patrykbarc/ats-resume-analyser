@@ -15,32 +15,10 @@ const getEmailHtmlTemplate = ({
   try {
     const filename = fileURLToPath(import.meta.url)
     const dirname = path.dirname(filename)
+    const templatePath = path.join(dirname, '../templates/email.template.html')
 
-    const possiblePaths = [
-      path.join(dirname, '../templates/email.template.html'),
-      path.join(dirname, '../src/templates/email.template.html'),
-      path.resolve(dirname, '../../templates/email.template.html')
-    ]
-
-    let templatePath: string | null = null
-    let htmlTemplate = ''
-
-    for (const candidatePath of possiblePaths) {
-      try {
-        htmlTemplate = readFileSync(candidatePath, 'utf-8')
-        templatePath = candidatePath
-        logger.info(`Email template loaded from: ${candidatePath}`)
-        break
-      } catch {
-        new Error(`Template not found at: ${candidatePath}`)
-      }
-    }
-
-    if (!templatePath || !htmlTemplate) {
-      throw new Error(
-        `Could not find email template. Tried paths: ${possiblePaths.join(', ')}`
-      )
-    }
+    const htmlTemplate = readFileSync(templatePath, 'utf-8')
+    logger.info(`Email template loaded from: ${templatePath}`)
 
     const confirmationAddress = `${FRONTEND_URL}/verify/${confirmationToken}`
     const currentYear = new Date().getFullYear()
