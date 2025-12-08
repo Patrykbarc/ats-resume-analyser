@@ -6,11 +6,16 @@ export default defineConfig((options) => {
   return {
     format: ['esm'],
     entryPoints: ['src/server.ts'],
-    onSuccess: async () => {
+    async onSuccess() {
       await cp(resolve('src/templates'), resolve('dist/templates'), {
         recursive: true,
         force: true
       })
+
+      if (options.watch) {
+        const { spawn } = await import('child_process')
+        spawn('node', ['dist/server.js'], { stdio: 'inherit' })
+      }
     },
     minify: !options.watch,
     external: ['pino']
