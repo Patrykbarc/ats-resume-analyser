@@ -18,7 +18,7 @@ export const prisma = new database.PrismaClient({
 
 app.set('trust proxy', 1)
 
-app.listen(config.port, async () => {
+const server = app.listen(config.port, async () => {
   const apiUrl = `http://localhost:${config.port}`
 
   try {
@@ -45,3 +45,28 @@ app.listen(config.port, async () => {
     }
   }
 })
+
+const gracefulShutdown = async (signal: string) => {
+  logger.info(`${signal} received, starting graceful shutdown`)
+
+  server.close(async () => {
+    logger.info('HTTP server closed')
+
+    try {
+      await prisma.$disconnect()
+      logger.info('Database connection closed')
+      process.exit(0)
+    } catch (err) {
+      logger.error({ err }, 'Error during graceful shutdown')
+      process.exit(1)
+    }
+  })
+
+  setTimeout(() => {
+    logger.error('Graceful shutdown timeout, forcing exit')
+    process.exit(1)
+  }, 10000)
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'))
+process.on('SIGINT', () => gracefulShutdown('SIGINT'))
