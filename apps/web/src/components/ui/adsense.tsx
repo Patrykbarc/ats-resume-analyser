@@ -11,6 +11,6 @@ export function AdSesne() {
       data-ad-slot="9101349995"
       data-ad-format="auto"
       data-full-width-responsive="true"
-    ></ins>
+    />
   )
 }

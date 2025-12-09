@@ -4,6 +4,7 @@ import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
 import { useAuth } from '@/hooks/useAuth'
 import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { Analytics } from '@vercel/analytics/react'
 import { Toaster } from 'react-hot-toast'
 import '../index.css'
 
@@ -12,6 +13,7 @@ const RootLayout = () => {
 
   return (
     <>
+      <Analytics />
       <Toaster />
 
       <div className="bg-background min-h-dvh flex flex-col">
