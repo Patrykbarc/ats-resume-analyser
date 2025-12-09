@@ -1,3 +1,4 @@
+import { AdSesne } from '@/components/ui/adsense'
 import { Devtools } from '@/components/views/devtools'
 import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
@@ -18,6 +19,7 @@ const RootLayout = () => {
         <main className="flex-1 py-12">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <Outlet />
+            <AdSesne />
             <Devtools />
           </div>
         </main>

@@ -4,11 +4,13 @@ export type EnvironmentVariables = {
   VITE_NODE_ENV: string
   VITE_API_URL: string
   VITE_FRONTEND_URL: string
+  VITE_ADSENSE_CLIENT_ID: string
 }
 
 export const ENV_NAMES = [
   'VITE_NODE_ENV',
   'VITE_API_URL',
   'VITE_FRONTEND_URL',
+  'VITE_ADSENSE_CLIENT_ID',
 ] as const
 
