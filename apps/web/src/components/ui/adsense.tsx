@@ -1,6 +1,6 @@
 import { getEnvs } from '@/lib/getEnv'
 
-export function AdSesne() {
+export function AdSense() {
   const { VITE_ADSENSE_CLIENT_ID } = getEnvs()
 
   return (
