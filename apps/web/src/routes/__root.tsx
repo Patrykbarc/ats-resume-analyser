@@ -24,8 +24,11 @@ const RootLayout = () => {
             <Devtools />
           </div>
         </main>
-        <footer>
-          <AdSense />
+
+        <footer className="border-t py-8">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <AdSense adSlot="9101349995" />
+          </div>
         </footer>
       </div>
     </>
