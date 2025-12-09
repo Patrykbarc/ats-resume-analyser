@@ -1,3 +1,4 @@
+import Logo from '@/components/icons/Logo.svg?react'
 import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
@@ -17,9 +18,8 @@ export function Navigation() {
             onClick={() => setIsOpen(false)}
             className="flex items-center gap-2 font-bold text-lg"
           >
-            <div className="size-8 bg-primary dark:bg-primary-foreground rounded-lg flex items-center justify-center">
-              <span className="text-white text-sm font-bold">RA</span>
-            </div>
+            <div className="flex items-center justify-center"></div>
+            <Logo className="size-8" />
             <span>Resume Analyzer</span>
           </Link>
 
