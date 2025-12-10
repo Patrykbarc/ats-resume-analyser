@@ -4,6 +4,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { ShareButton } from '../share-button'
 import { AnalysisSections } from './components/analysis-sections'
 import { AnalysisSummary } from './components/analysis-summary'
+import { CallToActionCard } from './components/call-to-action-card'
 import { PremiumModules } from './components/premium/premium-modules'
 
 const TABS = {
@@ -42,8 +43,11 @@ export function AnalysisResults({ analysis }: AnalysisResultsProps) {
 
         <div className="space-y-6">
           <AnalysisSections sections={analysis.sections} />
-          {analysis.premium_modules && (
+
+          {analysis.premium_modules ? (
             <PremiumModules premium={analysis.premium_modules} />
+          ) : (
+            <CallToActionCard />
           )}
         </div>
 
