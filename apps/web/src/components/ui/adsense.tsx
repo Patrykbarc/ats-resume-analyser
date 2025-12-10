@@ -1,4 +1,5 @@
 import { getEnvs } from '@/lib/getEnv'
+import { cn } from '@/lib/utils'
 import { CSSProperties, useEffect, useRef } from 'react'
 
 type AdSenseProps = {
@@ -48,7 +49,7 @@ export const AdSense = ({
   return (
     <ins
       ref={adRef}
-      className={`adsbygoogle ${className}`}
+      className={cn('overflow-hidden adsbygoogle', className)}
       style={{
         display: 'block',
         ...style

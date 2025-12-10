@@ -20,17 +20,15 @@ const RootLayout = () => {
 
       <div className="bg-background min-h-dvh flex flex-col">
         <Navigation />
-        <main className="flex-1 py-12">
+        <main className="flex-1 py-10">
           <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
             <Outlet />
             <Devtools />
           </div>
         </main>
 
-        <footer className="border-t py-8">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <AdSense adSlot="9101349995" />
-          </div>
+        <footer>
+          <AdSense adSlot="9101349995" />
         </footer>
       </div>
     </>
