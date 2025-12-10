@@ -10,6 +10,10 @@ An intelligent web application that analyzes resumes for compatibility with Appl
 - 🤖 AI-powered evaluation using OpenAI
 - 📊 Detailed ATS compatibility scoring
 - 💡 Actionable recommendations for improvement
+- 🔐 User authentication (JWT + Passport.js)
+- 📧 Email verification with Resend
+- ⭐ Premium subscription system
+- 🛡️ Rate limiting and security (Helmet, CORS)
 
 ## Tech Stack
 
@@ -18,27 +22,35 @@ An intelligent web application that analyzes resumes for compatibility with Appl
 - TypeScript
 - Vite
 - Tailwind CSS 4
-- Axios
+- TanStack Router & React Query
+- Zustand (state management)
 - Shadcn UI
+- Axios
 
 ### Backend
 - Node.js
 - Express
 - TypeScript
 - OpenAI API
+- Passport.js (JWT authentication)
+- Prisma ORM
+- PostgreSQL
+- Resend (email service)
 - Multer (file upload)
 
 ### Monorepo
 - pnpm workspaces
-- Shared packages for types, schemas, and PDF parsing
+- Shared packages for types, schemas, database, and PDF parsing
 
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
 - **Node.js** (v20 or higher)
-- **pnpm** (v8 or higher)
+- **pnpm** (v10 or higher)
+- **PostgreSQL** database
 - **OpenAI API Key** - Get one from [OpenAI Platform](https://platform.openai.com/)
+- **Resend API Key** (optional) - For email verification
 
 ## Getting Started
 
@@ -71,6 +83,17 @@ Edit `apps/api/.env` and configure the following variables:
 ```env
 # OpenAI API Key (required)
 OPENAI_API_KEY=your_openai_api_key_here
+
+# Database (required)
+DATABASE_URL=your_postgresql_connection_string
+DIRECT_URL=your_postgresql_direct_connection_string
+
+# JWT Secrets (required) - generate with: pnpm --filter @monorepo/api gen-key
+JWT_SECRET=your_jwt_secret_here
+REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
+
+# Email (optional - for email verification)
+RESEND_API_KEY=your_resend_api_key_here
 
 # Frontend URL for CORS (optional, defaults to http://localhost:5173)
 FRONTEND_URL=http://localhost:5173
@@ -122,6 +145,20 @@ The application will be available at:
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8080
 
+### 5. Database Setup
+
+Run database migrations:
+
+```bash
+pnpm db:migrate
+```
+
+Generate Prisma client:
+
+```bash
+pnpm db:generate
+```
+
 #### Production Build
 
 ```bash
@@ -135,36 +172,86 @@ resume-analizer/
 ├── apps/
 │   ├── api/                 # Backend Express server
 │   │   ├── src/
-│   │   │   ├── config/      # Configuration
+│   │   │   ├── config/      # Configuration (CORS, Passport, Pino, etc.)
 │   │   │   ├── controllers/ # Request handlers
-│   │   │   ├── middleware/  # Express middleware
-│   │   │   └── prompt/      # AI prompts
+│   │   │   ├── middleware/  # Express middleware (auth, rate limit, validation)
+│   │   │   ├── prompt/      # AI prompts (standard & pro)
 │   │   │   ├── routes/      # API routes
+│   │   │   ├── services/    # Business logic (email service)
+│   │   │   └── templates/   # Email templates
 │   │   └── package.json
 │   └── web/                 # Frontend React application
 │       ├── src/
-│       │   ├── components/  # React components
-│       │   └── lib/         # Utilities
+│       │   ├── api/         # API client & React Query
+│       │   ├── components/  # React components (UI, views, icons)
+│       │   ├── hooks/       # Custom React hooks
+│       │   ├── lib/         # Utilities
+│       │   ├── routes/      # TanStack Router routes
 │       │   ├── services/    # API services
+│       │   └── stores/      # Zustand stores
 │       └── package.json
 ├── packages/
+│   ├── database/           # Prisma ORM & PostgreSQL
+│   │   └── prisma/         # Schema & migrations
 │   ├── pdf-parse/          # Custom PDF parsing package
 │   ├── schemas/            # Shared Zod schemas
 │   └── types/              # Shared TypeScript types
+├── scripts/                # Utility scripts
 └── package.json
 ```
 
 ## Available Scripts
 
+### Development
 - `pnpm dev` - Run both frontend and backend in development mode
 - `pnpm dev:api` - Run only the API server
 - `pnpm dev:web` - Run only the web application
+
+### Build
 - `pnpm build` - Build all packages and applications
-- `pnpm lint` - Run ESlint linter
+- `pnpm build:api` - Build only API and its dependencies
+
+### Database
+- `pnpm db:migrate` - Run database migrations (development)
+- `pnpm db:generate` - Generate Prisma client (development)
+- `pnpm db:migrate:prod` - Run database migrations (production)
+- `pnpm db:generate:prod` - Generate Prisma client (production)
+- `pnpm db:studio` - Open Prisma Studio
+- `pnpm db:reset` - Reset database
+
+### Other
+- `pnpm lint` - Run ESLint linter
+- `pnpm prettier` - Format code with Prettier
+- `pnpm gen-envs` - Generate TypeScript types from environment variables
 
 ## API Endpoints
 
-### `POST /api/analyze`
+### Authentication
+
+#### `POST /api/auth/register`
+Register a new user account.
+
+#### `POST /api/auth/login`
+Login and receive JWT tokens.
+
+#### `POST /api/auth/refresh`
+Refresh access token.
+
+#### `POST /api/auth/logout`
+Logout and invalidate tokens.
+
+#### `GET /api/auth/me`
+Get current user information (protected).
+
+#### `POST /api/auth/verify-email`
+Verify email with confirmation token.
+
+#### `POST /api/auth/resend-verification`
+Resend email verification link.
+
+### Resume Analysis
+
+#### `POST /api/analyze`
 
 Analyzes a resume file for ATS compatibility.
 
@@ -172,6 +259,7 @@ Analyzes a resume file for ATS compatibility.
 - Method: `POST`
 - Content-Type: `multipart/form-data`
 - Body: `file` (PDF file)
+- Authentication: Optional (premium features require auth)
 
 **Response:**
 ```json
@@ -184,6 +272,14 @@ Analyzes a resume file for ATS compatibility.
   ]
 }
 ```
+
+#### `GET /api/analyze/:id`
+Get analysis by ID (protected).
+
+### Health Check
+
+#### `GET /api/health`
+Check API health status.
 
 ## How It Works
 
@@ -217,6 +313,15 @@ FRONTEND_URL=http://localhost:5173
 - Check your OpenAI account has sufficient credits
 - Ensure API key has proper permissions
 
+**Database connection errors:**
+- Verify PostgreSQL is running
+- Check DATABASE_URL and DIRECT_URL are correct
+- Run `pnpm db:migrate` to apply migrations
+
+**Prisma client errors:**
+- Run `pnpm db:generate` to regenerate Prisma client
+- Ensure database schema is up to date
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -231,4 +336,4 @@ For issues and questions, please open an issue in the repository.
 
 ---
 
-Built with ❤️ using React, Express, and OpenAI
+Built with ❤️ using React, Express, Prisma, and OpenAI
