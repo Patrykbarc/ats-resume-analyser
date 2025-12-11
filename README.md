@@ -2,7 +2,7 @@
 
 An intelligent web application that analyzes resumes for compatibility with Applicant Tracking Systems (ATS). Upload your CV and get instant feedback on how well it will perform in automated screening systems.
 
-🚀 **Live Demo**: [https://ats-resume-analyser.netlify.app/](https://ats-resume-analyser.netlify.app/)
+🚀 **Live Demo**: [https://ats-scan.patrykbarc.com/](https://ats-scan.patrykbarc.com/)
 
 ## Features
 
@@ -18,6 +18,7 @@ An intelligent web application that analyzes resumes for compatibility with Appl
 ## Tech Stack
 
 ### Frontend
+
 - React 19
 - TypeScript
 - Vite
@@ -28,17 +29,19 @@ An intelligent web application that analyzes resumes for compatibility with Appl
 - Axios
 
 ### Backend
+
 - Node.js
 - Express
 - TypeScript
 - OpenAI API
-- Passport.js (JWT authentication)
+- Passport.js
 - Prisma ORM
 - PostgreSQL
-- Resend (email service)
-- Multer (file upload)
+- Resend
+- Multer
 
 ### Monorepo
+
 - pnpm workspaces
 - Shared packages for types, schemas, database, and PDF parsing
 
@@ -142,6 +145,7 @@ pnpm dev:web
 ```
 
 The application will be available at:
+
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8080
 
@@ -203,15 +207,18 @@ resume-analizer/
 ## Available Scripts
 
 ### Development
+
 - `pnpm dev` - Run both frontend and backend in development mode
 - `pnpm dev:api` - Run only the API server
 - `pnpm dev:web` - Run only the web application
 
 ### Build
+
 - `pnpm build` - Build all packages and applications
 - `pnpm build:api` - Build only API and its dependencies
 
 ### Database
+
 - `pnpm db:migrate` - Run database migrations (development)
 - `pnpm db:generate` - Generate Prisma client (development)
 - `pnpm db:migrate:prod` - Run database migrations (production)
@@ -220,6 +227,7 @@ resume-analizer/
 - `pnpm db:reset` - Reset database
 
 ### Other
+
 - `pnpm lint` - Run ESLint linter
 - `pnpm prettier` - Format code with Prettier
 - `pnpm gen-envs` - Generate TypeScript types from environment variables
@@ -229,24 +237,31 @@ resume-analizer/
 ### Authentication
 
 #### `POST /api/auth/register`
+
 Register a new user account.
 
 #### `POST /api/auth/login`
+
 Login and receive JWT tokens.
 
 #### `POST /api/auth/refresh`
+
 Refresh access token.
 
 #### `POST /api/auth/logout`
+
 Logout and invalidate tokens.
 
 #### `GET /api/auth/me`
+
 Get current user information (protected).
 
 #### `POST /api/auth/verify-email`
+
 Verify email with confirmation token.
 
 #### `POST /api/auth/resend-verification`
+
 Resend email verification link.
 
 ### Resume Analysis
@@ -256,29 +271,30 @@ Resend email verification link.
 Analyzes a resume file for ATS compatibility.
 
 **Request:**
+
 - Method: `POST`
 - Content-Type: `multipart/form-data`
 - Body: `file` (PDF file)
 - Authentication: Optional (premium features require auth)
 
 **Response:**
+
 ```json
 {
   "score": 85,
   "analysis": "Detailed analysis...",
-  "recommendations": [
-    "Add more keywords",
-    "Use standard section headings"
-  ]
+  "recommendations": ["Add more keywords", "Use standard section headings"]
 }
 ```
 
 #### `GET /api/analyze/:id`
+
 Get analysis by ID (protected).
 
 ### Health Check
 
 #### `GET /api/health`
+
 Check API health status.
 
 ## How It Works
@@ -297,28 +313,33 @@ Check API health status.
 ### Common Issues
 
 **Port already in use:**
+
 ```bash
 # Change PORT in apps/api/.env
 PORT=3000
 ```
 
 **CORS errors:**
+
 ```bash
 # Ensure FRONTEND_URL in apps/api/.env matches your frontend URL
 FRONTEND_URL=http://localhost:5173
 ```
 
 **OpenAI API errors:**
+
 - Verify your API key is valid
 - Check your OpenAI account has sufficient credits
 - Ensure API key has proper permissions
 
 **Database connection errors:**
+
 - Verify PostgreSQL is running
 - Check DATABASE_URL and DIRECT_URL are correct
 - Run `pnpm db:migrate` to apply migrations
 
 **Prisma client errors:**
+
 - Run `pnpm db:generate` to regenerate Prisma client
 - Ensure database schema is up to date
 
