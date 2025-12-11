@@ -3,7 +3,10 @@ import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { getEnvs } from '../lib/getEnv'
 import { prisma } from '../server'
-import { sendRegisterConfirmationEmail } from '../services/email.service'
+import {
+  sendPasswordResetEmail,
+  sendRegisterConfirmationEmail
+} from '../services/email.service'
 import { createNewUser } from './helper/auth/createNewUser'
 import { generateRegistrationToken } from './helper/auth/generateRegistrationToken'
 import { getConfirmationTokenExpiry } from './helper/auth/getConfirmationTokenExpiry'
@@ -178,17 +181,23 @@ export const verifyUser = async (req: Request, res: Response) => {
 }
 
 export const resendVerificationLink = async (req: Request, res: Response) => {
-  const { token } = req.body
+  const { email } = req.body
 
   try {
     const user = await prisma.user.findUnique({
-      where: { confirmationToken: token },
-      select: { id: true, email: true }
+      where: { email },
+      select: { id: true, email: true, isEmailConfirmed: true }
     })
 
     if (!user) {
-      return res.status(StatusCodes.NOT_FOUND).json({
-        message: 'User not found'
+      return res.status(StatusCodes.OK).json({
+        message: 'If the email exists, a new verification link has been sent.'
+      })
+    }
+
+    if (user.isEmailConfirmed) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: 'Email is already verified.'
       })
     }
 
@@ -209,7 +218,7 @@ export const resendVerificationLink = async (req: Request, res: Response) => {
     })
 
     res.status(StatusCodes.OK).json({
-      message: 'A new verification link has been sent.'
+      message: 'If the email exists, a new verification link has been sent.'
     })
   } catch (error) {
     handleError(error, res)
@@ -282,6 +291,87 @@ export const getCurrentUser = async (req: Request, res: Response) => {
 
     res.status(StatusCodes.OK).json({
       ...user
+    })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
+
+export const requestPasswordReset = async (req: Request, res: Response) => {
+  const { email } = req.body
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: { id: true, email: true }
+    })
+
+    if (!user) {
+      return res.status(StatusCodes.OK).json({
+        message: 'If the email exists, a password reset link has been sent.'
+      })
+    }
+
+    const resetPasswordToken = generateRegistrationToken()
+    const resetPasswordExpiry = getConfirmationTokenExpiry()
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetPasswordToken,
+        resetPasswordExpiry
+      }
+    })
+
+    await sendPasswordResetEmail({
+      reciever: user.email,
+      resetToken: resetPasswordToken
+    })
+
+    res.status(StatusCodes.OK).json({
+      message: 'If the email exists, a password reset link has been sent.'
+    })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
+
+export const resetPassword = async (req: Request, res: Response) => {
+  const { token, password } = req.body
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: { resetPasswordToken: token },
+      select: { id: true, resetPasswordExpiry: true }
+    })
+
+    if (!user) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: 'Invalid or expired reset token.'
+      })
+    }
+
+    const isExpired = verifyIsTokenExpired(user.resetPasswordExpiry)
+
+    if (isExpired) {
+      return res.status(StatusCodes.GONE).json({
+        message: 'Password reset token has expired.'
+      })
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetPasswordToken: null,
+        resetPasswordExpiry: null
+      }
+    })
+
+    res.status(StatusCodes.OK).json({
+      message: 'Password has been reset successfully.'
     })
   } catch (error) {
     handleError(error, res)

@@ -42,6 +42,26 @@ const VerifyUserSchema = z.object({
   token: z.string().optional()
 })
 
+const ResendEmailValidationSchema = z.object({
+  email: z
+    .string()
+    .min(1, { message: 'Please enter an email address' })
+    .pipe(z.email({ message: 'Invalid email format' }))
+})
+
+const ResetPasswordSchema = z
+  .object({
+    token: z.string().min(1, { message: 'Token is required' }),
+    password: RegisterPasswordSchema,
+    confirmPassword: z
+      .string()
+      .min(1, { message: 'Please confirm your password' })
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword']
+  })
+
 const LoginUserSchema = RegisterUserSchema.pick({ email: true }).extend({
   password: PasswordLoginSchema
 })
@@ -61,14 +81,26 @@ type RegisterUserSchemaType = z.infer<typeof RegisterUserSchema>
 type LoginUserSchemaType = z.infer<typeof LoginUserSchema>
 type VerifyUserSchemaType = z.infer<typeof VerifyUserSchema>
 type UserSchemaType = z.infer<typeof UserSchema>
+type ResendEmailValidationSchemaType = z.infer<
+  typeof ResendEmailValidationSchema
+>
+type RequestPasswordResetSchemaType = z.infer<
+  typeof ResendEmailValidationSchema
+>
+type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>
 
 export {
   LoginUserSchema,
   RegisterUserSchema,
+  ResendEmailValidationSchema,
+  ResetPasswordSchema,
   UserSchema,
   VerifyUserSchema,
   type LoginUserSchemaType,
   type RegisterUserSchemaType,
+  type RequestPasswordResetSchemaType,
+  type ResendEmailValidationSchemaType,
+  type ResetPasswordSchemaType,
   type UserSchemaType,
   type VerifyUserSchemaType
 }

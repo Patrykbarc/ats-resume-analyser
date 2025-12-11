@@ -1,39 +1,34 @@
-import { readFileSync } from 'fs'
-import path from 'path'
-import { fileURLToPath } from 'url'
 import { resend } from '../config/email.config'
 import { getEnvs } from '../lib/getEnv'
 import { logger } from '../server'
+import { getHtmlTemplate } from './helper/getHtmlTemplate'
 
 const { FRONTEND_URL, EMAIL_SENDER } = getEnvs()
 
-const getEmailHtmlTemplate = ({
+const getActivateAccountHtmlTemplate = ({
   confirmationToken
 }: {
   confirmationToken: string
 }) => {
-  try {
-    const dirname = path.dirname(fileURLToPath(import.meta.url))
-    const templatePath = path.join(dirname, 'templates', 'email.template.html')
-    const htmlTemplate = readFileSync(templatePath, 'utf-8')
-    logger.info(`Email template loaded from: ${templatePath}`)
+  const confirmationAddress = `${FRONTEND_URL}/verify/${confirmationToken}`
+  const currentYear = new Date().getFullYear()
+  return getHtmlTemplate('activate-account.template.html', {
+    confirmationAddress,
+    currentYear
+  })
+}
 
-    const confirmationAddress = `${FRONTEND_URL}/verify/${confirmationToken}`
-    const currentYear = new Date().getFullYear()
-
-    let finalHtml = htmlTemplate
-
-    finalHtml = finalHtml.replace(
-      /\$\{confirmationAddress\}/g,
-      confirmationAddress
-    )
-    finalHtml = finalHtml.replace(/\$\{currentYear\}/g, String(currentYear))
-
-    return finalHtml
-  } catch (err) {
-    logger.error(`Failed to load email template: ${err}`)
-    throw err
-  }
+const getPasswordResetEmailTemplate = ({
+  resetToken
+}: {
+  resetToken: string
+}) => {
+  const resetAddress = `${FRONTEND_URL}/reset-password/${resetToken}`
+  const currentYear = new Date().getFullYear()
+  return getHtmlTemplate('password-reset.template.html', {
+    resetAddress,
+    currentYear
+  })
 }
 
 export const sendRegisterConfirmationEmail = async ({
@@ -46,7 +41,7 @@ export const sendRegisterConfirmationEmail = async ({
   try {
     logger.info(`Starting email sending for: ${reciever}`)
 
-    const template = getEmailHtmlTemplate({ confirmationToken })
+    const template = getActivateAccountHtmlTemplate({ confirmationToken })
     logger.info(`Email template loaded successfully`)
 
     const message = {
@@ -64,6 +59,38 @@ export const sendRegisterConfirmationEmail = async ({
     return response
   } catch (err) {
     logger.error(`Error sending email to ${reciever}: ${err}`)
+    throw err
+  }
+}
+
+export const sendPasswordResetEmail = async ({
+  reciever,
+  resetToken
+}: {
+  reciever: string
+  resetToken: string
+}) => {
+  try {
+    logger.info(`Starting password reset email sending for: ${reciever}`)
+
+    const template = getPasswordResetEmailTemplate({ resetToken })
+    logger.info(`Password reset email template loaded successfully`)
+
+    const message = {
+      from: EMAIL_SENDER,
+      to: reciever,
+      subject: 'Reset Your Password - ATS Resume Analyzer',
+      text: `Click the link to reset your password. This link will expire in 24 hours.`,
+      html: template
+    }
+
+    logger.info(`Sending password reset email via Resend API...`)
+    const response = await resend.emails.send(message)
+    logger.info(`Password reset email sent successfully`)
+
+    return response
+  } catch (err) {
+    logger.error(`Error sending password reset email to ${reciever}: ${err}`)
     throw err
   }
 }

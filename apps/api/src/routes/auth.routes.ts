@@ -1,6 +1,8 @@
 import {
   LoginUserSchema,
   RegisterUserSchema,
+  ResendEmailValidationSchema,
+  ResetPasswordSchema,
   VerifyUserSchema
 } from '@monorepo/schemas'
 import { Router } from 'express'
@@ -11,7 +13,9 @@ import {
   logoutUser,
   refreshToken,
   registerUser,
+  requestPasswordReset,
   resendVerificationLink,
+  resetPassword,
   verifyUser
 } from '../controllers/auth.controller'
 import { requireAuth } from '../middleware/auth.middleware'
@@ -35,9 +39,16 @@ router.post('/refresh', validateData(VerifyUserSchema), refreshToken)
 router.post('/verify', validateData(VerifyUserSchema), verifyUser)
 router.post(
   '/verify/resend',
-  validateData(VerifyUserSchema),
+  validateData(ResendEmailValidationSchema),
   resendVerificationLink
 )
+router.post(
+  '/password/request-reset',
+  validateData(ResendEmailValidationSchema),
+  authAttemptLimiter,
+  requestPasswordReset
+)
+router.post('/password/reset', validateData(ResetPasswordSchema), resetPassword)
 router.post('/logout', logoutUser)
 router.get('/me', requireAuth, getCurrentUser)
 
