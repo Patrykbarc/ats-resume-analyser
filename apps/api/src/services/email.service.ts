@@ -13,10 +13,8 @@ const getEmailHtmlTemplate = ({
   confirmationToken: string
 }) => {
   try {
-    const filename = fileURLToPath(import.meta.url)
-    const dirname = path.dirname(filename)
-    const templatePath = path.join(dirname, 'templates/email.template.html')
-
+    const dirname = path.dirname(fileURLToPath(import.meta.url))
+    const templatePath = path.join(dirname, 'templates', 'email.template.html')
     const htmlTemplate = readFileSync(templatePath, 'utf-8')
     logger.info(`Email template loaded from: ${templatePath}`)
 
