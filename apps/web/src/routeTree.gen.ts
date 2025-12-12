@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/index'
 import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
+import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
 import { Route as appPricingIndexRouteImport } from './routes/(app)/pricing/index'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
@@ -42,6 +43,11 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/login/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
+const AuthForgotPasswordIndexRoute = AuthForgotPasswordIndexRouteImport.update({
+  id: '/forgot-password/',
+  path: '/forgot-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const appPricingIndexRoute = appPricingIndexRouteImport.update({
   id: '/(app)/pricing/',
   path: '/pricing/',
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/pricing': typeof appPricingIndexRoute
+  '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
@@ -72,6 +79,7 @@ export interface FileRoutesByTo {
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/pricing': typeof appPricingIndexRoute
+  '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
@@ -83,6 +91,7 @@ export interface FileRoutesById {
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
   '/(app)/pricing/': typeof appPricingIndexRoute
+  '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/logout/': typeof AuthLogoutIndexRoute
   '/_auth/register/': typeof AuthRegisterIndexRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
     | '/analyse/$id'
     | '/verify/$token'
     | '/pricing'
+    | '/forgot-password'
     | '/login'
     | '/logout'
     | '/register'
@@ -103,6 +113,7 @@ export interface FileRouteTypes {
     | '/analyse/$id'
     | '/verify/$token'
     | '/pricing'
+    | '/forgot-password'
     | '/login'
     | '/logout'
     | '/register'
@@ -113,6 +124,7 @@ export interface FileRouteTypes {
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
     | '/(app)/pricing/'
+    | '/_auth/forgot-password/'
     | '/_auth/login/'
     | '/_auth/logout/'
     | '/_auth/register/'
@@ -163,6 +175,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof AuthRouteRoute
     }
+    '/_auth/forgot-password/': {
+      id: '/_auth/forgot-password/'
+      path: '/forgot-password'
+      fullPath: '/forgot-password'
+      preLoaderRoute: typeof AuthForgotPasswordIndexRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/(app)/pricing/': {
       id: '/(app)/pricing/'
       path: '/pricing'
@@ -188,12 +207,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteRouteChildren {
+  AuthForgotPasswordIndexRoute: typeof AuthForgotPasswordIndexRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthLogoutIndexRoute: typeof AuthLogoutIndexRoute
   AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthForgotPasswordIndexRoute: AuthForgotPasswordIndexRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthLogoutIndexRoute: AuthLogoutIndexRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,

@@ -75,3 +75,15 @@ export const getCurrentUserService = async () => {
     throw error
   }
 }
+
+export const requestPasswordReset = async (email: string) => {
+  await apiClient.post('/auth/password/request-reset', { email })
+}
+
+export const resetPassword = async (data: {
+  token: string
+  password: string
+  confirmPassword: string
+}) => {
+  await apiClient.post('/auth/password/reset', data)
+}

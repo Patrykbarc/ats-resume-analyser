@@ -10,17 +10,10 @@ import { Input } from '@/components/ui/input'
 import { useRegisterMutation } from '@/hooks/useRegisterMutation'
 import { RegisterUserSchema, RegisterUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
-import { HTMLInputTypeAttribute } from 'react'
 import { AuthErrorMessages } from './components/auth-error-messages'
+import { AuthFormFields } from './types'
 
-type FormFields = {
-  fieldName: keyof RegisterUserSchemaType
-  label: string
-  placeholder: string
-  type: HTMLInputTypeAttribute
-}
-
-const FORM_FIELDS: FormFields[] = [
+const FORM_FIELDS: AuthFormFields<RegisterUserSchemaType>[] = [
   {
     fieldName: 'email',
     label: 'Email address',

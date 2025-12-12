@@ -84,9 +84,6 @@ type UserSchemaType = z.infer<typeof UserSchema>
 type ResendEmailValidationSchemaType = z.infer<
   typeof ResendEmailValidationSchema
 >
-type RequestPasswordResetSchemaType = z.infer<
-  typeof ResendEmailValidationSchema
->
 type ResetPasswordSchemaType = z.infer<typeof ResetPasswordSchema>
 
 export {
@@ -98,7 +95,6 @@ export {
   VerifyUserSchema,
   type LoginUserSchemaType,
   type RegisterUserSchemaType,
-  type RequestPasswordResetSchemaType,
   type ResendEmailValidationSchemaType,
   type ResetPasswordSchemaType,
   type UserSchemaType,

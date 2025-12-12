@@ -6,56 +6,46 @@ import {
   FieldLabel
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useLoginMutation } from '@/hooks/useLoginMutation'
-import { useSessionState } from '@/stores/session/useSessionState'
-import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
+import { useRequestPasswordReset } from '@/hooks/useRequestPasswordReset'
+import {
+  ResendEmailValidationSchema,
+  ResendEmailValidationSchemaType
+} from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { Link, useNavigate } from '@tanstack/react-router'
-import toast from 'react-hot-toast'
+import { useState } from 'react'
 import { AuthErrorMessages } from './components/auth-error-messages'
+import { FieldSuccess } from './components/field-success'
 import { AuthFormFields } from './types'
 
-const FORM_FIELDS: AuthFormFields<LoginUserSchemaType>[] = [
+const FORM_FIELDS: AuthFormFields<ResendEmailValidationSchemaType>[] = [
   {
     fieldName: 'email',
     label: 'Email address',
     placeholder: 'you@example.com',
     type: 'email'
-  },
-  {
-    fieldName: 'password',
-    label: 'Password',
-    placeholder: '******',
-    type: 'password'
   }
 ]
 
-export function LoginForm() {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const { setAuthToken } = useSessionState()
+export function ForgotPasswordForm() {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const { mutate, isPending, isSuccess, error } = useLoginMutation({
-    onSuccess: (response) => {
-      const token = response.data.token
-      setAuthToken(token)
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
-      toast.success('Logged in successfully!')
-      navigate({ to: '/' })
+  const { mutate, isPending, isSuccess, error } = useRequestPasswordReset({
+    onSuccess: () => {
+      setSuccessMessage(
+        'If an account with that email exists, a password reset link has been sent.'
+      )
     }
   })
 
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: ''
+      email: ''
     },
     validators: {
-      onSubmit: LoginUserSchema
+      onSubmit: ResendEmailValidationSchema
     },
     onSubmit: async ({ value }) => {
-      mutate(value)
+      mutate(value.email)
     }
   })
 
@@ -102,16 +92,11 @@ export function LoginForm() {
         })}
       </FieldGroup>
 
-      <div className="flex justify-between items-center">
-        <Button type="submit" disabled={isPending}>
-          Login
-        </Button>
+      <Button type="submit" disabled={isPending}>
+        Reset password
+      </Button>
 
-        <Link to="/forgot-password" className="text-sm underline">
-          Forgot your password?
-        </Link>
-      </div>
-
+      {successMessage && <FieldSuccess message={successMessage} />}
       {error && <AuthErrorMessages error={error} />}
     </form>
   )
