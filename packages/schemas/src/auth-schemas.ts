@@ -57,15 +57,27 @@ const LoginUserSchema = RegisterUserSchema.pick({ email: true }).extend({
   password: PasswordLoginSchema
 })
 
+const SubscriptionStatus = [
+  'active',
+  'past_due',
+  'trialing',
+  'canceled',
+  'unpaid',
+  'incomplete',
+  'incomplete_expired',
+  'paused'
+] as const
+
 const UserSchema = z.object({
   id: z.uuid(),
   email: z.email(),
   createdAt: z.date(),
   isPremium: z.boolean(),
-  premiumStartedAt: z.date().nullable(),
-  premiumExpiresAt: z.date().nullable(),
-  premiumPlan: z.string().nullable(),
-  premiumCustomerId: z.string().nullable()
+  stripeCustomerId: z.string().nullable(),
+  stripeSubscriptionId: z.string().nullable(),
+  subscriptionStatus: z.enum(SubscriptionStatus).nullable(),
+  subscriptionStartedAt: z.date().nullable(),
+  subscriptionCurrentPeriodEnd: z.date().nullable()
 })
 
 type RegisterUserSchemaType = z.infer<typeof RegisterUserSchema>

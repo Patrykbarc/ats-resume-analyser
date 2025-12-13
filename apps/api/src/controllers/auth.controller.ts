@@ -274,12 +274,7 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       select: {
         id: true,
         email: true,
-        createdAt: true,
-        isPremium: true,
-        premiumStartedAt: true,
-        premiumExpiresAt: true,
-        premiumPlan: true,
-        premiumCustomerId: true
+        isPremium: true
       }
     })
 

@@ -14,8 +14,15 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-enum PremiumPlans {
-  PRO
+enum SubscriptionStatus {
+  active
+  past_due
+  trialing
+  canceled
+  unpaid
+  incomplete
+  incomplete_expired
+  paused
 }
 
 model User {
@@ -39,11 +46,12 @@ model User {
   lastLogin DateTime?
   status    String    @default("active")
 
-  isPremium         Boolean       @default(false)
-  premiumStartedAt  DateTime?
-  premiumExpiresAt  DateTime?
-  premiumPlan       PremiumPlans?
-  premiumCustomerId String        @unique() @default(uuid())
+  isPremium                    Boolean             @default(false)
+  stripeCustomerId             String?             @unique
+  stripeSubscriptionId         String?             @unique
+  subscriptionStatus           SubscriptionStatus?
+  subscriptionStartedAt        DateTime?
+  subscriptionCurrentPeriodEnd DateTime?
 
   refreshToken String? @unique
 }

@@ -2,6 +2,7 @@ import { UserSchemaType } from '@monorepo/schemas'
 import type { NextFunction, Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import passport from '../config/passport.config'
+import { logger } from '../server'
 
 export const requireAuth = (
   req: Request,
@@ -13,6 +14,7 @@ export const requireAuth = (
     { session: false },
     (err: Error, user: UserSchemaType) => {
       if (err) {
+        logger.fatal(err)
         return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
           message: 'Authentication error'
         })

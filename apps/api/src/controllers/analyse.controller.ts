@@ -37,7 +37,7 @@ export const createAnalyze = async (req: Request, res: Response) => {
 
     const sanitizedTextResult = await parseFileAndSanitize(buffer)
 
-    const user = req.user as UserSchemaType | undefined
+    const user = req.user as UserSchemaType
 
     const analysisResult: AiAnalysis | AiAnalysisError = await analyzeFile(
       sanitizedTextResult,

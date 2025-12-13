@@ -17,8 +17,7 @@ const jwtStrategy = new JwtStrategy(options, async (jwt_payload, done) => {
       select: {
         id: true,
         email: true,
-        isPremium: true,
-        premiumExpiresAt: true
+        isPremium: true
       }
     })
 
