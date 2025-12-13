@@ -10,6 +10,7 @@ export const useAuth = () => {
     useSessionState()
 
   const isAuthenticated = !!sessionStorage.getItem('jwtToken')
+
   useEffect(() => {
     if (isSuccess && data) {
       setUser({ ...data })

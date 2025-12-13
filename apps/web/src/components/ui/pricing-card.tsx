@@ -1,17 +1,9 @@
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { PricingPlan } from '@/routes/(app)/pricing'
+import { useSessionState } from '@/stores/session/useSessionState'
+import { Link } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
-
-type PricingCardProps = {
-  name: string
-  price: number
-  period: string
-  description: string
-  features: string[]
-  cta: string
-  highlighted?: boolean
-  onSelect?: () => void
-}
 
 export function PricingCard({
   name,
@@ -19,25 +11,20 @@ export function PricingCard({
   period,
   description,
   features,
-  cta,
-  highlighted = false
-}: PricingCardProps) {
+  cta
+}: PricingPlan[number]) {
+  const { isUserLoggedIn } = useSessionState()
+
   return (
     <div
       key={name}
       className={cn(
-        'relative rounded-lg bg-card border transition-all duration-200 overflow-hidden',
-        highlighted
-          ? 'border-primary ring-accent md:scale-105'
-          : 'border-border '
+        'relative rounded-lg bg-card border transition-all duration-200 overflow-hidden border-primary ring-accent md:scale-105'
       )}
     >
-      {/* Recommended Badge */}
-      {highlighted && (
-        <div className="absolute -right-12 top-6 rotate-45 bg-primary px-12 py-1 text-xs font-semibold text-background">
-          Recommended
-        </div>
-      )}
+      <div className="absolute -right-12 top-6 rotate-45 bg-primary px-12 py-1 text-xs font-semibold text-background">
+        Recommended
+      </div>
 
       <div className="flex flex-col px-6 py-8 h-full">
         <div>
@@ -52,16 +39,14 @@ export function PricingCard({
         </div>
 
         {/* CTA Button */}
-        <Button
-          className={cn(
-            'mb-8 w-full font-semibold',
-            highlighted
-              ? buttonVariants()
-              : buttonVariants({ variant: 'secondary' })
-          )}
+        <Link
+          to={isUserLoggedIn ? cta.url : '/login'}
+          target={isUserLoggedIn ? '_blank' : undefined}
+          rel="noopener noreferrer"
+          className={cn('mb-8 w-full font-semibold', buttonVariants())}
         >
-          {cta}
-        </Button>
+          {cta.title}
+        </Link>
 
         {/* Features List */}
         <div className="space-y-4">
