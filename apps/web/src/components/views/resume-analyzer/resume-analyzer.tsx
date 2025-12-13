@@ -3,55 +3,44 @@ import { Card } from '@/components/ui/card'
 import { useAnalyseResumeMutation } from '@/hooks/useAnalyseResumeMutation'
 import { useRateLimit } from '@/hooks/useRateLimit'
 import {
-  getRateLimitRemaining,
-  getRateLimitReset,
+  getHeadersRateLimitRemaining,
+  getHeadersRateLimitReset,
   isRateLimitError
 } from '@/lib/localStorage'
 import { cn } from '@/lib/utils'
 import { FileSchemaInput } from '@monorepo/schemas'
 import { Link, useNavigate } from '@tanstack/react-router'
-import { isAxiosError } from 'axios'
-import { type ChangeEvent, useState } from 'react'
+import { AxiosResponse, isAxiosError } from 'axios'
+import { type ChangeEvent, useCallback, useState } from 'react'
 import { RequestLimitError } from '../request-limit-error'
 import { AnalyzeFile } from './components/analyze-file'
 import { UploadFile } from './components/upload-file'
 
 export function ResumeAnalyzer() {
-  const { requestsLeft, setRequestsLeft } = useRateLimit()
+  const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [validationError, setValidationError] = useState<string | null>(null)
-  const navigate = useNavigate()
+  const { requestsLeft, setRequestsLeft, setRequestsCooldown } = useRateLimit()
 
   const { mutate, isPending, error } = useAnalyseResumeMutation({
     onSuccess: (response) => {
-      const remaining = getRateLimitRemaining(response)
-      if (remaining !== null) {
-        setRequestsLeft(remaining)
-      }
+      updateRequestLimit(response)
 
       setValidationError(null)
       navigate({ to: `/analyse/${response.data.id}` })
-    },
-    onError: (error) => {
-      if (isAxiosError(error)) {
-        const remaining = getRateLimitRemaining(error.response)
-        if (remaining !== null) {
-          setRequestsLeft(remaining)
-        }
-      }
     }
   })
 
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0]
 
     if (selectedFile) {
       setFile(selectedFile)
       setValidationError(null)
     }
-  }
+  }, [])
 
-  const handleAnalyse = () => {
+  const handleAnalyse = useCallback(() => {
     if (!file) {
       return
     }
@@ -65,24 +54,37 @@ export function ResumeAnalyzer() {
 
     setValidationError(null)
     mutate(file)
-  }
+  }, [file, mutate])
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setFile(null)
     setValidationError(null)
-  }
+  }, [])
+
+  const updateRequestLimit = useCallback(
+    (response: AxiosResponse) => {
+      const remaining = getHeadersRateLimitRemaining(response)
+      const timestamp = getHeadersRateLimitReset(response)
+
+      if (remaining !== null) {
+        setRequestsLeft(remaining)
+      }
+
+      if (timestamp) {
+        setRequestsCooldown?.(timestamp)
+      }
+    },
+    [setRequestsCooldown, setRequestsLeft]
+  )
 
   if (isRateLimitError(error) || requestsLeft === 0) {
-    const resetTime = isRateLimitError(error)
-      ? getRateLimitReset(error.response)
-      : null
+    if (isAxiosError(error)) {
+      const timestamp = getHeadersRateLimitReset(error.response)
+      setRequestsCooldown?.(timestamp)
 
-    if (resetTime) {
-      return <RequestLimitError resetTime={resetTime} />
+      return <RequestLimitError />
     }
   }
-
-  const currentErrorMessage = validationError || error?.message
 
   return (
     <div className="space-y-8">
@@ -105,8 +107,6 @@ export function ResumeAnalyzer() {
               </p>
             ) : (
               <span className="text-center">
-                No requests left.
-                <br />
                 <Link
                   className={cn(
                     buttonVariants({ variant: 'link' }),
@@ -115,13 +115,14 @@ export function ResumeAnalyzer() {
                   to="/pricing"
                 >
                   Upgrade to premium
-                </Link>{' '}
-                for unlimited access.{' '}
+                </Link>
+                <br />
+                To get unlimited analyses.
               </span>
             ))}
         </div>
-        {currentErrorMessage && (
-          <p className="text-center text-rose-400">{currentErrorMessage}</p>
+        {validationError && (
+          <p className="text-center text-rose-400">{validationError}</p>
         )}
       </Card>
     </div>

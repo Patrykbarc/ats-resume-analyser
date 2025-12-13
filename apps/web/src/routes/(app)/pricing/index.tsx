@@ -23,7 +23,7 @@ const plans: PricingPlan[] = [
     price: 14.99,
     period: 'month',
     features: [
-      '100 resume analyses per month',
+      'Unlimited resume analyses per month',
       'GPT-4 powered deep-dive analysis',
       'ATS optimization with keyword matching',
       'Content & structure recommendations',
@@ -40,16 +40,16 @@ const plans: PricingPlan[] = [
 ]
 
 const brief = [
-  '100 Resume Analyses/Month',
+  'Unlimited Resume Analyses/Month',
   'GPT-4 Deep Analysis',
   'Career Guidance'
 ]
 
 const faq = [
   {
-    question: 'What if I exceed 100 analyses?',
+    question: 'What if I exceed my analysis limit?',
     answer:
-      'Contact our support team to upgrade to a higher tier or purchase additional analysis credits.'
+      'There is no limit on analyses for Pro users. Free users can upgrade anytime to access more analyses.'
   },
   {
     question: 'Can I cancel anytime?',

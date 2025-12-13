@@ -1,6 +1,9 @@
 import { useSessionState } from '@/stores/session/useSessionState'
-
-const REQUESTS_LEFT_KEY = 'requestsLeft'
+import { isAfter } from 'date-fns'
+const LOCALSTORAGE = {
+  REQUESTS_LEFT_KEY: 'requestsLeft',
+  REQUESTS_COOLDOWN_KEY: 'requestsCooldown'
+}
 
 export const useRateLimit = () => {
   const { isPremium } = useSessionState()
@@ -10,7 +13,23 @@ export const useRateLimit = () => {
   }
 
   const requestsLeft = getRequestsLeft()
-  return { requestsLeft, setRequestsLeft }
+  const isOutOfFreeRequests = requestsLeft !== null && requestsLeft <= 0
+
+  const now = new Date()
+  const requestsCooldown = getRequestsCooldown()
+  const requestCooldownEnd = requestsCooldown && isAfter(now, requestsCooldown)
+
+  if (requestCooldownEnd) {
+    resetRequestsCooldown()
+  }
+
+  return {
+    requestsLeft,
+    setRequestsLeft,
+    requestsCooldown,
+    setRequestsCooldown,
+    isOutOfFreeRequests
+  }
 }
 
 const setRequestsLeft = (remaining: number) => {
@@ -18,14 +37,32 @@ const setRequestsLeft = (remaining: number) => {
     return
   }
 
-  localStorage.setItem(REQUESTS_LEFT_KEY, String(remaining))
+  localStorage.setItem(LOCALSTORAGE.REQUESTS_LEFT_KEY, String(remaining))
 }
 
-const getRequestsLeft = (): number | null => {
-  const value = localStorage.getItem(REQUESTS_LEFT_KEY)
+const setRequestsCooldown = (timestamp: string | null) => {
+  if (!timestamp) {
+    return
+  }
+
+  localStorage.setItem(LOCALSTORAGE.REQUESTS_COOLDOWN_KEY, timestamp)
+}
+
+const getRequestsLeft = () => {
+  const value = localStorage.getItem(LOCALSTORAGE.REQUESTS_LEFT_KEY)
   if (!value) {
     return null
   }
   const parsed = parseInt(value, 10)
   return isNaN(parsed) ? null : parsed
+}
+
+const getRequestsCooldown = () => {
+  const value = localStorage.getItem(LOCALSTORAGE.REQUESTS_COOLDOWN_KEY)
+
+  return value ? value : null
+}
+
+const resetRequestsCooldown = () => {
+  localStorage.removeItem(LOCALSTORAGE.REQUESTS_COOLDOWN_KEY)
 }
