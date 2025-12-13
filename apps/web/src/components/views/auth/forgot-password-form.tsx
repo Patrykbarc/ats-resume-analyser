@@ -15,7 +15,7 @@ import { useForm } from '@tanstack/react-form'
 import { useState } from 'react'
 import { AuthErrorMessages } from './components/auth-error-messages'
 import { FieldSuccess } from './components/field-success'
-import { AuthFormFields } from './types'
+import { AuthFormFields } from './types/types'
 
 const FORM_FIELDS: AuthFormFields<ResendEmailValidationSchemaType>[] = [
   {

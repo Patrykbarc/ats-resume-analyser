@@ -11,7 +11,7 @@ import { useRegisterMutation } from '@/hooks/useRegisterMutation'
 import { RegisterUserSchema, RegisterUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
 import { AuthErrorMessages } from './components/auth-error-messages'
-import { AuthFormFields } from './types'
+import { AuthFormFields } from './types/types'
 
 const FORM_FIELDS: AuthFormFields<RegisterUserSchemaType>[] = [
   {

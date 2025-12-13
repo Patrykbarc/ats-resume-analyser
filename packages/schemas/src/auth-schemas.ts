@@ -49,18 +49,9 @@ const ResendEmailValidationSchema = z.object({
     .pipe(z.email({ message: 'Invalid email format' }))
 })
 
-const ResetPasswordSchema = z
-  .object({
-    token: z.string().min(1, { message: 'Token is required' }),
-    password: RegisterPasswordSchema,
-    confirmPassword: z
-      .string()
-      .min(1, { message: 'Please confirm your password' })
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "Passwords don't match",
-    path: ['confirmPassword']
-  })
+const ResetPasswordSchema = RegisterUserSchema.omit({ email: true }).extend({
+  token: z.string().min(1, { message: 'Token is required' })
+})
 
 const LoginUserSchema = RegisterUserSchema.pick({ email: true }).extend({
   password: PasswordLoginSchema

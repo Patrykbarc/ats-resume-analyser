@@ -1,12 +1,17 @@
 import { resetPassword } from '@/services/authService'
-import { useMutation } from '@tanstack/react-query'
+import { ResetPasswordSchemaType } from '@monorepo/schemas'
+import { useMutation, UseMutationOptions } from '@tanstack/react-query'
+import { AxiosError } from 'axios'
 
-export const useResetPassword = () => {
+export const useResetPassword = (
+  options: UseMutationOptions<unknown, AxiosError, ResetPasswordSchemaType>
+) => {
   return useMutation({
     mutationFn: (data: {
       token: string
       password: string
       confirmPassword: string
-    }) => resetPassword(data)
+    }) => resetPassword(data),
+    ...options
   })
 }

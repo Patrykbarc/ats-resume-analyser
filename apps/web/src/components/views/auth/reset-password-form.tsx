@@ -6,53 +6,46 @@ import {
   FieldLabel
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useLoginMutation } from '@/hooks/useLoginMutation'
-import { useSessionState } from '@/stores/session/useSessionState'
-import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
+import { useResetPassword } from '@/hooks/useResetPassword'
+import { ResetPasswordSchema, ResetPasswordSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
-import { useQueryClient } from '@tanstack/react-query'
-import { Link, useNavigate } from '@tanstack/react-router'
-import toast from 'react-hot-toast'
+import { useState } from 'react'
 import { AuthErrorMessages } from './components/auth-error-messages'
+import { FieldSuccess } from './components/field-success'
 import { AuthFormFields } from './types/types'
 
-const FORM_FIELDS: AuthFormFields<LoginUserSchemaType>[] = [
-  {
-    fieldName: 'email',
-    label: 'Email address',
-    placeholder: 'you@example.com',
-    type: 'email'
-  },
+const FORM_FIELDS: AuthFormFields<ResetPasswordSchemaType>[] = [
   {
     fieldName: 'password',
     label: 'Password',
     placeholder: '******',
     type: 'password'
+  },
+  {
+    fieldName: 'confirmPassword',
+    label: 'Confirm passsword',
+    placeholder: '******',
+    type: 'password'
   }
 ]
 
-export function LoginForm() {
-  const navigate = useNavigate()
-  const queryClient = useQueryClient()
-  const { setAuthToken } = useSessionState()
+export function ResetPasswordForm({ token }: { token: string }) {
+  const [successMessage, setSuccessMessage] = useState<string | null>(null)
 
-  const { mutate, isPending, isSuccess, error } = useLoginMutation({
-    onSuccess: (response) => {
-      const token = response.data.token
-      setAuthToken(token)
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
-      toast.success('Logged in successfully!')
-      navigate({ to: '/' })
+  const { mutate, isPending, isSuccess, error } = useResetPassword({
+    onSuccess: () => {
+      setSuccessMessage('Your password has been successfully changed.')
     }
   })
 
   const form = useForm({
     defaultValues: {
-      email: '',
-      password: ''
+      token,
+      password: '',
+      confirmPassword: ''
     },
     validators: {
-      onSubmit: LoginUserSchema
+      onSubmit: ResetPasswordSchema
     },
     onSubmit: async ({ value }) => {
       mutate(value)
@@ -102,16 +95,11 @@ export function LoginForm() {
         })}
       </FieldGroup>
 
-      <div className="flex justify-between items-center">
-        <Button type="submit" disabled={isPending}>
-          Login
-        </Button>
+      <Button type="submit" disabled={isPending}>
+        Reset password
+      </Button>
 
-        <Link to="/forgot-password" className="text-sm underline">
-          Forgot your password?
-        </Link>
-      </div>
-
+      {successMessage && <FieldSuccess message={successMessage} />}
       {error && <AuthErrorMessages error={error} />}
     </form>
   )

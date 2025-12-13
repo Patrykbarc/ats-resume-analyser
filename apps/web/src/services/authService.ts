@@ -2,6 +2,8 @@ import { apiClient } from '@/api/apiClient'
 import {
   LoginUserSchemaType,
   RegisterUserSchemaType,
+  ResendEmailValidationSchemaType,
+  ResetPasswordSchemaType,
   UserSchemaType,
   VerifyUserSchemaType
 } from '@monorepo/schemas'
@@ -76,14 +78,12 @@ export const getCurrentUserService = async () => {
   }
 }
 
-export const requestPasswordReset = async (email: string) => {
+export const requestPasswordReset = async (
+  email: ResendEmailValidationSchemaType['email']
+) => {
   await apiClient.post('/auth/password/request-reset', { email })
 }
 
-export const resetPassword = async (data: {
-  token: string
-  password: string
-  confirmPassword: string
-}) => {
+export const resetPassword = async (data: ResetPasswordSchemaType) => {
   await apiClient.post('/auth/password/reset', data)
 }

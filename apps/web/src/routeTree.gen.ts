@@ -16,6 +16,7 @@ import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
 import { Route as appPricingIndexRouteImport } from './routes/(app)/pricing/index'
+import { Route as AuthResetPasswordIdRouteImport } from './routes/_auth/reset-password/$id'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
 
@@ -53,6 +54,11 @@ const appPricingIndexRoute = appPricingIndexRouteImport.update({
   path: '/pricing/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthResetPasswordIdRoute = AuthResetPasswordIdRouteImport.update({
+  id: '/reset-password/$id',
+  path: '/reset-password/$id',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
 const appVerifyTokenRoute = appVerifyTokenRouteImport.update({
   id: '/(app)/verify/$token',
   path: '/verify/$token',
@@ -68,6 +74,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
+  '/reset-password/$id': typeof AuthResetPasswordIdRoute
   '/pricing': typeof appPricingIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
@@ -78,6 +85,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
+  '/reset-password/$id': typeof AuthResetPasswordIdRoute
   '/pricing': typeof appPricingIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
@@ -90,6 +98,7 @@ export interface FileRoutesById {
   '/_auth': typeof AuthRouteRouteWithChildren
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
+  '/_auth/reset-password/$id': typeof AuthResetPasswordIdRoute
   '/(app)/pricing/': typeof appPricingIndexRoute
   '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
@@ -102,6 +111,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analyse/$id'
     | '/verify/$token'
+    | '/reset-password/$id'
     | '/pricing'
     | '/forgot-password'
     | '/login'
@@ -112,6 +122,7 @@ export interface FileRouteTypes {
     | '/'
     | '/analyse/$id'
     | '/verify/$token'
+    | '/reset-password/$id'
     | '/pricing'
     | '/forgot-password'
     | '/login'
@@ -123,6 +134,7 @@ export interface FileRouteTypes {
     | '/_auth'
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
+    | '/_auth/reset-password/$id'
     | '/(app)/pricing/'
     | '/_auth/forgot-password/'
     | '/_auth/login/'
@@ -189,6 +201,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appPricingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_auth/reset-password/$id': {
+      id: '/_auth/reset-password/$id'
+      path: '/reset-password/$id'
+      fullPath: '/reset-password/$id'
+      preLoaderRoute: typeof AuthResetPasswordIdRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
     '/(app)/verify/$token': {
       id: '/(app)/verify/$token'
       path: '/verify/$token'
@@ -207,6 +226,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteRouteChildren {
+  AuthResetPasswordIdRoute: typeof AuthResetPasswordIdRoute
   AuthForgotPasswordIndexRoute: typeof AuthForgotPasswordIndexRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthLogoutIndexRoute: typeof AuthLogoutIndexRoute
@@ -214,6 +234,7 @@ interface AuthRouteRouteChildren {
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
+  AuthResetPasswordIdRoute: AuthResetPasswordIdRoute,
   AuthForgotPasswordIndexRoute: AuthForgotPasswordIndexRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthLogoutIndexRoute: AuthLogoutIndexRoute,
