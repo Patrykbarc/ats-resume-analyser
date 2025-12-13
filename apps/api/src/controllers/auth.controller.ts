@@ -181,11 +181,11 @@ export const verifyUser = async (req: Request, res: Response) => {
 }
 
 export const resendVerificationLink = async (req: Request, res: Response) => {
-  const { email } = req.body
+  const { token } = req.body
 
   try {
     const user = await prisma.user.findUnique({
-      where: { email },
+      where: { confirmationToken: token },
       select: { id: true, email: true, isEmailConfirmed: true }
     })
 

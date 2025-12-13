@@ -39,7 +39,7 @@ router.post('/refresh', validateData(VerifyUserSchema), refreshToken)
 router.post('/verify', validateData(VerifyUserSchema), verifyUser)
 router.post(
   '/verify/resend',
-  validateData(ResendEmailValidationSchema),
+  validateData(VerifyUserSchema),
   resendVerificationLink
 )
 router.post(
