@@ -16,9 +16,12 @@ import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
 import { Route as appPricingIndexRouteImport } from './routes/(app)/pricing/index'
+import { Route as appCheckoutIndexRouteImport } from './routes/(app)/checkout/index'
 import { Route as AuthResetPasswordIdRouteImport } from './routes/_auth/reset-password/$id'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
+import { Route as appCheckoutSuccessIndexRouteImport } from './routes/(app)/checkout/success/index'
+import { Route as appCheckoutCancelIndexRouteImport } from './routes/(app)/checkout/cancel/index'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/_auth',
@@ -54,6 +57,11 @@ const appPricingIndexRoute = appPricingIndexRouteImport.update({
   path: '/pricing/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appCheckoutIndexRoute = appCheckoutIndexRouteImport.update({
+  id: '/(app)/checkout/',
+  path: '/checkout/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthResetPasswordIdRoute = AuthResetPasswordIdRouteImport.update({
   id: '/reset-password/$id',
   path: '/reset-password/$id',
@@ -69,28 +77,44 @@ const appAnalyseIdRoute = appAnalyseIdRouteImport.update({
   path: '/analyse/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appCheckoutSuccessIndexRoute = appCheckoutSuccessIndexRouteImport.update({
+  id: '/(app)/checkout/success/',
+  path: '/checkout/success/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const appCheckoutCancelIndexRoute = appCheckoutCancelIndexRouteImport.update({
+  id: '/(app)/checkout/cancel/',
+  path: '/checkout/cancel/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/reset-password/$id': typeof AuthResetPasswordIdRoute
+  '/checkout': typeof appCheckoutIndexRoute
   '/pricing': typeof appPricingIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
+  '/checkout/cancel': typeof appCheckoutCancelIndexRoute
+  '/checkout/success': typeof appCheckoutSuccessIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/reset-password/$id': typeof AuthResetPasswordIdRoute
+  '/checkout': typeof appCheckoutIndexRoute
   '/pricing': typeof appPricingIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
   '/register': typeof AuthRegisterIndexRoute
+  '/checkout/cancel': typeof appCheckoutCancelIndexRoute
+  '/checkout/success': typeof appCheckoutSuccessIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -99,11 +123,14 @@ export interface FileRoutesById {
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
   '/_auth/reset-password/$id': typeof AuthResetPasswordIdRoute
+  '/(app)/checkout/': typeof appCheckoutIndexRoute
   '/(app)/pricing/': typeof appPricingIndexRoute
   '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/logout/': typeof AuthLogoutIndexRoute
   '/_auth/register/': typeof AuthRegisterIndexRoute
+  '/(app)/checkout/cancel/': typeof appCheckoutCancelIndexRoute
+  '/(app)/checkout/success/': typeof appCheckoutSuccessIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -112,22 +139,28 @@ export interface FileRouteTypes {
     | '/analyse/$id'
     | '/verify/$token'
     | '/reset-password/$id'
+    | '/checkout'
     | '/pricing'
     | '/forgot-password'
     | '/login'
     | '/logout'
     | '/register'
+    | '/checkout/cancel'
+    | '/checkout/success'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/analyse/$id'
     | '/verify/$token'
     | '/reset-password/$id'
+    | '/checkout'
     | '/pricing'
     | '/forgot-password'
     | '/login'
     | '/logout'
     | '/register'
+    | '/checkout/cancel'
+    | '/checkout/success'
   id:
     | '__root__'
     | '/'
@@ -135,11 +168,14 @@ export interface FileRouteTypes {
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
     | '/_auth/reset-password/$id'
+    | '/(app)/checkout/'
     | '/(app)/pricing/'
     | '/_auth/forgot-password/'
     | '/_auth/login/'
     | '/_auth/logout/'
     | '/_auth/register/'
+    | '/(app)/checkout/cancel/'
+    | '/(app)/checkout/success/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -147,7 +183,10 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   appAnalyseIdRoute: typeof appAnalyseIdRoute
   appVerifyTokenRoute: typeof appVerifyTokenRoute
+  appCheckoutIndexRoute: typeof appCheckoutIndexRoute
   appPricingIndexRoute: typeof appPricingIndexRoute
+  appCheckoutCancelIndexRoute: typeof appCheckoutCancelIndexRoute
+  appCheckoutSuccessIndexRoute: typeof appCheckoutSuccessIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -201,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof appPricingIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/(app)/checkout/': {
+      id: '/(app)/checkout/'
+      path: '/checkout'
+      fullPath: '/checkout'
+      preLoaderRoute: typeof appCheckoutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_auth/reset-password/$id': {
       id: '/_auth/reset-password/$id'
       path: '/reset-password/$id'
@@ -220,6 +266,20 @@ declare module '@tanstack/react-router' {
       path: '/analyse/$id'
       fullPath: '/analyse/$id'
       preLoaderRoute: typeof appAnalyseIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(app)/checkout/success/': {
+      id: '/(app)/checkout/success/'
+      path: '/checkout/success'
+      fullPath: '/checkout/success'
+      preLoaderRoute: typeof appCheckoutSuccessIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(app)/checkout/cancel/': {
+      id: '/(app)/checkout/cancel/'
+      path: '/checkout/cancel'
+      fullPath: '/checkout/cancel'
+      preLoaderRoute: typeof appCheckoutCancelIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -250,7 +310,10 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   appAnalyseIdRoute: appAnalyseIdRoute,
   appVerifyTokenRoute: appVerifyTokenRoute,
+  appCheckoutIndexRoute: appCheckoutIndexRoute,
   appPricingIndexRoute: appPricingIndexRoute,
+  appCheckoutCancelIndexRoute: appCheckoutCancelIndexRoute,
+  appCheckoutSuccessIndexRoute: appCheckoutSuccessIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

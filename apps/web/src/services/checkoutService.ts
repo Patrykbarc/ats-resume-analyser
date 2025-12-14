@@ -1,5 +1,9 @@
 import { apiClient } from '@/api/apiClient'
-import { BuyerId, StripeSessionUrl } from '@/hooks/useCheckoutMutation/types'
+import {
+  BuyerId,
+  StripeSessionId,
+  StripeSessionUrl
+} from '@/hooks/checkout/types/types'
 
 export const handleBuyPremium = async (user: BuyerId) => {
   const userId = user.id
@@ -8,6 +12,17 @@ export const handleBuyPremium = async (user: BuyerId) => {
     '/checkout/create-checkout-session',
     {
       id: userId
+    }
+  )
+
+  return response.data
+}
+
+export const verifyStripeSession = async (sessionId: string) => {
+  const response = await apiClient<StripeSessionId>(
+    '/checkout/verify-payment',
+    {
+      params: { id: sessionId }
     }
   )
 

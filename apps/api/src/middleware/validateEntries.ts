@@ -33,9 +33,14 @@ export function validateFile(schema: Schema) {
 
 export function validateData(schema: Schema) {
   return (req: Request, res: Response, next: NextFunction) => {
-    try {
-      schema.parse(req.body ?? req.params)
+    const mergedData = {
+      ...req.params,
+      ...req.body,
+      ...req.query
+    }
 
+    try {
+      schema.parse(mergedData)
       next()
     } catch (error) {
       errorHandler(error, res)

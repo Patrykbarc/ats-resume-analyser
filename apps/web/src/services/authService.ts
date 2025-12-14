@@ -64,7 +64,7 @@ export const resendVerificationLink = async (token: VerifyUserSchemaType) => {
 
 export const getCurrentUserService = async () => {
   try {
-    const response = await apiClient.get<UserSchemaType>('/auth/me')
+    const response = await apiClient<UserSchemaType>('/auth/me')
 
     return response.data
   } catch (error) {

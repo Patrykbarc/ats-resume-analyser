@@ -6,6 +6,7 @@ import {
   FieldLabel
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
+import { QUERY_KEYS } from '@/constants/queryKeys'
 import { useLoginMutation } from '@/hooks/useLoginMutation'
 import { useSessionState } from '@/stores/session/useSessionState'
 import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
@@ -40,7 +41,9 @@ export function LoginForm() {
     onSuccess: (response) => {
       const token = response.data.token
       setAuthToken(token)
-      queryClient.invalidateQueries({ queryKey: ['currentUser'] })
+      queryClient.invalidateQueries({
+        queryKey: QUERY_KEYS.session.currentUser
+      })
       toast.success('Logged in successfully!')
       navigate({ to: '/' })
     }

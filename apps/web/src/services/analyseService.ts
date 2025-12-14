@@ -22,7 +22,7 @@ export const submitAnalyseResume = async (
 }
 
 export const getAnalysis = async (id: string): Promise<AnalyseResult> => {
-  const response = await apiClient.get<AiAnalysis>(`/cv/analysis/${id}`)
+  const response = await apiClient<AiAnalysis>(`/cv/analysis/${id}`)
 
   return response
 }

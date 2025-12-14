@@ -1,3 +1,4 @@
+import { QUERY_KEYS } from '@/constants/queryKeys'
 import { getCurrentUserService } from '@/services/authService'
 import { UserSchemaType } from '@monorepo/schemas'
 import { useQuery } from '@tanstack/react-query'
@@ -8,7 +9,7 @@ export const useGetCurrentUser = () => {
   const token = sessionStorage.getItem('jwtToken')
 
   return useQuery<UserSchemaType | null>({
-    queryKey: ['currentUser'],
+    queryKey: QUERY_KEYS.session.currentUser,
     queryFn: getCurrentUserService,
     retry: false,
     staleTime: FIVE_MINUTES,

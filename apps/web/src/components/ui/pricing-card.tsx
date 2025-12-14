@@ -1,5 +1,5 @@
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useCheckoutMutation } from '@/hooks/useCheckoutMutation/useCheckoutMutation'
+import { useCheckoutMutation } from '@/hooks/checkout/useCheckoutMutation'
 import { cn } from '@/lib/utils'
 import { PricingPlan } from '@/routes/(app)/pricing'
 import { useSessionState } from '@/stores/session/useSessionState'

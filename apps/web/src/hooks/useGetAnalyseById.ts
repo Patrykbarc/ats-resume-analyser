@@ -1,10 +1,11 @@
+import { QUERY_KEYS } from '@/constants/queryKeys'
 import { AnalyseResult, getAnalysis } from '@/services/analyseService'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 
 const analysisOptions = (id: string) =>
   queryOptions<AnalyseResult, AxiosError>({
-    queryKey: ['analysis', id],
+    queryKey: QUERY_KEYS.analysis.byId(id),
     queryFn: () => getAnalysis(id)
   })
 
