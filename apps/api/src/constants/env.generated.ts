@@ -11,6 +11,8 @@ export type EnvironmentVariables = {
   DIRECT_URL: string
   RESEND_API_KEY: string
   EMAIL_SENDER: string
+  STRIPE_SECRET_KEY: string
+  STRIPE_WEBHOOK_SECRET: string
 }
 
 export const ENV_NAMES = [
@@ -24,5 +26,7 @@ export const ENV_NAMES = [
   'DIRECT_URL',
   'RESEND_API_KEY',
   'EMAIL_SENDER',
+  'STRIPE_SECRET_KEY',
+  'STRIPE_WEBHOOK_SECRET',
 ] as const
 

@@ -29,7 +29,7 @@ const plan = [
     ],
     cta: {
       title: 'Get started',
-      url: getEnvs().VITE_PAYMENTT_PUBLIC_KEY
+      url: getEnvs().VITE_PAYMENT_PUBLIC_KEY
     }
   }
 ] as const

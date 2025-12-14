@@ -40,6 +40,7 @@
     "zustand": "^5.0.9"
   },
   "devDependencies": {
+    "stripe": "catalog:",
     "@tsconfig/vite-react": "3.0.2",
     "@types/lodash": "^4.17.20",
     "@types/node": "catalog:",

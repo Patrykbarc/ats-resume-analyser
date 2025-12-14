@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useGetCurrentUser } from './useGetCurrentUser'
 
 export const useAuth = () => {
-  const { data, isLoading, error, isSuccess } = useGetCurrentUser()
+  const { data, error, isSuccess, isError, isFetched } = useGetCurrentUser()
   const { setUser, setIsUserLoggedIn, setIsLoading, setIsPremium } =
     useSessionState()
 
@@ -14,9 +14,9 @@ export const useAuth = () => {
   useEffect(() => {
     if (isSuccess && data) {
       setUser({ ...data })
+
       setIsUserLoggedIn(isAuthenticated && !!data)
       setIsPremium(data.isPremium)
-      setIsLoading(false)
     }
 
     const isUnauthorizedError =
@@ -26,20 +26,23 @@ export const useAuth = () => {
       setUser(null)
       setIsUserLoggedIn(false)
       setIsPremium(false)
-      setIsLoading(false)
+
+      sessionStorage.removeItem('jwtToken')
     }
 
-    if (isLoading) {
-      setIsLoading(true)
+    if (isFetched) {
+      setIsLoading(false)
     }
   }, [
     isSuccess,
+    isFetched,
     data,
     setUser,
     setIsUserLoggedIn,
     setIsLoading,
+    setIsPremium,
     isAuthenticated,
-    isLoading,
-    error
+    error,
+    isError
   ])
 }

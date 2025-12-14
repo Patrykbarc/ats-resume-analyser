@@ -16,4 +16,5 @@ catalog:
   '@tsconfig/node20': '20.1.4'
   'http-status-codes': '^2.3.0'
   'date-fns': '4.1.0'
+  'stripe': '^20.0.0'
   '@types/node': '20.19.0'

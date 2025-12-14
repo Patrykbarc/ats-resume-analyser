@@ -1,4 +1,5 @@
-import { buttonVariants } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
+import { useCheckoutMutation } from '@/hooks/useCheckoutMutation/useCheckoutMutation'
 import { cn } from '@/lib/utils'
 import { PricingPlan } from '@/routes/(app)/pricing'
 import { useSessionState } from '@/stores/session/useSessionState'
@@ -14,6 +15,23 @@ export function PricingCard({
   cta
 }: PricingPlan[number]) {
   const { isUserLoggedIn } = useSessionState()
+  const { user } = useSessionState()
+
+  const { mutate } = useCheckoutMutation({
+    onSuccess: ({ url }) => {
+      if (url) {
+        window.location.href = url
+      }
+    }
+  })
+
+  const handleCheckoutMutation = () => {
+    if (!user?.id) {
+      return
+    }
+
+    mutate({ id: user.id })
+  }
 
   return (
     <div
@@ -39,6 +57,14 @@ export function PricingCard({
         </div>
 
         {/* CTA Button */}
+        <Button
+          className="mb-4"
+          variant="secondary"
+          onClick={handleCheckoutMutation}
+        >
+          Test checkout
+        </Button>
+
         <Link
           to={isUserLoggedIn ? cta.url : '/login'}
           target={isUserLoggedIn ? '_blank' : undefined}

@@ -19,7 +19,7 @@ const state = {
   authToken: sessionStorage.getItem('jwtToken'),
   isUserLoggedIn: false,
   isPremium: false,
-  isLoading: false
+  isLoading: true
 } as const
 
 export const useSessionState = create(
