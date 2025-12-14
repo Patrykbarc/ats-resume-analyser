@@ -15,19 +15,15 @@ const stripe = new Stripe(STRIPE_SECRET_KEY, {
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body
-
-    const searchParam = new URLSearchParams({
-      id: '{CHECKOUT_SESSION_ID}'
-    })
+    const { id } = req.body
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [{ price: 'price_1SdycYAeQW7NoIv71U80I4Lh', quantity: 1 }],
-      success_url: `${FRONTEND_URL}/checkout/success?${String(searchParam)}`,
+      success_url: `${FRONTEND_URL}/checkout/success?id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${FRONTEND_URL}/checkout/cancel`,
-      metadata: { userId }
+      metadata: { id }
     })
 
     const { url } = session
@@ -45,6 +41,7 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, STRIPE_WEBHOOK_SECRET)
+    logger.info(`Received event: ${event.type}`)
   } catch (err) {
     logger.error(`Webhook signature verification failed: ${err}`)
     return res.status(400).send(`Webhook Error`)
@@ -94,6 +91,7 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
 export const verifyPaymentSession = async (req: Request, res: Response) => {
   try {
     const { id } = req.query
+    logger.info(`Verifying session ID: ${id}`)
 
     const session = await stripe.checkout.sessions.retrieve(id as string, {
       expand: ['customer_details', 'subscription']

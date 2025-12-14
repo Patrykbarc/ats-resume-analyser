@@ -5,7 +5,6 @@ import express from 'express'
 import helmet from 'helmet'
 import logger from 'morgan'
 import { corsOptions } from '../config/cors.config'
-import { analyzeLimiter, requestLimiter } from '../config/limiter.config'
 import { routes } from '../routes/routes'
 import { middlewareErrorHandler } from './error-handler.middleware'
 
@@ -14,11 +13,15 @@ export const middleware = (app: Application) => {
   app.use(cors(corsOptions))
   app.use(logger('dev'))
 
-  app.use(express.json())
   app.use(cookieParser())
 
-  app.use('/api/cv/analyze', analyzeLimiter)
-  app.use('/api/cv/analysis/:id', requestLimiter)
+  app.use((req, res, next) => {
+    if (req.path === '/api/checkout/checkout-session-webhook') {
+      next()
+    } else {
+      express.json()(req, res, next)
+    }
+  })
 
   routes(app)
 
