@@ -17,11 +17,15 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
   try {
     const { userId } = req.body
 
+    const searchParam = new URLSearchParams({
+      id: '{CHECKOUT_SESSION_ID}'
+    })
+
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
       line_items: [{ price: 'price_1SdycYAeQW7NoIv71U80I4Lh', quantity: 1 }],
-      success_url: `${FRONTEND_URL}/checkout/success?sid={CHECKOUT_SESSION_ID}`,
+      success_url: `${FRONTEND_URL}/checkout/success?${String(searchParam)}`,
       cancel_url: `${FRONTEND_URL}/checkout/cancel`,
       metadata: { userId }
     })
