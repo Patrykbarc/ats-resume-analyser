@@ -1,7 +1,7 @@
 import { useSessionState } from '@/stores/session/useSessionState'
 import { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useGetCurrentUser } from './useGetCurrentUser'
 
 export const useAuth = () => {
@@ -11,21 +11,28 @@ export const useAuth = () => {
 
   const isAuthenticated = !!sessionStorage.getItem('jwtToken')
 
+  const resetUserState = useCallback(() => {
+    setUser(null)
+    setIsUserLoggedIn(false)
+    setIsPremium(false)
+  }, [setUser, setIsUserLoggedIn, setIsPremium])
+
   useEffect(() => {
     if (isSuccess && data) {
       setUser({ ...data })
-
       setIsUserLoggedIn(isAuthenticated && !!data)
       setIsPremium(data.isPremium)
+    } else {
+      resetUserState()
+
+      setIsLoading(false)
     }
 
     const isUnauthorizedError =
       isAxiosError(error) && error.response?.status === StatusCodes.UNAUTHORIZED
 
     if (isUnauthorizedError) {
-      setUser(null)
-      setIsUserLoggedIn(false)
-      setIsPremium(false)
+      resetUserState()
 
       sessionStorage.removeItem('jwtToken')
     }

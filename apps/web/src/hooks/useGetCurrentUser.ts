@@ -6,7 +6,7 @@ const FIVE_MINUTES = 5 * 60 * 1000
 
 export const useGetCurrentUser = () => {
   const token = sessionStorage.getItem('jwtToken')
-  
+
   return useQuery<UserSchemaType | null>({
     queryKey: ['currentUser'],
     queryFn: getCurrentUserService,

@@ -55,7 +55,7 @@ export function NavItems({ className }: { className?: string }) {
 
 function NavItemsSkeleton() {
   return (
-    <div className="flex gap-4 items-center">
+    <div className="gap-4 items-center hidden md:flex">
       <Skeleton className="h-9 w-20" />
       <Skeleton className="h-6 w-14" />
       <Skeleton className="h-6 w-14" />
