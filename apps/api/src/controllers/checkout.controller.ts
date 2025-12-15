@@ -77,8 +77,6 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
         where: { id: userId }
       })
 
-      logger.info(updatedUser)
-
       if (!updatedUser) {
         logger.error(`User with ID ${userId} was not found.`)
         return res.status(404).send('User not found')
@@ -132,6 +130,43 @@ export const verifyPaymentSession = async (req: Request, res: Response) => {
   } catch (error) {
     if (isStripeError(error)) {
       logger.error(`Stripe error while verifying session: ${error.message}`)
+    }
+
+    handleError(error, res)
+  }
+}
+
+export const cancelSubscription = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.body
+
+    logger.info(`Cancelling subscription for user: ${userId}`)
+
+    const user = await prisma.user.findUnique({
+      where: { id: userId }
+    })
+
+    if (!user || !user.stripeSubscriptionId) {
+      logger.error(`User or subscription not found for userId: ${userId}`)
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: 'User or subscription not found.'
+      })
+    }
+
+    await stripe.subscriptions.update(user.stripeSubscriptionId, {
+      cancel_at_period_end: true
+    })
+
+    logger.info(`Subscription for user ${userId} set to cancel at period end.`)
+
+    res.status(StatusCodes.OK).json({
+      message: 'Subscription will be canceled at the end of the current period.'
+    })
+  } catch (error) {
+    if (isStripeError(error)) {
+      logger.error(
+        `Stripe error while cancelling subscription: ${error.message}`
+      )
     }
 
     handleError(error, res)

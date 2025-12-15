@@ -1,6 +1,7 @@
 import { CheckoutSessionIdSchema } from '@monorepo/schemas'
 import express, { Router } from 'express'
 import {
+  cancelSubscription,
   createCheckoutSession,
   stripeWebhookHandler,
   verifyPaymentSession
@@ -28,6 +29,13 @@ router.get(
   requireAuth,
   validateData(CheckoutSessionIdSchema),
   verifyPaymentSession
+)
+
+router.get(
+  '/cancel-subscription',
+  requireAuth,
+  validateData(CheckoutSessionIdSchema),
+  cancelSubscription
 )
 
 export default router
