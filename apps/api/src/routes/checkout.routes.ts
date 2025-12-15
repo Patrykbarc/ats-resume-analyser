@@ -19,7 +19,6 @@ router.post(
 
 router.post(
   '/checkout-session-webhook',
-  requireAuth,
   express.raw({ type: 'application/json' }),
   stripeWebhookHandler
 )

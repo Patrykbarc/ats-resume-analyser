@@ -63,6 +63,8 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
       const now = new Date()
       const nextMonth = addMonths(now, 1)
 
+      logger.info('Updating user subscription status in the database')
+
       const updatedUser = await prisma.user.update({
         data: {
           isPremium: true,
@@ -74,6 +76,8 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
         },
         where: { id: userId }
       })
+
+      logger.info(updatedUser)
 
       if (!updatedUser) {
         logger.error(`User with ID ${userId} was not found.`)
