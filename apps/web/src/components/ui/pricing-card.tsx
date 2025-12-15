@@ -3,7 +3,7 @@ import { useCheckoutMutation } from '@/hooks/checkout/useCheckoutMutation'
 import { cn } from '@/lib/utils'
 import { PricingPlan } from '@/routes/(app)/pricing'
 import { useSessionState } from '@/stores/session/useSessionState'
-import { Link } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 
 export function PricingCard({
@@ -14,6 +14,7 @@ export function PricingCard({
   features,
   cta
 }: PricingPlan[number]) {
+  const navigate = useNavigate()
   const { isUserLoggedIn } = useSessionState()
   const { user } = useSessionState()
 
@@ -26,8 +27,8 @@ export function PricingCard({
   })
 
   const handleCheckoutMutation = () => {
-    if (!user?.id) {
-      return
+    if (!user?.id || !isUserLoggedIn) {
+      return navigate({ to: '/login' })
     }
 
     mutate({ id: user.id })
@@ -58,21 +59,12 @@ export function PricingCard({
 
         {/* CTA Button */}
         <Button
-          className="mb-4"
           variant="secondary"
           onClick={handleCheckoutMutation}
-        >
-          Test checkout
-        </Button>
-
-        <Link
-          to={isUserLoggedIn ? cta.url : '/login'}
-          target={isUserLoggedIn ? '_blank' : undefined}
-          rel="noopener noreferrer"
           className={cn('mb-8 w-full font-semibold', buttonVariants())}
         >
           {cta.title}
-        </Link>
+        </Button>
 
         {/* Features List */}
         <div className="space-y-4">

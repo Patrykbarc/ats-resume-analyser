@@ -23,7 +23,7 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
       line_items: [{ price: 'price_1SdycYAeQW7NoIv71U80I4Lh', quantity: 1 }],
       success_url: `${FRONTEND_URL}/checkout/success?id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${FRONTEND_URL}/checkout/cancel`,
-      metadata: { id }
+      metadata: { userId: id }
     })
 
     const { url } = session
@@ -51,7 +51,9 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
     const session = event.data.object as Stripe.Checkout.Session
 
     if (!session.metadata?.userId) {
-      logger.error('Missing userId in session metadata.')
+      logger.error(
+        `Missing userId in session metadata. Metadata: ${JSON.stringify(session.metadata)}`
+      )
       return res.status(400).send('Bad Request: Missing userId in metadata')
     }
 
@@ -97,9 +99,20 @@ export const verifyPaymentSession = async (req: Request, res: Response) => {
       expand: ['customer_details', 'subscription']
     })
 
+    const userId = session.metadata?.userId
+    logger.info(`Retrieved userId from session metadata: ${userId}`)
+
+    if (!userId) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Missing userId in session metadata.'
+      })
+    }
+
     if (session.payment_status === 'paid' && session.status === 'complete') {
       return res.status(StatusCodes.OK).json({
         status: 'verified',
+        sessionId: id,
+        userId,
         customerEmail: session.customer_details?.email
       })
     } else {
