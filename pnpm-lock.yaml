@@ -24,6 +24,9 @@ catalogs:
     http-status-codes:
       specifier: ^2.3.0
       version: 2.3.0
+    pdf-parse:
+      specifier: ^2.3.12
+      version: 2.4.5
     stripe:
       specifier: ^20.0.0
       version: 20.0.0
@@ -87,9 +90,6 @@ importers:
       '@monorepo/database':
         specifier: workspace:*
         version: link:../../packages/database
-      '@monorepo/pdf-parse':
-        specifier: workspace:*
-        version: link:../../packages/pdf-parse
       '@monorepo/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas
@@ -147,6 +147,9 @@ importers:
       passport-jwt:
         specifier: ^4.0.1
         version: 4.0.1
+      pdf-parse:
+        specifier: 'catalog:'
+        version: 2.4.5
       resend:
         specifier: ^6.5.2
         version: 6.6.0
@@ -333,22 +336,6 @@ importers:
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
-
-  packages/pdf-parse:
-    dependencies:
-      pdf-parse:
-        specifier: ^2.3.12
-        version: 2.4.5
-    devDependencies:
-      '@tsconfig/node20':
-        specifier: 'catalog:'
-        version: 20.1.4
-      '@types/node':
-        specifier: 'catalog:'
-        version: 20.19.0
-      tsup:
-        specifier: 'catalog:'
-        version: 8.1.0(postcss@8.5.6)(typescript@5.9.3)
 
   packages/schemas:
     dependencies:

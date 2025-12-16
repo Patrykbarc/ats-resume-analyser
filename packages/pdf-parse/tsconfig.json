@@ -1,8 +1,0 @@
-{
-  "extends": ["@tsconfig/node20/tsconfig.json", "../../tsconfig.base.json"],
-  "compilerOptions": {
-    "declaration": true,
-    "declarationDir": "dist"
-  },
-  "include": ["src", "tsup.config.ts"]
-}

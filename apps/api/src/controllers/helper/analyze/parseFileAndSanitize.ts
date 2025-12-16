@@ -1,4 +1,4 @@
-import * as PDFParse from '@monorepo/pdf-parse'
+import * as PDFParse from 'pdf-parse'
 import sanitize from 'sanitize-html'
 
 export const parseFileAndSanitize = async (buffer: Buffer) => {
