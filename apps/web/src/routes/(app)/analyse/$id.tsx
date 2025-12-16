@@ -1,5 +1,5 @@
-import { Skeleton } from '@/components/ui/skeleton'
 import { AnalysisResults } from '@/components/views/analysis-results/analysis-results'
+import { AnalysisSkeletonWithNavigation } from '@/components/views/analysis-results/components/analysis-results-skeleton'
 import { NotFound } from '@/components/views/not-found'
 import { useGetAnalyseById } from '@/hooks/useGetAnalyseById'
 import { createFileRoute, Link, useParams } from '@tanstack/react-router'
@@ -14,7 +14,7 @@ function Analysis() {
   const { data, isLoading, isError, error } = useGetAnalyseById(id)
 
   if (isLoading) {
-    return <LoadingSkeleton />
+    return <AnalysisSkeletonWithNavigation />
   }
 
   if (isError) {
@@ -33,21 +33,6 @@ function Analysis() {
         </Link>
       </div>
       <AnalysisResults analysis={data.data} />
-    </div>
-  )
-}
-
-function LoadingSkeleton() {
-  const commonClasses = 'h-[456px] md:h-64 w-full'
-
-  return (
-    <div className="space-y-6">
-      <Skeleton className="h-6 pb-4 w-[70px]" />
-      <Skeleton className="h-8 w-[183px]" />
-      <Skeleton className={commonClasses} />
-      <Skeleton className={commonClasses} />
-      <Skeleton className={commonClasses} />
-      <Skeleton className={commonClasses} />
     </div>
   )
 }
