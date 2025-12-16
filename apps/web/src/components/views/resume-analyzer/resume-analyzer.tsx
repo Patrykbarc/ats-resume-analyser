@@ -8,6 +8,7 @@ import {
   isRateLimitError
 } from '@/lib/localStorage'
 import { cn } from '@/lib/utils'
+import { useSessionState } from '@/stores/session/useSessionState'
 import { FileSchemaInput } from '@monorepo/schemas'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { AxiosResponse, isAxiosError } from 'axios'
@@ -99,32 +100,43 @@ export function ResumeAnalyzer() {
               handlers={{ handleReset, handleAnalyse }}
             />
           )}
-          {requestsLeft !== null &&
-            (requestsLeft !== 0 ? (
-              <p className="text-center">
-                Requests left:{' '}
-                <span className="font-medium">{requestsLeft}</span>
-              </p>
-            ) : (
-              <span className="text-center">
-                <Link
-                  className={cn(
-                    buttonVariants({ variant: 'link' }),
-                    'p-0 text-base'
-                  )}
-                  to="/pricing"
-                >
-                  Upgrade to premium
-                </Link>
-                <br />
-                To get unlimited analyses.
-              </span>
-            ))}
+          <RequestsLeft />
         </div>
+
         {validationError && (
           <p className="text-center text-rose-400">{validationError}</p>
         )}
       </Card>
     </div>
+  )
+}
+
+function RequestsLeft() {
+  const { requestsLeft } = useRateLimit()
+  const { isPremium } = useSessionState()
+
+  if (isPremium) {
+    return null
+  }
+
+  if (requestsLeft !== 0) {
+    return (
+      <p className="text-center">
+        Requests left: <span className="font-medium">{requestsLeft ?? 5}</span>
+      </p>
+    )
+  }
+
+  return (
+    <span className="text-center">
+      <Link
+        className={cn(buttonVariants({ variant: 'link' }), 'p-0 text-base')}
+        to="/pricing"
+      >
+        Upgrade to premium
+      </Link>
+      <br />
+      To get unlimited analyses.
+    </span>
   )
 }

@@ -1,5 +1,4 @@
 import Logo from '@/components/icons/Logo.svg?react'
-import { useSessionState } from '@/stores/session/useSessionState'
 import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
@@ -9,7 +8,6 @@ import { NavItems } from './components/nav-items'
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
-  const { isPremium } = useSessionState()
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/75">
@@ -24,10 +22,6 @@ export function Navigation() {
             <Logo className="size-8" />
             <span>Resume Analyzer</span>
           </Link>
-
-          <p className="font-strong">
-            {isPremium ? 'Premium User' : 'Free User'}
-          </p>
 
           <NavItems className="hidden md:flex items-center gap-4" />
 

@@ -11,11 +11,21 @@ type NavLinks = {
   className?: string
 }
 
-const getNavLinks = (isUserLoggedIn: SessionState['isUserLoggedIn']) => {
-  const baseLinks: NavLinks = {
+type GetNavLinksProps = {
+  isUserLoggedIn: SessionState['isUserLoggedIn']
+  isPremium: SessionState['isPremium']
+}
+
+const getNavLinks = ({ isUserLoggedIn, isPremium }: GetNavLinksProps) => {
+  const pricingLink: NavLinks = {
     href: '/pricing',
     label: 'Pricing',
     className: cn('text-primary', buttonVariants({ variant: 'default' }))
+  }
+
+  const accountLink: NavLinks = {
+    href: '/account',
+    label: 'Account'
   }
 
   const authLinks: NavLinks[] = [
@@ -23,16 +33,18 @@ const getNavLinks = (isUserLoggedIn: SessionState['isUserLoggedIn']) => {
     { href: '/register', label: 'Sign Up' }
   ]
 
+  const baseLink = isPremium ? accountLink : pricingLink
+
   if (isUserLoggedIn) {
-    return [baseLinks, { href: '/logout', label: 'Logout' }]
+    return [baseLink, { href: '/logout', label: 'Logout' }]
   }
 
-  return [baseLinks, ...authLinks]
+  return [pricingLink, ...authLinks]
 }
 
 export function NavItems({ className }: { className?: string }) {
-  const { isLoading, isUserLoggedIn } = useSessionState()
-  const navLinks = getNavLinks(isUserLoggedIn)
+  const { isLoading, isUserLoggedIn, isPremium } = useSessionState()
+  const navLinks = getNavLinks({ isUserLoggedIn, isPremium })
 
   if (isLoading) {
     return <NavItemsSkeleton />
