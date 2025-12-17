@@ -4,7 +4,8 @@ import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
 import { useAuth } from '@/hooks/useAuth'
 import { getEnvs } from '@/lib/getEnv'
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { RouterContext } from '@/main'
+import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { Analytics } from '@vercel/analytics/react'
 import { Toaster } from 'react-hot-toast'
 import '../index.css'
@@ -35,7 +36,7 @@ const RootLayout = () => {
   )
 }
 
-export const Route = createRootRoute({
+export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
   notFoundComponent: NotFound
 })

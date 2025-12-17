@@ -3,12 +3,21 @@ import { RouterProvider, createRouter } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import ReactDOM from 'react-dom/client'
 import { queryClient } from './api/queryClient'
-import { NotFound } from './components/views/not-found'
 import { routeTree } from './routeTree.gen'
+import {
+  SessionStoreReturnType,
+  useSessionStore
+} from './stores/session/useSessionStore'
+
+export interface RouterContext {
+  sessionStore: SessionStoreReturnType
+}
 
 const router = createRouter({
   routeTree,
-  defaultNotFoundComponent: NotFound
+  context: {
+    sessionStore: useSessionStore
+  }
 })
 
 // Register the router instance for type safety
