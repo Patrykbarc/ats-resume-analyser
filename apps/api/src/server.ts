@@ -1,4 +1,4 @@
-import * as database from '@monorepo/database'
+import { PrismaClient } from '@monorepo/database'
 import axios, { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import OpenAI from 'openai'
@@ -12,7 +12,7 @@ const { OPENAI_API_KEY, DATABASE_URL } = getEnvs()
 
 export const logger = pino({ ...pinoConfig })
 export const openAiClient = new OpenAI({ apiKey: OPENAI_API_KEY })
-export const prisma = new database.PrismaClient({
+export const prisma = new PrismaClient({
   datasourceUrl: DATABASE_URL
 })
 
