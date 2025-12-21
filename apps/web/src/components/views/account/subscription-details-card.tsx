@@ -34,12 +34,14 @@ export function SubscriptionDetailsCard({
       </CardHeader>
 
       <CardContent className="space-y-6">
-        <CardContainer className="bg-muted/50">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-sm font-medium text-muted-foreground">Plan</h3>
-          </div>
+        {subscriptionStatus === 'active' && (
+          <CardContainer className="bg-muted/50">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-sm font-medium text-muted-foreground">
+                Plan
+              </h3>
+            </div>
 
-          {subscriptionStatus === 'active' && (
             <div className="space-y-6 grid grid-cols-1 md:grid-cols-2">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <p className="font-medium">
@@ -71,8 +73,8 @@ export function SubscriptionDetailsCard({
                 nextBillingDate={nextBillingDate}
               />
             </div>
-          )}
-        </CardContainer>
+          </CardContainer>
+        )}
 
         {subscriptionStatus === 'canceled' && (
           <CanceledSubscriptionStatus nextBillingDate={nextBillingDate} />

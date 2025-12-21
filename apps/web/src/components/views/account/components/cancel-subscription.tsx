@@ -25,7 +25,11 @@ export function CancelSubscription({
   nextBillingDate: NextBillingDate
   className?: string
 }) {
-  const { isPending, mutate } = useCancelSubscription()
+  const { isPending, mutate } = useCancelSubscription({
+    onSuccess: () => {
+      window.location.reload()
+    }
+  })
 
   return (
     <AlertDialog>

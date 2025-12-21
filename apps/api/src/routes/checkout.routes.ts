@@ -3,6 +3,7 @@ import express, { Router } from 'express'
 import {
   cancelSubscription,
   createCheckoutSession,
+  resumeSubscription,
   stripeWebhookHandler,
   verifyPaymentSession
 } from '../controllers/checkout.controller'
@@ -36,6 +37,13 @@ router.post(
   requireAuth,
   validateData(CheckoutSessionIdSchema),
   cancelSubscription
+)
+
+router.post(
+  '/restore-subscription',
+  requireAuth,
+  validateData(CheckoutSessionIdSchema),
+  resumeSubscription
 )
 
 export default router

@@ -5,6 +5,7 @@ import {
   StripeSessionUrl
 } from '@/hooks/checkout/types/types'
 import { UserId } from '@/hooks/checkout/useCancelSubscription'
+import { AxiosResponse } from 'axios'
 
 export const handleBuyPremium = async (user: BuyerId) => {
   const userId = user.id
@@ -31,9 +32,21 @@ export const verifyStripeSession = async (sessionId: string) => {
 }
 
 export const cancelSubscriptionService = async (user: UserId) => {
-  const response = await apiClient.post('/checkout/cancel-subscription', {
-    id: user.id
-  })
+  const response = await apiClient.post<AxiosResponse>(
+    '/checkout/cancel-subscription',
+    {
+      id: user.id
+    }
+  )
+
+  return response
+}
+
+export const restoreSubscriptionService = async (user: UserId) => {
+  const response = await apiClient.post<AxiosResponse>(
+    '/checkout/restore-subscription',
+    { id: user.id }
+  )
 
   return response
 }

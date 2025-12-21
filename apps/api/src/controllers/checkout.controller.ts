@@ -148,6 +148,7 @@ export const cancelSubscription = async (req: Request, res: Response) => {
 
     if (!user || !user.stripeSubscriptionId) {
       logger.error(`User or subscription not found for userId: ${id}`)
+
       return res.status(StatusCodes.NOT_FOUND).json({
         error: 'User or subscription not found.'
       })
@@ -159,6 +160,27 @@ export const cancelSubscription = async (req: Request, res: Response) => {
 
     logger.info(`Subscription for user ${id} set to cancel at period end.`)
 
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data: {
+        subscriptionStatus: 'canceled'
+      }
+    })
+
+    if (!updatedUser) {
+      logger.error(
+        `Failed to update subscription status in database for userId: ${id}`
+      )
+
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        error: 'Failed to update subscription status in database.'
+      })
+    }
+
+    logger.info(
+      `User ${id} subscription status updated to 'canceled' in database.`
+    )
+
     res.status(StatusCodes.OK).json({
       message: 'Subscription will be canceled at the end of the current period.'
     })
@@ -169,6 +191,48 @@ export const cancelSubscription = async (req: Request, res: Response) => {
       )
     }
 
+    handleError(error, res)
+  }
+}
+
+export const resumeSubscription = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.body
+
+    const user = await prisma.user.findUnique({ where: { id } })
+
+    if (!user?.stripeSubscriptionId) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        error: 'Subscription not found.'
+      })
+    }
+
+    const subscription = await stripe.subscriptions.retrieve(
+      user.stripeSubscriptionId
+    )
+
+    if (
+      subscription.status === 'canceled' ||
+      !subscription.cancel_at_period_end
+    ) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        error: 'Cannot resume this subscription.'
+      })
+    }
+
+    await stripe.subscriptions.update(user.stripeSubscriptionId, {
+      cancel_at_period_end: false
+    })
+
+    await prisma.user.update({
+      where: { id },
+      data: { subscriptionStatus: 'active' }
+    })
+
+    res.status(StatusCodes.OK).json({
+      message: 'Subscription resumed successfully.'
+    })
+  } catch (error) {
     handleError(error, res)
   }
 }
