@@ -10,6 +10,7 @@
     "dev:api": "pnpm --filter @monorepo/api run dev",
     "build": "pnpm --recursive run build",
     "build:api": "pnpm --filter !./apps/web --recursive run build",
+    "build:web": "pnpm --filter !./apps/api --recursive run build",
     "start:api": "pnpm --filter @monorepo/api run start",
     "prepare": "husky",
     "type-check": "pnpm --recursive run type-check",
