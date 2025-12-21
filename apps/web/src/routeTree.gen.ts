@@ -17,6 +17,7 @@ import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
 import { Route as appPricingIndexRouteImport } from './routes/(app)/pricing/index'
 import { Route as appCheckoutIndexRouteImport } from './routes/(app)/checkout/index'
+import { Route as appAccountIndexRouteImport } from './routes/(app)/account/index'
 import { Route as AuthResetPasswordIdRouteImport } from './routes/_auth/reset-password/$id'
 import { Route as appVerifyTokenRouteImport } from './routes/(app)/verify/$token'
 import { Route as appAnalyseIdRouteImport } from './routes/(app)/analyse/$id'
@@ -62,6 +63,11 @@ const appCheckoutIndexRoute = appCheckoutIndexRouteImport.update({
   path: '/checkout/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const appAccountIndexRoute = appAccountIndexRouteImport.update({
+  id: '/(app)/account/',
+  path: '/account/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthResetPasswordIdRoute = AuthResetPasswordIdRouteImport.update({
   id: '/reset-password/$id',
   path: '/reset-password/$id',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/reset-password/$id': typeof AuthResetPasswordIdRoute
+  '/account': typeof appAccountIndexRoute
   '/checkout': typeof appCheckoutIndexRoute
   '/pricing': typeof appPricingIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
@@ -107,6 +114,7 @@ export interface FileRoutesByTo {
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/reset-password/$id': typeof AuthResetPasswordIdRoute
+  '/account': typeof appAccountIndexRoute
   '/checkout': typeof appCheckoutIndexRoute
   '/pricing': typeof appPricingIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
@@ -123,6 +131,7 @@ export interface FileRoutesById {
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
   '/_auth/reset-password/$id': typeof AuthResetPasswordIdRoute
+  '/(app)/account/': typeof appAccountIndexRoute
   '/(app)/checkout/': typeof appCheckoutIndexRoute
   '/(app)/pricing/': typeof appPricingIndexRoute
   '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
@@ -139,6 +148,7 @@ export interface FileRouteTypes {
     | '/analyse/$id'
     | '/verify/$token'
     | '/reset-password/$id'
+    | '/account'
     | '/checkout'
     | '/pricing'
     | '/forgot-password'
@@ -153,6 +163,7 @@ export interface FileRouteTypes {
     | '/analyse/$id'
     | '/verify/$token'
     | '/reset-password/$id'
+    | '/account'
     | '/checkout'
     | '/pricing'
     | '/forgot-password'
@@ -168,6 +179,7 @@ export interface FileRouteTypes {
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
     | '/_auth/reset-password/$id'
+    | '/(app)/account/'
     | '/(app)/checkout/'
     | '/(app)/pricing/'
     | '/_auth/forgot-password/'
@@ -183,6 +195,7 @@ export interface RootRouteChildren {
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
   appAnalyseIdRoute: typeof appAnalyseIdRoute
   appVerifyTokenRoute: typeof appVerifyTokenRoute
+  appAccountIndexRoute: typeof appAccountIndexRoute
   appCheckoutIndexRoute: typeof appCheckoutIndexRoute
   appPricingIndexRoute: typeof appPricingIndexRoute
   appCheckoutCancelIndexRoute: typeof appCheckoutCancelIndexRoute
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       path: '/checkout'
       fullPath: '/checkout'
       preLoaderRoute: typeof appCheckoutIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(app)/account/': {
+      id: '/(app)/account/'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof appAccountIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/reset-password/$id': {
@@ -310,6 +330,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRouteRoute: AuthRouteRouteWithChildren,
   appAnalyseIdRoute: appAnalyseIdRoute,
   appVerifyTokenRoute: appVerifyTokenRoute,
+  appAccountIndexRoute: appAccountIndexRoute,
   appCheckoutIndexRoute: appCheckoutIndexRoute,
   appPricingIndexRoute: appPricingIndexRoute,
   appCheckoutCancelIndexRoute: appCheckoutCancelIndexRoute,

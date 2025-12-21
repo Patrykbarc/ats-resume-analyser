@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { useSessionState } from '@/stores/session/useSessionState'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { FileSearchIcon, Sparkles } from 'lucide-react'
 
 type AnalyseFileProps = {
@@ -16,7 +16,7 @@ export function AnalyzeFile({
   analyzing,
   handlers: { handleReset, handleAnalyse }
 }: AnalyseFileProps) {
-  const { isPremium } = useSessionState()
+  const { isPremium } = useSessionStore()
 
   return (
     <>

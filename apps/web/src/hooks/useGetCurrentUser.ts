@@ -5,10 +5,12 @@ import { useQuery } from '@tanstack/react-query'
 
 const FIVE_MINUTES = 5 * 60 * 1000
 
+export type CurrentUser = Pick<UserSchemaType, 'id' | 'email' | 'isPremium'>
+
 export const useGetCurrentUser = () => {
   const token = sessionStorage.getItem('jwtToken')
 
-  return useQuery<UserSchemaType | null>({
+  return useQuery<CurrentUser | null>({
     queryKey: QUERY_KEYS.session.currentUser,
     queryFn: getCurrentUserService,
     retry: false,

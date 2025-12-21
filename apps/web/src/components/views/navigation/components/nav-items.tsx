@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router'
 import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { SessionState, useSessionState } from '@/stores/session/useSessionState'
+import { SessionState, useSessionStore } from '@/stores/session/useSessionStore'
 
 type NavLinks = {
   href: string
@@ -43,7 +43,7 @@ const getNavLinks = ({ isUserLoggedIn, isPremium }: GetNavLinksProps) => {
 }
 
 export function NavItems({ className }: { className?: string }) {
-  const { isLoading, isUserLoggedIn, isPremium } = useSessionState()
+  const { isLoading, isUserLoggedIn, isPremium } = useSessionStore()
   const navLinks = getNavLinks({ isUserLoggedIn, isPremium })
 
   if (isLoading) {

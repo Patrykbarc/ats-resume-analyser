@@ -8,7 +8,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { QUERY_KEYS } from '@/constants/queryKeys'
 import { useLoginMutation } from '@/hooks/useLoginMutation'
-import { useSessionState } from '@/stores/session/useSessionState'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'
 import { useForm } from '@tanstack/react-form'
 import { useQueryClient } from '@tanstack/react-query'
@@ -35,7 +35,7 @@ const FORM_FIELDS: AuthFormFields<LoginUserSchemaType>[] = [
 export function LoginForm() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
-  const { setAuthToken } = useSessionState()
+  const { setAuthToken } = useSessionStore()
 
   const { mutate, isPending, isSuccess, error } = useLoginMutation({
     onSuccess: (response) => {

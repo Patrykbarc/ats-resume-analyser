@@ -1,4 +1,4 @@
-import { useSessionState } from '@/stores/session/useSessionState'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
 import { useCallback, useEffect } from 'react'
@@ -7,7 +7,7 @@ import { useGetCurrentUser } from './useGetCurrentUser'
 export const useAuth = () => {
   const { data, error, isSuccess, isError, isFetched } = useGetCurrentUser()
   const { setUser, setIsUserLoggedIn, setIsLoading, setIsPremium } =
-    useSessionState()
+    useSessionStore()
 
   const isAuthenticated = !!sessionStorage.getItem('jwtToken')
 

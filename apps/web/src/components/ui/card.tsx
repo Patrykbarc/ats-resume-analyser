@@ -71,6 +71,18 @@ function CardContent({ className, ...props }: React.ComponentProps<'div'>) {
   )
 }
 
+export function CardContainer({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  return (
+    <div
+      className={cn('rounded-lg border border-border p-4', className)}
+      {...props}
+    />
+  )
+}
+
 function CardFooter({ className, ...props }: React.ComponentProps<'div'>) {
   return (
     <div

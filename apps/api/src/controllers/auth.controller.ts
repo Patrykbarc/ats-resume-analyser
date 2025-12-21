@@ -262,6 +262,7 @@ export const logoutUser = async (req: Request, res: Response) => {
 export const getCurrentUser = async (req: Request, res: Response) => {
   try {
     const userId = (req.user as { id: string })?.id
+    const extendQuery = req.query.extended === 'true'
 
     if (!userId) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -274,7 +275,13 @@ export const getCurrentUser = async (req: Request, res: Response) => {
       select: {
         id: true,
         email: true,
-        isPremium: true
+        isPremium: true,
+
+        ...(extendQuery && {
+          createdAt: true,
+          subscriptionStatus: true,
+          subscriptionCurrentPeriodEnd: true
+        })
       }
     })
 

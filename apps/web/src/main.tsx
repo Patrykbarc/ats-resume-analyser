@@ -11,12 +11,14 @@ import {
 
 export interface RouterContext {
   sessionStore: SessionStoreReturnType
+  queryClient: typeof queryClient
 }
 
 const router = createRouter({
   routeTree,
   context: {
-    sessionStore: useSessionStore
+    sessionStore: useSessionStore,
+    queryClient: queryClient
   }
 })
 

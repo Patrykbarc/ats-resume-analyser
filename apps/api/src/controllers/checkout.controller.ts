@@ -138,16 +138,16 @@ export const verifyPaymentSession = async (req: Request, res: Response) => {
 
 export const cancelSubscription = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.body
+    const { id } = req.body
 
-    logger.info(`Cancelling subscription for user: ${userId}`)
+    logger.info(`Cancelling subscription for user: ${id}`)
 
     const user = await prisma.user.findUnique({
-      where: { id: userId }
+      where: { id }
     })
 
     if (!user || !user.stripeSubscriptionId) {
-      logger.error(`User or subscription not found for userId: ${userId}`)
+      logger.error(`User or subscription not found for userId: ${id}`)
       return res.status(StatusCodes.NOT_FOUND).json({
         error: 'User or subscription not found.'
       })
@@ -157,7 +157,7 @@ export const cancelSubscription = async (req: Request, res: Response) => {
       cancel_at_period_end: true
     })
 
-    logger.info(`Subscription for user ${userId} set to cancel at period end.`)
+    logger.info(`Subscription for user ${id} set to cancel at period end.`)
 
     res.status(StatusCodes.OK).json({
       message: 'Subscription will be canceled at the end of the current period.'

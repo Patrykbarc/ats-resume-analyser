@@ -1,6 +1,7 @@
 export const QUERY_KEYS = {
   session: {
-    currentUser: ['currentUser'] as const
+    currentUser: ['currentUser'] as const,
+    account: ['accountInformations'] as const
   },
   subscription: {
     user: ['userSubscription'] as const

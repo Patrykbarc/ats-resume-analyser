@@ -31,7 +31,7 @@ router.get(
   verifyPaymentSession
 )
 
-router.get(
+router.post(
   '/cancel-subscription',
   requireAuth,
   validateData(CheckoutSessionIdSchema),

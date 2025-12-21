@@ -8,7 +8,7 @@ import {
   isRateLimitError
 } from '@/lib/localStorage'
 import { cn } from '@/lib/utils'
-import { useSessionState } from '@/stores/session/useSessionState'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { FileSchemaInput } from '@monorepo/schemas'
 import { Link, useNavigate } from '@tanstack/react-router'
 import { AxiosResponse, isAxiosError } from 'axios'
@@ -113,7 +113,7 @@ export function ResumeAnalyzer() {
 
 function RequestsLeft() {
   const { requestsLeft } = useRateLimit()
-  const { isPremium } = useSessionState()
+  const { isPremium } = useSessionStore()
 
   if (isPremium) {
     return null

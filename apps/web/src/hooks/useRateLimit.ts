@@ -1,4 +1,4 @@
-import { useSessionState } from '@/stores/session/useSessionState'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { isAfter } from 'date-fns'
 const LOCALSTORAGE = {
   REQUESTS_LEFT_KEY: 'requestsLeft',
@@ -6,7 +6,7 @@ const LOCALSTORAGE = {
 }
 
 export const useRateLimit = () => {
-  const { isPremium } = useSessionState()
+  const { isPremium } = useSessionStore()
 
   if (isPremium) {
     return { requestsLeft: Infinity, setRequestsLeft }

@@ -4,6 +4,7 @@ import {
   StripeSessionId,
   StripeSessionUrl
 } from '@/hooks/checkout/types/types'
+import { UserId } from '@/hooks/checkout/useCancelSubscription'
 
 export const handleBuyPremium = async (user: BuyerId) => {
   const userId = user.id
@@ -27,4 +28,12 @@ export const verifyStripeSession = async (sessionId: string) => {
   )
 
   return response.data
+}
+
+export const cancelSubscriptionService = async (user: UserId) => {
+  const response = await apiClient.post('/checkout/cancel-subscription', {
+    id: user.id
+  })
+
+  return response
 }

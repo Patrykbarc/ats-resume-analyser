@@ -1,4 +1,5 @@
 import { apiClient } from '@/api/apiClient'
+import { CurrentUser } from '@/hooks/useGetCurrentUser'
 import {
   LoginUserSchemaType,
   RegisterUserSchemaType,
@@ -64,7 +65,7 @@ export const resendVerificationLink = async (token: VerifyUserSchemaType) => {
 
 export const getCurrentUserService = async () => {
   try {
-    const response = await apiClient<UserSchemaType>('/auth/me')
+    const response = await apiClient<CurrentUser>('/auth/me')
 
     return response.data
   } catch (error) {
@@ -76,6 +77,20 @@ export const getCurrentUserService = async () => {
     }
     throw error
   }
+}
+
+export const getUserAccountInformationsService = async () => {
+  const response = await apiClient<
+    CurrentUser &
+      Pick<
+        UserSchemaType,
+        'createdAt' | 'subscriptionStatus' | 'subscriptionCurrentPeriodEnd'
+      >
+  >('/auth/me', {
+    params: { extended: true }
+  })
+
+  return response.data
 }
 
 export const requestPasswordReset = async (

@@ -2,7 +2,7 @@ import { Button, buttonVariants } from '@/components/ui/button'
 import { useCheckoutMutation } from '@/hooks/checkout/useCheckoutMutation'
 import { cn } from '@/lib/utils'
 import { PricingPlan } from '@/routes/(app)/pricing'
-import { useSessionState } from '@/stores/session/useSessionState'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { useNavigate } from '@tanstack/react-router'
 import { Check } from 'lucide-react'
 
@@ -15,8 +15,8 @@ export function PricingCard({
   cta
 }: PricingPlan[number]) {
   const navigate = useNavigate()
-  const { isUserLoggedIn } = useSessionState()
-  const { user } = useSessionState()
+  const { isUserLoggedIn } = useSessionStore()
+  const { user } = useSessionStore()
 
   const { mutate } = useCheckoutMutation({
     onSuccess: ({ url }) => {
