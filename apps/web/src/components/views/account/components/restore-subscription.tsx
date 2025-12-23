@@ -10,22 +10,19 @@ import {
   AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button, buttonVariants } from '@/components/ui/button'
-import { useCancelSubscription } from '@/hooks/checkout/useCancelSubscription'
+import { useRestoreSubscription } from '@/hooks/checkout/useRestoreSubscription'
 import { cn } from '@/lib/utils'
 import { User } from '@monorepo/database'
 import { AlertTriangle } from 'lucide-react'
-import { NextBillingDate } from '../types/types'
 
-export function CancelSubscription({
+export function RestoreSubscription({
   id,
-  nextBillingDate,
   className
 }: {
   id: User['id']
-  nextBillingDate: NextBillingDate
   className?: string
 }) {
-  const { isPending, mutate } = useCancelSubscription({
+  const { isPending, mutate } = useRestoreSubscription({
     onSuccess: () => {
       window.location.reload()
     }
@@ -35,44 +32,37 @@ export function CancelSubscription({
     <AlertDialog>
       <AlertDialogTrigger className={className} asChild>
         <Button
-          variant="outline"
+          variant="default"
           size="sm"
           className="w-fit md:ml-auto"
           disabled={isPending}
         >
-          Cancel subscription
+          Restore subscription
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <div className="flex items-center gap-2 mb-2">
             <AlertTriangle className="h-5 w-5 text-destructive" />
-            <AlertDialogTitle>Cancel Subscription</AlertDialogTitle>
+            <AlertDialogTitle>Restore subscription</AlertDialogTitle>
           </div>
           <AlertDialogDescription className="space-y-2">
             <span>
-              Are you sure you want to cancel your Premium subscription?
-              <br />
-            </span>
-            <span className="text-sm text-muted-foreground mt-2">
-              Your subscription will remain active until {nextBillingDate}.
+              Are you sure you want to restore your Premium subscription?
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel
-            className={cn(
-              buttonVariants({ variant: 'default' }),
-              'hover:text-white'
-            )}
+            className={cn(buttonVariants({ variant: 'secondary' }))}
           >
-            Keep subscription
+            Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            className={buttonVariants({ variant: 'secondary' })}
+            className={cn(buttonVariants({ variant: 'default' }))}
             onClick={() => mutate({ id })}
           >
-            Yes, cancel
+            Yes, restore
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

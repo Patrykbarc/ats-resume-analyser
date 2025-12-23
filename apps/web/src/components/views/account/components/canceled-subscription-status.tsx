@@ -1,9 +1,8 @@
-import { Button } from '@/components/ui/button'
 import { CardContainer } from '@/components/ui/card'
-import { useRestoreSubscription } from '@/hooks/checkout/useRestoreSubscription'
 import { useLoaderData } from '@tanstack/react-router'
 import { AlertTriangle } from 'lucide-react'
 import { NextBillingDate } from '../types/types'
+import { RestoreSubscription } from './restore-subscription'
 
 export function CanceledSubscriptionStatus({
   nextBillingDate
@@ -11,16 +10,6 @@ export function CanceledSubscriptionStatus({
   nextBillingDate: NextBillingDate
 }) {
   const data = useLoaderData({ from: '/(app)/account/' })
-
-  const { mutate, isPending } = useRestoreSubscription({
-    onSuccess: () => {
-      window.location.reload()
-    }
-  })
-
-  function handleRestoreSubscription() {
-    mutate({ id: data.id })
-  }
 
   return (
     <CardContainer className="flex items-start gap-3 bg-destructive/10 border-destructive/20">
@@ -41,14 +30,7 @@ export function CanceledSubscriptionStatus({
           </span>
         </p>
 
-        <Button
-          className="mt-4"
-          size="sm"
-          onClick={handleRestoreSubscription}
-          disabled={isPending}
-        >
-          Restore subscription
-        </Button>
+        <RestoreSubscription id={data.id} className="mt-4" />
       </div>
     </CardContainer>
   )
