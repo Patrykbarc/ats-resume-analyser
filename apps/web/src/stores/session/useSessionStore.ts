@@ -12,6 +12,7 @@ export type SessionState = {
   setIsPremium: (premium: boolean) => void
   isLoading: boolean
   setIsLoading: (loading: boolean) => void
+  resetUserState: () => void
 }
 
 export type SessionStoreReturnType = UseBoundStore<StoreApi<SessionState>>
@@ -39,6 +40,13 @@ export const useSessionStore = create(
     },
     setIsUserLoggedIn: (loggedIn) => set({ isUserLoggedIn: loggedIn }),
     setIsPremium: (premium) => set({ isPremium: premium }),
-    setIsLoading: (loading) => set({ isLoading: loading })
+    setIsLoading: (loading) => set({ isLoading: loading }),
+
+    resetUserState: () =>
+      set({
+        user: null,
+        isUserLoggedIn: false,
+        isPremium: false
+      })
   })
 )

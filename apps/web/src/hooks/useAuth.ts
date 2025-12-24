@@ -1,55 +1,63 @@
 import { useSessionStore } from '@/stores/session/useSessionStore'
 import { isAxiosError } from 'axios'
 import { StatusCodes } from 'http-status-codes'
-import { useCallback, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useGetCurrentUser } from './useGetCurrentUser'
 
 export const useAuth = () => {
-  const { data, error, isSuccess, isError, isFetched } = useGetCurrentUser()
-  const { setUser, setIsUserLoggedIn, setIsLoading, setIsPremium } =
-    useSessionStore()
-
-  const isAuthenticated = !!localStorage.getItem('jwtToken')
-
-  const resetUserState = useCallback(() => {
-    setUser(null)
-    setIsUserLoggedIn(false)
-    setIsPremium(false)
-  }, [setUser, setIsUserLoggedIn, setIsPremium])
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      setUser({ ...data })
-      setIsUserLoggedIn(isAuthenticated && !!data)
-      setIsPremium(data.isPremium)
-    } else {
-      resetUserState()
-
-      setIsLoading(false)
-    }
-
-    const isUnauthorizedError =
-      isAxiosError(error) && error.response?.status === StatusCodes.UNAUTHORIZED
-
-    if (isUnauthorizedError) {
-      resetUserState()
-
-      localStorage.removeItem('jwtToken')
-    }
-
-    if (isFetched) {
-      setIsLoading(false)
-    }
-  }, [
+  const {
+    data,
+    error,
     isSuccess,
     isFetched,
-    data,
+    isLoading: queryLoading
+  } = useGetCurrentUser()
+  const {
     setUser,
     setIsUserLoggedIn,
     setIsLoading,
     setIsPremium,
-    isAuthenticated,
+    resetUserState
+  } = useSessionStore()
+
+  const token = localStorage.getItem('jwtToken')
+
+  useEffect(() => {
+    if (!token) {
+      resetUserState()
+      setIsLoading(false)
+      return
+    }
+
+    setIsLoading(queryLoading)
+
+    if (isFetched) {
+      if (isSuccess && data) {
+        setUser({ ...data })
+        setIsUserLoggedIn(true)
+        setIsPremium(data.isPremium)
+      } else {
+        resetUserState()
+
+        const isUnauthorized =
+          isAxiosError(error) &&
+          error.response?.status === StatusCodes.UNAUTHORIZED
+        if (isUnauthorized) {
+          localStorage.removeItem('jwtToken')
+        }
+      }
+    }
+  }, [
+    isSuccess,
+    isFetched,
+    queryLoading,
+    data,
     error,
-    isError
+    token,
+    setUser,
+    setIsUserLoggedIn,
+    setIsPremium,
+    setIsLoading,
+    resetUserState
   ])
 }
