@@ -2,7 +2,7 @@ import { AnalysisParamsSchema, FileSchema } from '@monorepo/schemas'
 import { Router } from 'express'
 import multer from 'multer'
 import { createAnalyze, getAnalysys } from '../controllers/analyse.controller'
-import { requireAuth } from '../middleware/auth.middleware'
+import { requireAuth } from '../middleware/require-auth.middleware'
 import { requirePremium } from '../middleware/require-premium.middleware'
 import { validateData, validateFile } from '../middleware/validateEntries'
 

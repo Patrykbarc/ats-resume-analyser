@@ -1,7 +1,9 @@
+import { checkoutSessionGuard } from '@/guards/checkoutSessionGuard'
 import { createFileRoute } from '@tanstack/react-router'
 import { XCircle } from 'lucide-react'
 
 export const Route = createFileRoute('/(app)/checkout/cancel/')({
+  beforeLoad: async () => await checkoutSessionGuard(),
   component: CancelledPage
 })
 

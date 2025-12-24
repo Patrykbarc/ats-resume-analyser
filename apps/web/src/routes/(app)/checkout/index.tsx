@@ -1,14 +1,17 @@
 import { Spinner } from '@/components/ui/spinner'
+import { checkoutSessionGuard } from '@/guards/checkoutSessionGuard'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/(app)/checkout/')({
-  component: RouteComponent
+  beforeLoad: async () => await checkoutSessionGuard(),
+  component: PaymentVerification
 })
 
-function RouteComponent() {
+function PaymentVerification() {
   return (
     <div className="p-4 gap-3 flex justify-center items-center mx-auto">
-      <Spinner /> <p>Verifying payment...</p>
+      <Spinner />
+      <p>Verifying payment...</p>
     </div>
   )
 }

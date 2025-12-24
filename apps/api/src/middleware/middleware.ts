@@ -18,9 +18,9 @@ export const middleware = (app: Application) => {
   app.use((req, res, next) => {
     if (req.path === '/api/checkout/checkout-session-webhook') {
       next()
-    } else {
-      express.json()(req, res, next)
     }
+
+    express.json()(req, res, next)
   })
 
   routes(app)

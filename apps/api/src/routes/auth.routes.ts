@@ -18,7 +18,7 @@ import {
   resetPassword,
   verifyUser
 } from '../controllers/auth.controller'
-import { requireAuth } from '../middleware/auth.middleware'
+import { requireAuth } from '../middleware/require-auth.middleware'
 import { validateData } from '../middleware/validateEntries'
 
 const router: Router = Router()

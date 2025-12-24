@@ -1,4 +1,5 @@
 import { QUERY_KEYS } from '@/constants/queryKeys'
+import { checkoutSessionGuard } from '@/guards/checkoutSessionGuard'
 import { useVerifyStripeSession } from '@/hooks/checkout/useVerifyStripeSession'
 import { CheckoutSessionIdSchema } from '@monorepo/schemas'
 import { useQueryClient } from '@tanstack/react-query'
@@ -7,6 +8,7 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/(app)/checkout/success/')({
+  beforeLoad: async () => await checkoutSessionGuard(),
   component: SuccessPage,
   validateSearch: CheckoutSessionIdSchema
 })
