@@ -113,9 +113,9 @@ export function ResumeAnalyzer() {
 
 function RequestsLeft() {
   const { requestsLeft } = useRateLimit()
-  const { isPremium } = useSessionStore()
+  const { isPremium, isLoading } = useSessionStore()
 
-  if (isPremium) {
+  if (isPremium || isLoading) {
     return null
   }
 
