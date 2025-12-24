@@ -17,7 +17,8 @@ export const loginService = async (value: LoginUserSchemaType) => {
     ...value
   })
 
-  sessionStorage.setItem('jwtToken', response.data.token)
+  console.log(response)
+  localStorage.setItem('jwtToken', response.data.token)
 
   return response
 }

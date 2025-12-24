@@ -8,7 +8,7 @@ const FIVE_MINUTES = 5 * 60 * 1000
 export type CurrentUser = Pick<UserSchemaType, 'id' | 'email' | 'isPremium'>
 
 export const useGetCurrentUser = () => {
-  const token = sessionStorage.getItem('jwtToken')
+  const token = localStorage.getItem('jwtToken')
 
   return useQuery<CurrentUser | null>({
     queryKey: QUERY_KEYS.session.currentUser,

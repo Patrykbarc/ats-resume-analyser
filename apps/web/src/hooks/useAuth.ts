@@ -9,7 +9,7 @@ export const useAuth = () => {
   const { setUser, setIsUserLoggedIn, setIsLoading, setIsPremium } =
     useSessionStore()
 
-  const isAuthenticated = !!sessionStorage.getItem('jwtToken')
+  const isAuthenticated = !!localStorage.getItem('jwtToken')
 
   const resetUserState = useCallback(() => {
     setUser(null)
@@ -34,7 +34,7 @@ export const useAuth = () => {
     if (isUnauthorizedError) {
       resetUserState()
 
-      sessionStorage.removeItem('jwtToken')
+      localStorage.removeItem('jwtToken')
     }
 
     if (isFetched) {

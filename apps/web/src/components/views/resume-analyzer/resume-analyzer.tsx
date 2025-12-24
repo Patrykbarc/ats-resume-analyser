@@ -6,7 +6,7 @@ import {
   getHeadersRateLimitRemaining,
   getHeadersRateLimitReset,
   isRateLimitError
-} from '@/lib/localStorage'
+} from '@/lib/rateLimits'
 import { cn } from '@/lib/utils'
 import { useSessionStore } from '@/stores/session/useSessionStore'
 import { FileSchemaInput } from '@monorepo/schemas'

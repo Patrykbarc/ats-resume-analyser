@@ -8,7 +8,9 @@ const isRateLimitError = (error: unknown): error is AxiosError => {
   )
 }
 
-const getHeadersRateLimitRemaining = (response?: AxiosResponse): number | null => {
+const getHeadersRateLimitRemaining = (
+  response?: AxiosResponse
+): number | null => {
   const remaining = response?.headers?.['x-ratelimit-remaining']
   if (!remaining) {
     return null
@@ -33,4 +35,8 @@ const getHeadersRateLimitReset = (response?: AxiosResponse): string | null => {
   return resetDate.toLocaleString('pl-PL')
 }
 
-export { getHeadersRateLimitRemaining, getHeadersRateLimitReset, isRateLimitError }
+export {
+  getHeadersRateLimitRemaining,
+  getHeadersRateLimitReset,
+  isRateLimitError
+}

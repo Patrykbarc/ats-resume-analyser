@@ -18,7 +18,7 @@ export type SessionStoreReturnType = UseBoundStore<StoreApi<SessionState>>
 
 const state = {
   user: null,
-  authToken: sessionStorage.getItem('jwtToken'),
+  authToken: localStorage.getItem('jwtToken'),
   isUserLoggedIn: false,
   isPremium: false,
   isLoading: true
@@ -31,9 +31,9 @@ export const useSessionStore = create(
     setUser: (user) => set({ user }),
     setAuthToken: (token) => {
       if (token) {
-        sessionStorage.setItem('jwtToken', token)
+        localStorage.setItem('jwtToken', token)
       } else {
-        sessionStorage.removeItem('jwtToken')
+        localStorage.removeItem('jwtToken')
       }
       set({ authToken: token, user: null })
     },

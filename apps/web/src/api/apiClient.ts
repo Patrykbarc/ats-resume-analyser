@@ -35,7 +35,7 @@ const processQueue = (
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = sessionStorage.getItem('jwtToken')
+    const token = localStorage.getItem('jwtToken')
 
     if (token) {
       if (!config.headers.Authorization) {
@@ -89,7 +89,7 @@ apiClient.interceptors.response.use(
         const refreshResponse = await apiClient.post('/auth/refresh')
         const newAccessToken = refreshResponse.data.token
 
-        sessionStorage.setItem('jwtToken', newAccessToken)
+        localStorage.setItem('jwtToken', newAccessToken)
 
         isRefreshing = false
         processQueue(null, newAccessToken)
@@ -98,7 +98,7 @@ apiClient.interceptors.response.use(
         return apiClient(originalRequest)
       } catch (refreshError: unknown) {
         isRefreshing = false
-        sessionStorage.removeItem('jwtToken')
+        localStorage.removeItem('jwtToken')
 
         if (isAxiosError(refreshError)) {
           processQueue(refreshError)
