@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /analyse/
+
+Sitemap: https://ats-scan.patrykbarc.com/
