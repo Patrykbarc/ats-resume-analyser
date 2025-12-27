@@ -1,50 +1,19 @@
 import { Link } from '@tanstack/react-router'
 
-import { buttonVariants } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { SessionState, useSessionStore } from '@/stores/session/useSessionStore'
+import { useSessionStore } from '@/stores/session/useSessionStore'
+import { getNavLinks } from '../helper/getNavLinks'
 
-type NavLinks = {
-  href: string
-  label: string
+export function NavItems({
+  className,
+  highlightCta
+}: {
   className?: string
-}
-
-type GetNavLinksProps = {
-  isUserLoggedIn: SessionState['isUserLoggedIn']
-  isPremium: SessionState['isPremium']
-}
-
-const getNavLinks = ({ isUserLoggedIn, isPremium }: GetNavLinksProps) => {
-  const pricingLink: NavLinks = {
-    href: '/pricing',
-    label: 'Pricing',
-    className: cn('text-primary', buttonVariants({ variant: 'default' }))
-  }
-
-  const accountLink: NavLinks = {
-    href: '/account',
-    label: 'Account'
-  }
-
-  const authLinks: NavLinks[] = [
-    { href: '/login', label: 'Log In' },
-    { href: '/register', label: 'Sign Up' }
-  ]
-
-  const baseLink = isPremium ? accountLink : pricingLink
-
-  if (isUserLoggedIn) {
-    return [baseLink, { href: '/logout', label: 'Logout' }]
-  }
-
-  return [pricingLink, ...authLinks]
-}
-
-export function NavItems({ className }: { className?: string }) {
+  highlightCta?: boolean
+}) {
   const { isLoading, isUserLoggedIn, isPremium } = useSessionStore()
-  const navLinks = getNavLinks({ isUserLoggedIn, isPremium })
+  const navLinks = getNavLinks({ isUserLoggedIn, isPremium, highlightCta })
 
   if (isLoading) {
     return <NavItemsSkeleton />
@@ -52,15 +21,17 @@ export function NavItems({ className }: { className?: string }) {
 
   return (
     <>
-      <div className={cn('text-neutral-600 font-medium', className)}>
+      <ul className={cn('text-neutral-600 font-medium', className)}>
         {navLinks.map((link) => {
           return (
-            <Link key={link.href} to={link.href} className={link.className}>
-              {link.label}
-            </Link>
+            <li key={link.href}>
+              <Link to={link.href} className={link.className}>
+                {link.label}
+              </Link>
+            </li>
           )
         })}
-      </div>
+      </ul>
     </>
   )
 }

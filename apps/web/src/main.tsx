@@ -16,6 +16,7 @@ export interface RouterContext {
 
 const router = createRouter({
   routeTree,
+  scrollRestoration: true,
   context: {
     sessionStore: useSessionStore,
     queryClient: queryClient

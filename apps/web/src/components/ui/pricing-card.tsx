@@ -38,7 +38,7 @@ export function PricingCard({
     <div
       key={name}
       className={cn(
-        'relative rounded-lg bg-card border transition-all duration-200 overflow-hidden border-primary ring-accent md:scale-105'
+        'relative rounded-lg bg-card border overflow-hidden border-primary ring-accent'
       )}
     >
       <div className="absolute -right-12 top-6 rotate-45 bg-primary px-12 py-1 text-xs font-semibold text-background">

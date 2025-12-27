@@ -32,7 +32,10 @@ export function Navigation() {
           </Link>
 
           {!isMobile && (
-            <NavItems className="hidden md:flex items-center gap-4" />
+            <NavItems
+              className="hidden md:flex items-center gap-4"
+              highlightCta
+            />
           )}
 
           <Button

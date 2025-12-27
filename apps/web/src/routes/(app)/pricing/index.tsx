@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { PricingCard } from '@/components/ui/pricing-card'
 import { buildPageTitle } from '@/lib/buildPageTitle'
 import { getEnvs } from '@/lib/getEnv'
@@ -72,38 +72,43 @@ const faq = [
 ] as const
 
 export default function PricingPage() {
+  const { VITE_CONTACT_EMAIL } = getEnvs()
+
   return (
     <div>
-      <div className="mb-12 text-center">
-        <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          One Powerful Plan
-        </h1>
-        <p className="mb-4 text-xl text-muted-foreground">
-          Professional resume analysis powered by GPT-4
-        </p>
-        <div className="inline-flex flex-wrap justify-center gap-4">
-          {brief.map((item) => {
-            return (
-              <span
-                key={item}
-                className="rounded-md bg-accent/40 px-4 py-2 text-sm font-medium text-muted-foreground"
-              >
-                {item}
-              </span>
-            )
-          })}
-        </div>
-      </div>
+      <section>
+        <div className="mb-12 text-center">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            One Powerful Plan
+          </h1>
+          <p className="mb-4 text-xl text-muted-foreground">
+            Professional resume analysis powered by GPT-4
+          </p>
 
-      <div className="flex justify-center">
-        <div className="w-full max-w-md">
-          {plan.map((plan) => (
-            <PricingCard key={plan.name} {...plan} />
-          ))}
+          <div className="inline-flex flex-wrap justify-center gap-4">
+            {brief.map((item) => {
+              return (
+                <span
+                  key={item}
+                  className="rounded-md bg-accent/40 px-4 py-2 text-sm font-medium text-muted-foreground"
+                >
+                  {item}
+                </span>
+              )
+            })}
+          </div>
         </div>
-      </div>
 
-      <div className="mt-16">
+        <div className="flex justify-center">
+          <div className="w-full max-w-md">
+            {plan.map((plan) => (
+              <PricingCard key={plan.name} {...plan} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-16">
         <h2 className="mb-8 text-center text-2xl font-semibold text-foreground">
           Frequently Asked Questions
         </h2>
@@ -120,9 +125,9 @@ export default function PricingPage() {
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
-      <div className="mt-16 rounded-lg border border-border bg-card p-8 text-center">
+      <section className="mt-16 rounded-lg border border-border bg-card p-8 text-center">
         <h2 className="mb-3 text-2xl font-semibold text-foreground">
           Need higher limits or custom features?
         </h2>
@@ -130,8 +135,14 @@ export default function PricingPage() {
           Contact our team for enterprise solutions, volume discounts, or custom
           analysis requirements.
         </p>
-        <Button variant="outline">Contact Sales</Button>
-      </div>
+
+        <a
+          className={buttonVariants({ variant: 'outline' })}
+          href={`mailto:${VITE_CONTACT_EMAIL}`}
+        >
+          Contact Sales
+        </a>
+      </section>
     </div>
   )
 }
