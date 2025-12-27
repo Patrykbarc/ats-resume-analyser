@@ -1,4 +1,6 @@
 import { ResumeAnalyzer } from '@/components/views/resume-analyzer/resume-analyzer'
+import { Faq } from '@/components/views/seo/faq'
+import { Features } from '@/components/views/seo/features'
 import { buildPageTitle } from '@/lib/buildPageTitle'
 import { createFileRoute } from '@tanstack/react-router'
 
@@ -15,17 +17,23 @@ export const Route = createFileRoute('/')({
 
 function RouteComponent() {
   return (
-    <>
+    <div className="space-y-12 md:space-y-24">
       <header className="mb-12 text-center">
-        <h1 className="mb-3 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-          ATS Resume Analyzer
+        <h1 className="mb-4 mt-8 text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl text-balance">
+          AI-Powered Resume Analyzer
         </h1>
-        <p className="text-lg text-muted-foreground">
-          Get AI-powered insights to improve your resume
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground sm:text-xl text-pretty leading-relaxed">
+          Get instant AI-powered insights to improve your resume and land more
+          interviews
         </p>
       </header>
 
-      <ResumeAnalyzer />
-    </>
+      <section>
+        <ResumeAnalyzer />
+      </section>
+
+      <Features />
+      <Faq />
+    </div>
   )
 }
