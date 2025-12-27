@@ -79,14 +79,14 @@ export const getCurrentUserService = async () => {
   }
 }
 
+type CurrentUserDetails = CurrentUser &
+  Pick<
+    UserSchemaType,
+    'createdAt' | 'subscriptionStatus' | 'subscriptionCurrentPeriodEnd'
+  >
+
 export const getUserAccountInformationsService = async () => {
-  const response = await apiClient<
-    CurrentUser &
-      Pick<
-        UserSchemaType,
-        'createdAt' | 'subscriptionStatus' | 'subscriptionCurrentPeriodEnd'
-      >
-  >('/auth/me', {
+  const response = await apiClient<CurrentUserDetails | null>('/auth/me', {
     params: { extended: true }
   })
 

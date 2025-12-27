@@ -38,6 +38,10 @@ export const Route = createFileRoute('/(app)/account/')({
 function RouteComponent() {
   const data = useLoaderData({ from: '/(app)/account/' })
 
+  if (!data) {
+    return null
+  }
+
   const nextBillingDate =
     data.subscriptionCurrentPeriodEnd &&
     format(data.subscriptionCurrentPeriodEnd, 'MMMM dd, yyyy')
