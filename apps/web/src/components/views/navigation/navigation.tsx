@@ -1,13 +1,21 @@
 import Logo from '@/components/icons/Logo.svg?react'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { Link } from '@tanstack/react-router'
 import { Menu, X } from 'lucide-react'
-import { useState } from 'react'
+import { lazy, useState } from 'react'
 import { Button } from '../../ui/button'
-import { MobileNav } from './components/mobile-nav'
-import { NavItems } from './components/nav-items'
+
+const MobileNav = lazy(() =>
+  import('./components/mobile-nav').then((mod) => ({ default: mod.MobileNav }))
+)
+
+const NavItems = lazy(() =>
+  import('./components/nav-items').then((mod) => ({ default: mod.NavItems }))
+)
 
 export function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
+  const isMobile = useIsMobile()
 
   return (
     <nav className="sticky top-0 z-50 border-b bg-background/75">
@@ -23,7 +31,9 @@ export function Navigation() {
             <span>Resume Analyzer</span>
           </Link>
 
-          <NavItems className="hidden md:flex items-center gap-4" />
+          {!isMobile && (
+            <NavItems className="hidden md:flex items-center gap-4" />
+          )}
 
           <Button
             onClick={() => setIsOpen(!isOpen)}
@@ -34,7 +44,7 @@ export function Navigation() {
           </Button>
         </div>
 
-        <MobileNav isOpen={isOpen} />
+        {isMobile && <MobileNav isOpen={isOpen} />}
       </div>
     </nav>
   )
