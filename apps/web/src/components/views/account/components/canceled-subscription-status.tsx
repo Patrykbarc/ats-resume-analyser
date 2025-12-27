@@ -11,6 +11,10 @@ export function CanceledSubscriptionStatus({
 }) {
   const data = useLoaderData({ from: '/(app)/account/' })
 
+  if (!data) {
+    return null
+  }
+
   return (
     <CardContainer className="flex items-start gap-3 bg-destructive/10 border-destructive/20">
       <AlertTriangle className="size-5 text-destructive mt-0.5 hrink-0" />
