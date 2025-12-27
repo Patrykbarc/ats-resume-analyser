@@ -1,4 +1,5 @@
 import { AdSense } from '@/components/ui/adsense'
+import { MetaTags } from '@/components/ui/meta-tags'
 import { Devtools } from '@/components/views/devtools'
 import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
@@ -16,6 +17,8 @@ const RootLayout = () => {
 
   return (
     <>
+      <MetaTags />
+      
       {VITE_NODE_ENV !== 'development' && <Analytics />}
       <Toaster />
 
