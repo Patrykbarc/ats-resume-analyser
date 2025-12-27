@@ -1,6 +1,7 @@
-import { QUERY_KEYS } from '@/constants/queryKeys'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import { checkoutSessionGuard } from '@/guards/checkoutSessionGuard'
 import { useVerifyStripeSession } from '@/hooks/checkout/useVerifyStripeSession'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import { CheckoutSessionIdSchema } from '@monorepo/schemas'
 import { useQueryClient } from '@tanstack/react-query'
 import { createFileRoute, useSearch } from '@tanstack/react-router'
@@ -10,7 +11,14 @@ import { useEffect } from 'react'
 export const Route = createFileRoute('/(app)/checkout/success/')({
   beforeLoad: async () => await checkoutSessionGuard(),
   component: SuccessPage,
-  validateSearch: CheckoutSessionIdSchema
+  validateSearch: CheckoutSessionIdSchema,
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle('Payment successful')
+      }
+    ]
+  })
 })
 
 function SuccessPage() {

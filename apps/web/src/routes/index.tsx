@@ -1,8 +1,16 @@
 import { ResumeAnalyzer } from '@/components/views/resume-analyzer/resume-analyzer'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({
-  component: RouteComponent
+  component: RouteComponent,
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle()
+      }
+    ]
+  })
 })
 
 function RouteComponent() {

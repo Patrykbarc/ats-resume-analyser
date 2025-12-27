@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/constants/queryKeys'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import { verifyStripeSession } from '@/services/checkoutService'
 import { useQuery } from '@tanstack/react-query'
 

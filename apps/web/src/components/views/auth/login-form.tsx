@@ -6,7 +6,7 @@ import {
   FieldLabel
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { QUERY_KEYS } from '@/constants/queryKeys'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import { useLoginMutation } from '@/hooks/useLoginMutation'
 import { useSessionStore } from '@/stores/session/useSessionStore'
 import { LoginUserSchema, LoginUserSchemaType } from '@monorepo/schemas'

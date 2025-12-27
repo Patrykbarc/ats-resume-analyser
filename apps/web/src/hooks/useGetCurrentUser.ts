@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/constants/queryKeys'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import { getCurrentUserService } from '@/services/authService'
 import { UserSchemaType } from '@monorepo/schemas'
 import { useQuery } from '@tanstack/react-query'

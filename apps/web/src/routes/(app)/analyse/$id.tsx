@@ -2,11 +2,19 @@ import { AnalysisResults } from '@/components/views/analysis-results/analysis-re
 import { AnalysisSkeletonWithNavigation } from '@/components/views/analysis-results/components/analysis-results-skeleton'
 import { NotFound } from '@/components/views/not-found'
 import { useGetAnalyseById } from '@/hooks/useGetAnalyseById'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import { createFileRoute, Link, useParams } from '@tanstack/react-router'
 import { StatusCodes } from 'http-status-codes'
 import { ArrowLeft } from 'lucide-react'
 export const Route = createFileRoute('/(app)/analyse/$id')({
-  component: Analysis
+  component: Analysis,
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle('Analysis')
+      }
+    ]
+  })
 })
 
 function Analysis() {

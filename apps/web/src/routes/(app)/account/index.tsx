@@ -2,7 +2,8 @@ import { AccountInformationCard } from '@/components/views/account/account-infor
 import { AccountInformationCardSkeleton } from '@/components/views/account/components/skeletons/account-information-card-skeleton'
 import { SubscriptionDetailsCardSkeleton } from '@/components/views/account/components/skeletons/subscription-details-card-skeleton'
 import { SubscriptionDetailsCard } from '@/components/views/account/subscription-details-card'
-import { QUERY_KEYS } from '@/constants/queryKeys'
+import { QUERY_KEYS } from '@/constants/query-keys'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import {
   getCurrentUserService,
   getUserAccountInformationsService
@@ -32,7 +33,14 @@ export const Route = createFileRoute('/(app)/account/')({
     })
   },
   component: RouteComponent,
-  pendingComponent: LoadingComponent
+  pendingComponent: LoadingComponent,
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle('Account')
+      }
+    ]
+  })
 })
 
 function RouteComponent() {

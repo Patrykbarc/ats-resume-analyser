@@ -1,10 +1,18 @@
 import { checkoutSessionGuard } from '@/guards/checkoutSessionGuard'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import { createFileRoute } from '@tanstack/react-router'
 import { XCircle } from 'lucide-react'
 
 export const Route = createFileRoute('/(app)/checkout/cancel/')({
   beforeLoad: async () => await checkoutSessionGuard(),
-  component: CancelledPage
+  component: CancelledPage,
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle('Order cancelled')
+      }
+    ]
+  })
 })
 
 function CancelledPage() {

@@ -1,4 +1,4 @@
-import { QUERY_KEYS } from '@/constants/queryKeys'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import { AnalyseResult, getAnalysis } from '@/services/analyseService'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'

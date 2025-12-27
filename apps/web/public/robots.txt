@@ -1,4 +1,7 @@
 User-agent: *
+Allow: /
 Disallow: /analyse/
+Disallow: /verify/
+Disallow: /checkout/
 
 Sitemap: https://ats-scan.patrykbarc.com/

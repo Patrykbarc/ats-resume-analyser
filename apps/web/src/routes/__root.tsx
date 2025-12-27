@@ -1,12 +1,16 @@
 import { AdSense } from '@/components/ui/adsense'
-import { MetaTags } from '@/components/ui/meta-tags'
 import { Devtools } from '@/components/views/devtools'
 import { Navigation } from '@/components/views/navigation/navigation'
 import { NotFound } from '@/components/views/not-found'
+import { metaTags } from '@/constants/meta-tags'
 import { useAuth } from '@/hooks/useAuth'
 import { getEnvs } from '@/lib/getEnv'
 import { RouterContext } from '@/main'
-import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  Outlet
+} from '@tanstack/react-router'
 import { Analytics } from '@vercel/analytics/react'
 import { Toaster } from 'react-hot-toast'
 import '../index.css'
@@ -17,8 +21,8 @@ const RootLayout = () => {
 
   return (
     <>
-      <MetaTags />
-      
+      <HeadContent />
+
       {VITE_NODE_ENV !== 'development' && <Analytics />}
       <Toaster />
 
@@ -41,5 +45,25 @@ const RootLayout = () => {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
-  notFoundComponent: NotFound
+  notFoundComponent: NotFound,
+  head: () => ({
+    title: metaTags.title,
+    meta: [
+      { name: 'description', content: metaTags.description },
+      { name: 'keywords', content: metaTags.keywords },
+      { name: 'author', content: metaTags.author },
+      { name: 'robots', content: metaTags.robots },
+
+      { property: 'og:title', content: metaTags.title },
+      { property: 'og:description', content: metaTags.description },
+      { property: 'og:image', content: metaTags.ogImage },
+      { property: 'og:type', content: 'website' },
+
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: metaTags.title },
+      { name: 'twitter:description', content: metaTags.description },
+      { name: 'twitter:image', content: metaTags.ogImageTwitter }
+    ],
+    links: [{ rel: 'icon', href: '/favicon.ico' }]
+  })
 })

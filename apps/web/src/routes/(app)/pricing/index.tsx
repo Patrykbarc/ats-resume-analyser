@@ -1,10 +1,18 @@
 import { Button } from '@/components/ui/button'
 import { PricingCard } from '@/components/ui/pricing-card'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import { getEnvs } from '@/lib/getEnv'
 import { createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/(app)/pricing/')({
-  component: PricingPage
+  component: PricingPage,
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle('Pricing')
+      }
+    ]
+  })
 })
 
 export type PricingPlan = typeof plan
