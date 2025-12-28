@@ -70,7 +70,7 @@ export const useAnalyzer = () => {
         setRequestsLeft(remaining)
       }
 
-      if (timestamp) {
+      if (remaining === 0 && timestamp) {
         setRequestsCooldown?.(timestamp)
       }
     },
