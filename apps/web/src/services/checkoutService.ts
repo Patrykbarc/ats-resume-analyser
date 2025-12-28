@@ -31,14 +31,6 @@ export const verifyStripeSession = async (sessionId: string) => {
   return response.data
 }
 
-export const getCheckoutSessionStatus = async () => {
-  const response = await apiClient<AxiosResponse>(
-    '/checkout/checkout-session-webhook'
-  )
-
-  return response
-}
-
 export const cancelSubscriptionService = async (user: UserId) => {
   const response = await apiClient.post<AxiosResponse>(
     '/checkout/cancel-subscription',

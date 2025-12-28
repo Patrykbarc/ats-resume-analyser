@@ -9,9 +9,9 @@ import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { useEffect } from 'react'
 
 export const Route = createFileRoute('/(app)/checkout/success/')({
-  beforeLoad: async () => await checkoutSessionGuard(),
-  component: SuccessPage,
   validateSearch: CheckoutSessionIdSchema,
+  beforeLoad: async ({ search }) => await checkoutSessionGuard(search.id),
+  component: SuccessPage,
   head: () => ({
     meta: [
       {

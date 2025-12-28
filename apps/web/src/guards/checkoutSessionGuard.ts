@@ -1,9 +1,12 @@
-import { getCheckoutSessionStatus } from '@/services/checkoutService'
+import { verifyStripeSession } from '@/services/checkoutService'
+import { CheckoutSessionIdSchemaType } from '@monorepo/schemas'
 import { redirect } from '@tanstack/react-router'
 
-export async function checkoutSessionGuard() {
+export async function checkoutSessionGuard(
+  id: CheckoutSessionIdSchemaType['id']
+) {
   try {
-    await getCheckoutSessionStatus()
+    return await verifyStripeSession(id)
   } catch (_) {
     throw redirect({ to: '/pricing' })
   }
