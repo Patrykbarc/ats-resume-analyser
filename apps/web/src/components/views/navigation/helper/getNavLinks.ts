@@ -27,20 +27,21 @@ export const getNavLinks = ({
       : undefined
   }
 
-  const accountLink: NavLinks = {
-    href: '/account',
-    label: 'Account'
-  }
+  const accountLink: NavLinks = { href: '/account', label: 'Account' }
 
   const authLinks: NavLinks[] = [
     { href: '/login', label: 'Log In' },
     { href: '/register', label: 'Sign Up' }
   ]
 
-  const baseLink = isPremium ? accountLink : pricingLink
+  const pricingOptionLink = !isPremium && pricingLink
 
   if (isUserLoggedIn) {
-    return [baseLink, { href: '/logout', label: 'Logout' }]
+    return [
+      pricingOptionLink,
+      accountLink,
+      { href: '/logout', label: 'Logout' }
+    ]
   }
 
   return [pricingLink, ...authLinks]

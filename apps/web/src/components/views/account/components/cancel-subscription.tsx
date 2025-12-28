@@ -12,19 +12,14 @@ import {
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useCancelSubscription } from '@/hooks/checkout/useCancelSubscription'
 import { cn } from '@/lib/utils'
-import { User } from '@monorepo/database'
 import { AlertTriangle } from 'lucide-react'
-import { NextBillingDate } from '../types/types'
+import { UserBillingInformation } from '../types/types'
 
 export function CancelSubscription({
   id,
   nextBillingDate,
   className
-}: {
-  id: User['id']
-  nextBillingDate: NextBillingDate
-  className?: string
-}) {
+}: UserBillingInformation) {
   const { isPending, mutate } = useCancelSubscription({
     onSuccess: () => {
       window.location.reload()
@@ -45,8 +40,8 @@ export function CancelSubscription({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="h-5 w-5 text-destructive" />
+          <div className="flex justify-center items-center gap-2 mb-2">
+            <AlertTriangle className="size-5 text-destructive" />
             <AlertDialogTitle>Cancel Subscription</AlertDialogTitle>
           </div>
           <AlertDialogDescription className="space-y-2">

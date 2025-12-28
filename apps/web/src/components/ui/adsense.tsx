@@ -49,7 +49,7 @@ export const AdSense = ({
   return (
     <ins
       ref={adRef}
-      className={cn('overflow-hidden adsbygoogle', className)}
+      className={cn('overflow-hidden adsbygoogle mx-auto', className)}
       style={{
         display: 'block',
         ...style

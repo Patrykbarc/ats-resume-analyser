@@ -1,3 +1,4 @@
+import { buttonVariants } from '@/components/ui/button'
 import {
   Card,
   CardContainer,
@@ -6,23 +7,18 @@ import {
   CardHeader,
   CardTitle
 } from '@/components/ui/card'
-import { User } from '@monorepo/database'
+import { cn } from '@/lib/utils'
+import { Link } from '@tanstack/react-router'
 import { CreditCard } from 'lucide-react'
-import { CancelSubscription } from './components/cancel-subscription'
+import { ActiveSubscriptionStatus } from './components/active-subscription-status'
 import { CanceledSubscriptionStatus } from './components/canceled-subscription-status'
-import { NextBillingDate } from './types/types'
-
-type SubscriptionDetailsCardProps = {
-  id: User['id']
-  subscriptionStatus?: User['subscriptionStatus']
-  nextBillingDate: NextBillingDate
-}
+import { UserBillingInformation } from './types/types'
 
 export function SubscriptionDetailsCard({
   id,
-  subscriptionStatus,
-  nextBillingDate
-}: SubscriptionDetailsCardProps) {
+  nextBillingDate,
+  subscriptionStatus
+}: UserBillingInformation) {
   return (
     <Card>
       <CardHeader>
@@ -34,46 +30,23 @@ export function SubscriptionDetailsCard({
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {subscriptionStatus === 'active' && (
+        {subscriptionStatus == null && (
           <CardContainer className="bg-muted/50">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-sm font-medium text-muted-foreground">
-                Plan
-              </h3>
-            </div>
-
-            <div className="space-y-6 grid grid-cols-1 md:grid-cols-2">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <p className="font-medium">
-                  $14.99{' '}
-                  <span className="text-xs text-muted-foreground">
-                    / monthly
-                  </span>
-                </p>
-              </div>
-
-              <CancelSubscription
-                className="md:block hidden"
-                id={id}
-                nextBillingDate={nextBillingDate}
-              />
-
-              <div>
-                <p className="text-sm font-medium text-muted-foreground">
-                  Next Billing Date
-                </p>
-                <p className="text-base font-medium text-foreground">
-                  {nextBillingDate}
-                </p>
-              </div>
-
-              <CancelSubscription
-                className="block md:hidden"
-                id={id}
-                nextBillingDate={nextBillingDate}
-              />
-            </div>
+            <p className="text-sm">No active subscription found.</p>
+            <Link
+              to="/pricing"
+              className={cn(
+                buttonVariants({ variant: 'default', size: 'sm' }),
+                'mt-4'
+              )}
+            >
+              View pricing
+            </Link>
           </CardContainer>
+        )}
+
+        {subscriptionStatus === 'active' && (
+          <ActiveSubscriptionStatus id={id} nextBillingDate={nextBillingDate} />
         )}
 
         {subscriptionStatus === 'canceled' && (

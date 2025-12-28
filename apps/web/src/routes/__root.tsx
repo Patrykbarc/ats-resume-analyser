@@ -1,3 +1,4 @@
+import { AdSense } from '@/components/ui/adsense'
 import { Devtools } from '@/components/views/devtools'
 import { Footer } from '@/components/views/navigation/footer'
 import { Navigation } from '@/components/views/navigation/navigation'
@@ -35,6 +36,7 @@ const RootLayout = () => {
           </div>
         </main>
 
+        <AdSense adSlot="9101349995" />
         <Footer />
       </div>
     </>

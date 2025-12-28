@@ -7,7 +7,7 @@ export const faqData = [
   {
     question: 'Is the resume analyzer free?',
     answer:
-      'Yes! We offer a free plan with 5 resume analyses per day. Upgrade to Pro or Premium for unlimited analyses and advanced features like detailed keyword analysis, comparison tools, and priority support.'
+      'Yes! We offer a free plan with 5 resume analyses per day. Upgrade to Pro for unlimited analyses and advanced features like detailed keyword analysis, comparison tools, and priority support.'
   },
   {
     question: 'What file formats are supported?',
@@ -16,6 +16,6 @@ export const faqData = [
   {
     question: 'How quickly will I receive my analysis?',
     answer:
-      'Analysis is typically completed within 30-40 seconds after upload. You&apos;ll see your results instantly on the screen, including your overall score, strengths, areas for improvement, and specific recommendations.'
+      "Analysis is typically completed within 30-40 seconds after upload. You'll see your results instantly on the screen, including your overall score, strengths, areas for improvement, and specific recommendations."
   }
 ] as const

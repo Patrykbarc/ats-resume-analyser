@@ -42,8 +42,8 @@ export function RestoreSubscription({
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <div className="flex items-center gap-2 mb-2">
-            <AlertTriangle className="h-5 w-5 text-destructive" />
+          <div className="flex justify-center items-center gap-2 mb-2">
+            <AlertTriangle className="size-5 text-destructive" />
             <AlertDialogTitle>Restore subscription</AlertDialogTitle>
           </div>
           <AlertDialogDescription className="space-y-2">
