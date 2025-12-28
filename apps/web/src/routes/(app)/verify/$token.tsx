@@ -1,5 +1,6 @@
 import { Button, buttonVariants } from '@/components/ui/button'
 import { useResendVerificationLink } from '@/hooks/useResendVerificationLink'
+import { buildPageTitle } from '@/lib/buildPageTitle'
 import { verifyUserService } from '@/services/authService'
 import { VerifyUserSchema } from '@monorepo/schemas'
 import {
@@ -20,7 +21,14 @@ export const Route = createFileRoute('/(app)/verify/$token')({
     const { token } = params
 
     return verifyUserService({ token })
-  }
+  },
+  head: () => ({
+    meta: [
+      {
+        title: buildPageTitle('Verify Account')
+      }
+    ]
+  })
 })
 
 const MESSAGES = {

@@ -1,10 +1,12 @@
+import { buttonVariants } from '@/components/ui/button'
 import { QUERY_KEYS } from '@/constants/query-keys'
 import { checkoutSessionGuard } from '@/guards/checkoutSessionGuard'
 import { useVerifyStripeSession } from '@/hooks/checkout/useVerifyStripeSession'
 import { buildPageTitle } from '@/lib/buildPageTitle'
+import { cn } from '@/lib/utils'
 import { CheckoutSessionIdSchema } from '@monorepo/schemas'
 import { useQueryClient } from '@tanstack/react-query'
-import { createFileRoute, useSearch } from '@tanstack/react-router'
+import { createFileRoute, Link, useSearch } from '@tanstack/react-router'
 import { CheckCircle2, Loader2, XCircle } from 'lucide-react'
 import { useEffect } from 'react'
 
@@ -70,6 +72,12 @@ function SuccessPage() {
         Thank you for your purchase. Your order has been confirmed and you now
         have access to premium features.
       </p>
+      <Link
+        to="/"
+        className={cn(buttonVariants({ variant: 'link' }), 'mt-4 text-lg')}
+      >
+        Return to home
+      </Link>
     </div>
   )
 }
