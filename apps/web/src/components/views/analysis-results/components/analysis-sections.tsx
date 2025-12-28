@@ -20,9 +20,8 @@ export function AnalysisSections({
 }) {
   const sectionsArr = Object.entries(sections) as TypedSectionArray
 
-  return sectionsArr.map(([key, value], index) => {
+  return sectionsArr.map(([key, items], index) => {
     const title = capitalize(key.replaceAll('_', ' '))
-    const description = value.map((i) => i.replaceAll('.', '. '))
 
     const iconsData = [
       { icon: CheckCircle2, color: 'text-green-500' },
@@ -35,7 +34,7 @@ export function AnalysisSections({
     const IconComponent = sectionIconData.icon
     const iconColor = sectionIconData.color
 
-    if (description.length === 0) {
+    if (items.length === 0) {
       return null
     }
 
@@ -48,7 +47,14 @@ export function AnalysisSections({
             </div>
             <h3 className="text-lg font-semibold text-foreground">{title}</h3>
           </div>
-          <p className="leading-relaxed text-muted-foreground">{description}</p>
+
+          <ol className="list-inside list-decimal space-y-2">
+            {items.map((item, idx) => (
+              <li key={idx} className="leading-relaxed text-muted-foreground">
+                {item}
+              </li>
+            ))}
+          </ol>
         </CardContent>
       </Card>
     )

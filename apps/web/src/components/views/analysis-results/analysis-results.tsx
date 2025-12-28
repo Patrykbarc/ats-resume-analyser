@@ -3,15 +3,19 @@ import type { AiAnalysis } from '@monorepo/types'
 import { lazy, Suspense } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../ui/tabs'
 import { ShareButton } from '../share-button'
-// import { AnalysisSections } from './components/analysis-sections'
 import { AnalysisCardsSkeleton } from './components/analysis-results-skeleton'
 import { AnalysisSummary } from './components/analysis-summary'
 import { CallToActionCard } from './components/call-to-action-card'
-import { PremiumModules } from './components/premium/premium-modules'
 
 const AnalysisSections = lazy(() =>
   import('./components/analysis-sections').then((module) => ({
     default: module.AnalysisSections
+  }))
+)
+
+const PremiumModules = lazy(() =>
+  import('./components/premium/premium-modules').then((module) => ({
+    default: module.PremiumModules
   }))
 )
 

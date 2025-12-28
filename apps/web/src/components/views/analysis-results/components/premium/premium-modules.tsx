@@ -20,9 +20,7 @@ export function PremiumModules({ premium }: PremiumModulesProps) {
     return (
       <Card>
         <CardContent className="pt-6 text-sm text-muted-foreground">
-          Premium modules are unavailable for this analysis. Re-run the analysis
-          to generate ATS keyword coverage, cover letter support, interview
-          prep, LinkedIn tips, and export guidance.
+          Premium analysis modules available only to premium users.
         </CardContent>
       </Card>
     )
