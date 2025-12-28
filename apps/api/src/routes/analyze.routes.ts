@@ -1,6 +1,7 @@
 import { AnalysisParamsSchema, FileSchema } from '@monorepo/schemas'
 import { Router } from 'express'
 import multer from 'multer'
+import { analyzeLimiter } from '../config/limiter.config'
 import { createAnalyze, getAnalysys } from '../controllers/analyse.controller'
 import { requireAuth } from '../middleware/require-auth.middleware'
 import { requirePremium } from '../middleware/require-premium.middleware'
@@ -13,6 +14,7 @@ const router: Router = Router()
 
 router.post(
   '/analyze',
+  analyzeLimiter,
   multipartParser,
   validateFile(FileSchema),
   createAnalyze
