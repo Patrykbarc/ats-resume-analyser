@@ -23,6 +23,10 @@ export function NavItems({
     <>
       <ul className={cn('text-neutral-600 font-medium', className)}>
         {navLinks.map((link) => {
+          if (!link) {
+            return null
+          }
+
           return (
             <li key={link.href}>
               <Link to={link.href} className={link.className}>
