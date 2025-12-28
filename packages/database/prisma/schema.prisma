@@ -25,6 +25,16 @@ enum SubscriptionStatus {
   paused
 }
 
+model RequestLog {
+  analyseId        String   @id @default(uuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  createdAt        DateTime @default(now())
+  isPremiumRequest Boolean  @default(false)
+  ipAddress        String?
+  userAgent        String?
+}
+
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -53,5 +63,6 @@ model User {
   subscriptionStartedAt        DateTime?
   subscriptionCurrentPeriodEnd DateTime?
 
-  refreshToken String? @unique
+  refreshToken String?      @unique
+  requestLogs  RequestLog[]
 }
