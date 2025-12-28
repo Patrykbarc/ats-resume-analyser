@@ -1,3 +1,4 @@
+import { FREE_REQUESTS_PER_DAY } from '@monorepo/constants'
 import rateLimit from 'express-rate-limit'
 import { getEnvs } from '../lib/getEnv'
 
@@ -18,7 +19,7 @@ const requestLimiter = rateLimit({
 
 const analyzeLimiter = rateLimit({
   windowMs: DAY,
-  max: NODE_ENV === 'development' ? Infinity : 5,
+  max: NODE_ENV === 'development' ? Infinity : FREE_REQUESTS_PER_DAY,
   message: {
     error: 'The limit of analyses has been reached.'
   },

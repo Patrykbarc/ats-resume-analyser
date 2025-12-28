@@ -87,6 +87,9 @@ importers:
 
   apps/api:
     dependencies:
+      '@monorepo/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@monorepo/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -202,6 +205,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@monorepo/constants':
+        specifier: workspace:*
+        version: link:../../packages/constants
       '@monorepo/schemas':
         specifier: workspace:*
         version: link:../../packages/schemas
@@ -329,6 +335,18 @@ importers:
       vite-plugin-svgr:
         specifier: ^4.5.0
         version: 4.5.0(rollup@4.54.0)(typescript@5.9.3)(vite@7.3.0(@types/node@20.19.0)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)(yaml@2.8.2))
+
+  packages/constants:
+    devDependencies:
+      '@tsconfig/node20':
+        specifier: 'catalog:'
+        version: 20.1.4
+      '@types/node':
+        specifier: 'catalog:'
+        version: 20.19.0
+      tsup:
+        specifier: 'catalog:'
+        version: 8.1.0(postcss@8.5.6)(typescript@5.9.3)
 
   packages/database:
     dependencies:
@@ -5582,11 +5600,11 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 20.19.0
+      '@types/node': 22.19.3
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 20.19.0
+      '@types/node': 22.19.3
 
   '@types/cookie-parser@1.4.10(@types/express@5.0.6)':
     dependencies:
@@ -5600,7 +5618,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.0':
     dependencies:
-      '@types/node': 20.19.0
+      '@types/node': 22.19.3
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -5677,12 +5695,12 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 20.19.0
+      '@types/node': 22.19.3
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 20.19.0
+      '@types/node': 22.19.3
 
   '@typescript-eslint/eslint-plugin@8.50.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)':
     dependencies:

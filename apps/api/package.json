@@ -13,6 +13,7 @@
     "@monorepo/database": "workspace:*",
     "@monorepo/schemas": "workspace:*",
     "@monorepo/types": "workspace:*",
+    "@monorepo/constants": "workspace:*",
     "@types/passport-jwt": "^4.0.1",
     "axios": "catalog:",
     "bcryptjs": "^3.0.3",

@@ -1,3 +1,5 @@
+import { FREE_REQUESTS_PER_DAY } from '@monorepo/constants'
+
 export const faqData = [
   {
     question: 'How does the AI Resume Analyzer work?',
@@ -6,8 +8,7 @@ export const faqData = [
   },
   {
     question: 'Is the resume analyzer free?',
-    answer:
-      'Yes! We offer a free plan with 5 resume analyses per day. Upgrade to Pro for unlimited analyses and advanced features like detailed keyword analysis, comparison tools, and priority support.'
+    answer: `Yes! We offer a free plan with ${FREE_REQUESTS_PER_DAY} resume analyses per day. Upgrade to Pro for unlimited analyses and advanced features like detailed keyword analysis, comparison tools, and priority support.`
   },
   {
     question: 'What file formats are supported?',
