@@ -26,13 +26,7 @@ const getHeadersRateLimitReset = (response?: AxiosResponse): string | null => {
     return null
   }
 
-  const parsed = Number(resetTimestamp)
-  if (isNaN(parsed)) {
-    return null
-  }
-
-  const resetDate = new Date(parsed * 1000)
-  return resetDate.toLocaleString('pl-PL')
+  return String(resetTimestamp)
 }
 
 export {

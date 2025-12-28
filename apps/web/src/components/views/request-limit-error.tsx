@@ -1,11 +1,14 @@
 import { useRateLimit } from '@/hooks/useRateLimit'
 import { cn } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
+import { format } from 'date-fns'
 import { AlertCircle } from 'lucide-react'
 import { buttonVariants } from '../ui/button'
 
 export function RequestLimitError() {
-  const { requestsCooldown } = useRateLimit()
+  const { cooldownDate } = useRateLimit()
+
+  const formattedDate = format(cooldownDate ? cooldownDate : new Date(), 'PPpp')
 
   return (
     <div className="w-full mx-auto max-w-md space-y-8 rounded-lg border border-border bg-card p-8 text-center">
@@ -20,9 +23,11 @@ export function RequestLimitError() {
           Rate Limit Exceeded
         </h1>
 
-        <p className="text-sm text-card-foreground max-w-80 mx-auto">
-          The limit will be renewed at <strong>{requestsCooldown}</strong>.
-        </p>
+        {cooldownDate && (
+          <p className="text-sm text-card-foreground max-w-80 mx-auto">
+            The limit will be renewed at <strong>{formattedDate}</strong>.
+          </p>
+        )}
 
         <Link to="/pricing" className={cn(buttonVariants(), 'mt-3')}>
           Upgrade your plan for unlimited analyses

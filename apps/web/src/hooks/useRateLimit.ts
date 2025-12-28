@@ -1,68 +1,54 @@
-import { useSessionStore } from '@/stores/session/useSessionStore'
-import { isAfter } from 'date-fns'
-const LOCALSTORAGE = {
-  REQUESTS_LEFT_KEY: 'requestsLeft',
-  REQUESTS_COOLDOWN_KEY: 'requestsCooldown'
-}
+import { fromUnixTime, isAfter, isValid } from 'date-fns'
+import { useCallback, useMemo } from 'react'
+import { useLocalStorage } from 'usehooks-ts'
 
 export const useRateLimit = () => {
-  const { isPremium } = useSessionStore()
+  const [requestsLeft, setRequestsLeft] = useLocalStorage<number | null>(
+    'requestsLeft',
+    null
+  )
+  const [requestsCooldown, setRequestsCooldownRaw] = useLocalStorage<
+    string | null
+  >('requestsCooldown', null)
 
-  if (isPremium) {
-    return { requestsLeft: Infinity, setRequestsLeft }
+  const cooldownDate = useMemo(() => {
+    if (!requestsCooldown) {
+      return null
+    }
+
+    const timestamp = Number(requestsCooldown)
+    const date = isNaN(timestamp)
+      ? new Date(requestsCooldown)
+      : fromUnixTime(timestamp)
+    return isValid(date) ? date : null
+  }, [requestsCooldown])
+
+  const isCooldownActive = useMemo(() => {
+    if (!cooldownDate) {
+      return false
+    }
+    return isAfter(cooldownDate, new Date())
+  }, [cooldownDate])
+
+  if (requestsCooldown && !isCooldownActive) {
+    setRequestsCooldownRaw(null)
+
+    setRequestsLeft(null)
   }
 
-  const requestsLeft = getRequestsLeft()
-  const isOutOfFreeRequests = requestsLeft !== null && requestsLeft <= 0
-
-  const now = new Date()
-  const requestsCooldown = getRequestsCooldown()
-  const requestCooldownEnd = requestsCooldown && isAfter(now, requestsCooldown)
-
-  if (requestCooldownEnd) {
-    resetRequestsCooldown()
-  }
+  const setRequestsCooldown = useCallback(
+    (value: string | null) => {
+      setRequestsCooldownRaw(value)
+    },
+    [setRequestsCooldownRaw]
+  )
 
   return {
     requestsLeft,
     setRequestsLeft,
     requestsCooldown,
-    setRequestsCooldown,
-    isOutOfFreeRequests
+    cooldownDate,
+    isCooldownActive,
+    setRequestsCooldown
   }
-}
-
-const setRequestsLeft = (remaining: number) => {
-  if (typeof remaining !== 'number' || isNaN(remaining)) {
-    return
-  }
-
-  localStorage.setItem(LOCALSTORAGE.REQUESTS_LEFT_KEY, String(remaining))
-}
-
-const setRequestsCooldown = (timestamp: string | null) => {
-  if (!timestamp) {
-    return
-  }
-
-  localStorage.setItem(LOCALSTORAGE.REQUESTS_COOLDOWN_KEY, timestamp)
-}
-
-const getRequestsLeft = () => {
-  const value = localStorage.getItem(LOCALSTORAGE.REQUESTS_LEFT_KEY)
-  if (!value) {
-    return null
-  }
-  const parsed = parseInt(value, 10)
-  return isNaN(parsed) ? null : parsed
-}
-
-const getRequestsCooldown = () => {
-  const value = localStorage.getItem(LOCALSTORAGE.REQUESTS_COOLDOWN_KEY)
-
-  return value ? value : null
-}
-
-const resetRequestsCooldown = () => {
-  localStorage.removeItem(LOCALSTORAGE.REQUESTS_COOLDOWN_KEY)
 }
