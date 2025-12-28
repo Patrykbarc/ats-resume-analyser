@@ -2,7 +2,7 @@ import { AnalysisParamsSchema, FileSchema } from '@monorepo/schemas'
 import { Router } from 'express'
 import multer from 'multer'
 import { analyzeLimiter } from '../config/limiter.config'
-import { createAnalyze, getAnalysys } from '../controllers/analyse.controller'
+import { createAnalyze, getAnalysis } from '../controllers/analyse.controller'
 import { requireAuth } from '../middleware/require-auth.middleware'
 import { requirePremium } from '../middleware/require-premium.middleware'
 import { validateData, validateFile } from '../middleware/validateEntries'
@@ -13,8 +13,15 @@ const multipartParser = upload.single('file')
 const router: Router = Router()
 
 router.post(
-  '/analyze',
+  '/analyze/free',
   analyzeLimiter,
+  multipartParser,
+  validateFile(FileSchema),
+  createAnalyze
+)
+router.post(
+  '/analyze/signed-in',
+  requireAuth,
   multipartParser,
   validateFile(FileSchema),
   createAnalyze
@@ -27,6 +34,6 @@ router.post(
   validateFile(FileSchema),
   createAnalyze
 )
-router.get('/analysis/:id', validateData(AnalysisParamsSchema), getAnalysys)
+router.get('/analysis/:id', validateData(AnalysisParamsSchema), getAnalysis)
 
 export default router

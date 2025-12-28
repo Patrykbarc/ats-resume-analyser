@@ -6,10 +6,11 @@ import { AxiosError } from 'axios'
 export const useAnalyseResumeMutation = (
   options?: UseMutationOptions<AnalyseResult, AxiosError, File>
 ) => {
-  const { isPremium } = useSessionStore()
+  const { isPremium, user } = useSessionStore()
 
   return useMutation<AnalyseResult, AxiosError, File>({
-    mutationFn: (file: File) => submitAnalyseResume(file, isPremium),
+    mutationFn: (file: File) =>
+      submitAnalyseResume({ file, isPremium, userId: user?.id }),
     ...options
   })
 }

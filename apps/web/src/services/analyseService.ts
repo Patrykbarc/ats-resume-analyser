@@ -1,18 +1,34 @@
 import { apiClient } from '@/api/apiClient'
+import { User } from '@monorepo/database'
 import type { AiAnalysis } from '@monorepo/types'
 import { AxiosResponse } from 'axios'
 export type AnalyseResult = AxiosResponse<AiAnalysis>
 
-export const submitAnalyseResume = async (
-  file: File,
+export const submitAnalyseResume = async ({
+  file,
+  isPremium,
+  userId
+}: {
+  file: File
   isPremium: boolean
-): Promise<AnalyseResult> => {
+  userId?: User['id']
+}): Promise<AnalyseResult> => {
   const formData = new FormData()
   formData.append('file', file)
 
-  const route = isPremium ? '/cv/analyze/premium' : '/cv/analyze'
+  const route = () => {
+    if (isPremium) {
+      return '/cv/analyze/premium'
+    }
 
-  const response = await apiClient.post<AiAnalysis>(route, formData, {
+    if (userId && !isPremium) {
+      return '/cv/analyze/signed-in'
+    }
+
+    return '/cv/analyze/free'
+  }
+
+  const response = await apiClient.post<AiAnalysis>(route(), formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }

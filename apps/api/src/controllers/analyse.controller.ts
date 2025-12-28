@@ -3,11 +3,12 @@ import type { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
-import { openAiClient } from '../server'
+import { logger, openAiClient } from '../server'
 import { analyzeFile } from './helper/analyze/analyzeFile'
 import { isPremiumUser } from './helper/analyze/isPremiumUser'
 import { parseFileAndSanitize } from './helper/analyze/parseFileAndSanitize'
 import { parseOpenAiApiResponse } from './helper/analyze/parseOpenAiApiResponse'
+import { saveRequestLog } from './helper/analyze/saveRequestLog'
 import { handleError } from './helper/handleError'
 
 export const createAnalyze = async (req: Request, res: Response) => {
@@ -37,7 +38,7 @@ export const createAnalyze = async (req: Request, res: Response) => {
 
     const sanitizedTextResult = await parseFileAndSanitize(buffer)
 
-    const user = req.user as UserSchemaType
+    const user = req.user as UserSchemaType | undefined
 
     const analysisResult: AiAnalysis | AiAnalysisError = await analyzeFile(
       sanitizedTextResult,
@@ -49,6 +50,14 @@ export const createAnalyze = async (req: Request, res: Response) => {
         status: StatusCodes.BAD_REQUEST,
         ...analysisResult
       })
+    }
+
+    if (user?.id) {
+      await saveRequestLog({ user, resultId: analysisResult.id, req })
+    } else {
+      logger.warn(
+        'Unable to save request log: No user information available in request.'
+      )
     }
 
     return res.status(StatusCodes.OK).json({
@@ -83,7 +92,7 @@ type ParsedFile = {
   has_more: boolean
 }
 
-export const getAnalysys = async (req: Request, res: Response) => {
+export const getAnalysis = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
