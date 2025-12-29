@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router'
 import { NavItems } from './components/nav-items'
 
 export function Footer() {
@@ -22,7 +23,9 @@ export function Footer() {
             <h3 className="mb-4 text-sm font-semibold text-foreground">
               Quick Links
             </h3>
-            <NavItems className="space-y-3 text-sm text-muted-foreground" />
+            <NavItems className="space-y-3 text-sm text-muted-foreground">
+              <Link to="/privacy-policy">Privacy Policy</Link>
+            </NavItems>
           </nav>
         </div>
 

@@ -15,6 +15,7 @@ import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/i
 import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
 import { Route as AuthForgotPasswordIndexRouteImport } from './routes/_auth/forgot-password/index'
+import { Route as appPrivacyPolicyIndexRouteImport } from './routes/(app)/privacy-policy/index'
 import { Route as appPricingIndexRouteImport } from './routes/(app)/pricing/index'
 import { Route as appCheckoutIndexRouteImport } from './routes/(app)/checkout/index'
 import { Route as appAccountIndexRouteImport } from './routes/(app)/account/index'
@@ -52,6 +53,11 @@ const AuthForgotPasswordIndexRoute = AuthForgotPasswordIndexRouteImport.update({
   id: '/forgot-password/',
   path: '/forgot-password/',
   getParentRoute: () => AuthRouteRoute,
+} as any)
+const appPrivacyPolicyIndexRoute = appPrivacyPolicyIndexRouteImport.update({
+  id: '/(app)/privacy-policy/',
+  path: '/privacy-policy/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const appPricingIndexRoute = appPricingIndexRouteImport.update({
   id: '/(app)/pricing/',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/account': typeof appAccountIndexRoute
   '/checkout': typeof appCheckoutIndexRoute
   '/pricing': typeof appPricingIndexRoute
+  '/privacy-policy': typeof appPrivacyPolicyIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/account': typeof appAccountIndexRoute
   '/checkout': typeof appCheckoutIndexRoute
   '/pricing': typeof appPricingIndexRoute
+  '/privacy-policy': typeof appPrivacyPolicyIndexRoute
   '/forgot-password': typeof AuthForgotPasswordIndexRoute
   '/login': typeof AuthLoginIndexRoute
   '/logout': typeof AuthLogoutIndexRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/(app)/account/': typeof appAccountIndexRoute
   '/(app)/checkout/': typeof appCheckoutIndexRoute
   '/(app)/pricing/': typeof appPricingIndexRoute
+  '/(app)/privacy-policy/': typeof appPrivacyPolicyIndexRoute
   '/_auth/forgot-password/': typeof AuthForgotPasswordIndexRoute
   '/_auth/login/': typeof AuthLoginIndexRoute
   '/_auth/logout/': typeof AuthLogoutIndexRoute
@@ -151,6 +160,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/checkout'
     | '/pricing'
+    | '/privacy-policy'
     | '/forgot-password'
     | '/login'
     | '/logout'
@@ -166,6 +176,7 @@ export interface FileRouteTypes {
     | '/account'
     | '/checkout'
     | '/pricing'
+    | '/privacy-policy'
     | '/forgot-password'
     | '/login'
     | '/logout'
@@ -182,6 +193,7 @@ export interface FileRouteTypes {
     | '/(app)/account/'
     | '/(app)/checkout/'
     | '/(app)/pricing/'
+    | '/(app)/privacy-policy/'
     | '/_auth/forgot-password/'
     | '/_auth/login/'
     | '/_auth/logout/'
@@ -198,6 +210,7 @@ export interface RootRouteChildren {
   appAccountIndexRoute: typeof appAccountIndexRoute
   appCheckoutIndexRoute: typeof appCheckoutIndexRoute
   appPricingIndexRoute: typeof appPricingIndexRoute
+  appPrivacyPolicyIndexRoute: typeof appPrivacyPolicyIndexRoute
   appCheckoutCancelIndexRoute: typeof appCheckoutCancelIndexRoute
   appCheckoutSuccessIndexRoute: typeof appCheckoutSuccessIndexRoute
 }
@@ -245,6 +258,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/forgot-password'
       preLoaderRoute: typeof AuthForgotPasswordIndexRouteImport
       parentRoute: typeof AuthRouteRoute
+    }
+    '/(app)/privacy-policy/': {
+      id: '/(app)/privacy-policy/'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof appPrivacyPolicyIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/(app)/pricing/': {
       id: '/(app)/pricing/'
@@ -333,6 +353,7 @@ const rootRouteChildren: RootRouteChildren = {
   appAccountIndexRoute: appAccountIndexRoute,
   appCheckoutIndexRoute: appCheckoutIndexRoute,
   appPricingIndexRoute: appPricingIndexRoute,
+  appPrivacyPolicyIndexRoute: appPrivacyPolicyIndexRoute,
   appCheckoutCancelIndexRoute: appCheckoutCancelIndexRoute,
   appCheckoutSuccessIndexRoute: appCheckoutSuccessIndexRoute,
 }

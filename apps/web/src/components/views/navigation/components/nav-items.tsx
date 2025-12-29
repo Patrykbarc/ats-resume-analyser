@@ -3,14 +3,17 @@ import { Link } from '@tanstack/react-router'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { useSessionStore } from '@/stores/session/useSessionStore'
+import { ReactNode } from 'react'
 import { getNavLinks } from '../helper/getNavLinks'
 
 export function NavItems({
   className,
-  highlightCta
+  highlightCta,
+  children
 }: {
   className?: string
   highlightCta?: boolean
+  children?: ReactNode
 }) {
   const { isLoading, isUserLoggedIn, isPremium } = useSessionStore()
   const navLinks = getNavLinks({ isUserLoggedIn, isPremium, highlightCta })
@@ -35,6 +38,7 @@ export function NavItems({
             </li>
           )
         })}
+        {children}
       </ul>
     </>
   )
