@@ -10,6 +10,7 @@ export const QUERY_KEYS = {
     session: (sessionId: string) => ['stripeSession', sessionId] as const
   },
   analysis: {
-    byId: (id: string) => ['analysis', id] as const
+    byId: (id: string) => ['analysis', id] as const,
+    history: (userId: string) => ['analysisHistory', userId] as const
   }
 }

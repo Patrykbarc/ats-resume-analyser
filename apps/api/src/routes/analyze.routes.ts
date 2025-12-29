@@ -1,8 +1,16 @@
-import { AnalysisParamsSchema, FileSchema } from '@monorepo/schemas'
+import {
+  AnalysisParamsSchema,
+  AnalysisParamsWithPaginationSchema,
+  FileSchema
+} from '@monorepo/schemas'
 import { Router } from 'express'
 import multer from 'multer'
 import { analyzeLimiter } from '../config/limiter.config'
-import { createAnalyze, getAnalysis } from '../controllers/analyse.controller'
+import {
+  createAnalyze,
+  getAnalysis,
+  getAnalysisHistory
+} from '../controllers/analyse.controller'
 import { requireAuth } from '../middleware/require-auth.middleware'
 import { requirePremium } from '../middleware/require-premium.middleware'
 import { validateData, validateFile } from '../middleware/validateEntries'
@@ -34,6 +42,13 @@ router.post(
   validateFile(FileSchema),
   createAnalyze
 )
+
 router.get('/analysis/:id', validateData(AnalysisParamsSchema), getAnalysis)
+
+router.get(
+  '/analysis-history/:id',
+  validateData(AnalysisParamsWithPaginationSchema),
+  getAnalysisHistory
+)
 
 export default router

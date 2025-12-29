@@ -77,10 +77,6 @@ type AiAnalysis = {
   parsed_file: string
 }
 
-enum PremiumPlan {
-  PRO = 'PRO'
-}
 type AiAnalysisError = { error: string }
 
-export { PremiumPlan }
 export type { AiAnalysis, AiAnalysisError, PremiumModules }

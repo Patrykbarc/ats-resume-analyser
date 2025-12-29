@@ -29,6 +29,8 @@ model RequestLog {
   analyseId        String   @id @default(uuid())
   userId           String
   user             User     @relation(fields: [userId], references: [id])
+  fileName         String?
+  fileSize         Int?
   createdAt        DateTime @default(now())
   isPremiumRequest Boolean  @default(false)
   ipAddress        String?

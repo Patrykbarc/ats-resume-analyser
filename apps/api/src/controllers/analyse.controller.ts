@@ -3,7 +3,7 @@ import type { AiAnalysis, AiAnalysisError } from '@monorepo/types'
 import type { Request, Response } from 'express'
 import { StatusCodes } from 'http-status-codes'
 import { promises as fs } from 'node:fs'
-import { logger, openAiClient } from '../server'
+import { logger, openAiClient, prisma } from '../server'
 import { analyzeFile } from './helper/analyze/analyzeFile'
 import { isPremiumUser } from './helper/analyze/isPremiumUser'
 import { parseFileAndSanitize } from './helper/analyze/parseFileAndSanitize'
@@ -53,7 +53,7 @@ export const createAnalyze = async (req: Request, res: Response) => {
     }
 
     if (user?.id) {
-      await saveRequestLog({ user, resultId: analysisResult.id, req })
+      await saveRequestLog({ user, resultId: analysisResult.id, req, file })
     } else {
       logger.warn(
         'Unable to save request log: No user information available in request.'
@@ -108,6 +108,46 @@ export const getAnalysis = async (req: Request, res: Response) => {
     return res
       .status(StatusCodes.OK)
       .json({ status: StatusCodes.OK, ...parsedResponse, parsed_file })
+  } catch (error) {
+    handleError(error, res)
+  }
+}
+
+export const getAnalysisHistory = async (req: Request, res: Response) => {
+  const { id } = req.params
+  const { limit, page } = req.query
+
+  const currentPage = Math.max(Number(page) || 1, 1)
+  const pageSize = Math.max(Number(limit) || 10, 1)
+
+  try {
+    const [logs, totalCount] = await Promise.all([
+      prisma.requestLog.findMany({
+        select: {
+          analyseId: true,
+          createdAt: true,
+          fileName: true,
+          fileSize: true
+        },
+        where: { userId: id },
+        orderBy: { createdAt: 'desc' },
+        take: pageSize,
+        skip: (currentPage - 1) * pageSize
+      }),
+      prisma.requestLog.count({ where: { userId: id } })
+    ])
+
+    const totalPages = Math.ceil(totalCount / pageSize)
+
+    return res.status(StatusCodes.OK).json({
+      logs,
+      pagination: {
+        totalCount,
+        totalPages,
+        currentPage,
+        pageSize
+      }
+    })
   } catch (error) {
     handleError(error, res)
   }
