@@ -13,6 +13,7 @@ export type EnvironmentVariables = {
   EMAIL_SENDER: string
   STRIPE_SECRET_KEY: string
   STRIPE_WEBHOOK_SECRET: string
+  CRON_SECRET_KEY: string
 }
 
 export const ENV_NAMES = [
@@ -28,5 +29,6 @@ export const ENV_NAMES = [
   'EMAIL_SENDER',
   'STRIPE_SECRET_KEY',
   'STRIPE_WEBHOOK_SECRET',
+  'CRON_SECRET_KEY',
 ] as const
 
