@@ -68,3 +68,8 @@ model User {
   refreshToken String?      @unique
   requestLogs  RequestLog[]
 }
+
+model CronLog {
+  id        String   @id @default(uuid())
+  createdAt DateTime @unique @default(now())
+}
