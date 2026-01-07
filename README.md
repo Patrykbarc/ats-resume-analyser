@@ -84,28 +84,33 @@ cp .env.template .env
 Edit `apps/api/.env` and configure the following variables:
 
 ```env
+NODE_ENV=development
+PORT=8080
+
 # OpenAI API Key (required)
 OPENAI_API_KEY=your_openai_api_key_here
+
+# Frontend URL for CORS (required for cookies/auth)
+FRONTEND_URL=http://localhost:5173
+
+# JWT Secrets (required) - generate with: pnpm --filter @monorepo/api gen-key
+JWT_SECRET=your_jwt_secret_here
+JWT_REFRESH_SECRET=your_jwt_refresh_secret_here
 
 # Database (required)
 DATABASE_URL=your_postgresql_connection_string
 DIRECT_URL=your_postgresql_direct_connection_string
 
-# JWT Secrets (required) - generate with: pnpm --filter @monorepo/api gen-key
-JWT_SECRET=your_jwt_secret_here
-REFRESH_TOKEN_SECRET=your_refresh_token_secret_here
-
 # Email (optional - for email verification)
 RESEND_API_KEY=your_resend_api_key_here
+EMAIL_SENDER=sender@example.com
 
-# Frontend URL for CORS (optional, defaults to http://localhost:5173)
-FRONTEND_URL=http://localhost:5173
+# Stripe (optional - required for premium)
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
 
-# Server port (optional, defaults to 8080)
-PORT=8080
-
-# Node environment (optional, defaults to development)
-NODE_ENV=development
+# Cron (optional - for protected cron routes)
+CRON_SECRET_KEY=your_random_cron_key
 ```
 
 #### Web Configuration
@@ -122,6 +127,11 @@ Edit `apps/web/.env` and configure the following variables:
 ```env
 # API URL (required)
 VITE_API_URL=http://localhost:8080
+
+# After editing env files, regenerate typed envs
+# (validates presence and makes types available in code)
+# From repo root:
+# pnpm gen-envs
 ```
 
 ### 4. Running the Application
@@ -148,6 +158,12 @@ The application will be available at:
 
 - **Frontend**: http://localhost:5173
 - **Backend API**: http://localhost:8080
+
+Optional quick setup (build packages and generate Prisma client):
+
+```bash
+pnpm dev:setup
+```
 
 ### 5. Database Setup
 
@@ -197,7 +213,7 @@ resume-analizer/
 ├── packages/
 │   ├── database/           # Prisma ORM & PostgreSQL
 │   │   └── prisma/         # Schema & migrations
-│   ├── pdf-parse/          # Custom PDF parsing package
+│   ├── constants/          # Shared constants
 │   ├── schemas/            # Shared Zod schemas
 │   └── types/              # Shared TypeScript types
 ├── scripts/                # Utility scripts
@@ -256,46 +272,52 @@ Logout and invalidate tokens.
 
 Get current user information (protected).
 
-#### `POST /api/auth/verify-email`
+#### `POST /api/auth/verify`
 
 Verify email with confirmation token.
 
-#### `POST /api/auth/resend-verification`
+#### `POST /api/auth/verify/resend`
 
 Resend email verification link.
 
+#### `POST /api/auth/password/request-reset`
+
+Request password reset link.
+
+#### `POST /api/auth/password/reset`
+
+Reset password with token.
+
 ### Resume Analysis
 
-#### `POST /api/analyze`
+Endpoints are under `/api/cv`:
 
-Analyzes a resume file for ATS compatibility.
+- `POST /api/cv/analyze/free` — public analysis, multipart with `file`
+- `POST /api/cv/analyze/signed-in` — requires auth
+- `POST /api/cv/analyze/premium` — requires premium subscription
+- `GET /api/cv/analysis/:id` — fetch analysis by id
+- `GET /api/cv/analysis-history/:id?cursor=...` — paginated history
 
-**Request:**
+Request format (for analyze endpoints):
 
 - Method: `POST`
 - Content-Type: `multipart/form-data`
 - Body: `file` (PDF file)
-- Authentication: Optional (premium features require auth)
-
-**Response:**
-
-```json
-{
-  "score": 85,
-  "analysis": "Detailed analysis...",
-  "recommendations": ["Add more keywords", "Use standard section headings"]
-}
-```
-
-#### `GET /api/analyze/:id`
-
-Get analysis by ID (protected).
+- Auth: varies by endpoint
 
 ### Health Check
 
-#### `GET /api/health`
+#### `GET /health`
 
 Check API health status.
+
+### Checkout (Premium)
+
+- `POST /api/checkout/create-checkout-session`
+- `POST /api/checkout/checkout-session-webhook`
+- `GET /api/checkout/verify-payment`
+- `POST /api/checkout/cancel-subscription`
+- `POST /api/checkout/restore-subscription`
 
 ## How It Works
 
