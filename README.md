@@ -365,6 +365,14 @@ FRONTEND_URL=http://localhost:5173
 - Run `pnpm db:generate` to regenerate Prisma client
 - Ensure database schema is up to date
 
+**Zod schema from @monorepo/schemas isn't validating!**
+
+- Remember to rebuild the packages after each change using the `pnpm run build` command from the root directory.
+
+**getEnvs function doesn't return my newly added env variable!**
+
+- Remember to regenerate the types after each change using the `pnpm gen-envs` command from the root directory.
+
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
