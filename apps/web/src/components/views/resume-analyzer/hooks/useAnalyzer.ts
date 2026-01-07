@@ -1,3 +1,5 @@
+import { queryClient } from '@/api/queryClient'
+import { QUERY_KEYS } from '@/constants/query-keys'
 import { useAnalyseResumeMutation } from '@/hooks/useAnalyseResumeMutation'
 import { useRateLimit } from '@/hooks/useRateLimit'
 import {
@@ -5,6 +7,7 @@ import {
   getHeadersRateLimitReset,
   isRateLimitError
 } from '@/lib/rateLimits'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { FileSchemaInput } from '@monorepo/schemas'
 import { useNavigate } from '@tanstack/react-router'
 import { AxiosResponse, isAxiosError } from 'axios'
@@ -12,6 +15,7 @@ import { ChangeEvent, useCallback, useState } from 'react'
 
 export const useAnalyzer = () => {
   const navigate = useNavigate()
+  const { user } = useSessionStore()
   const [file, setFile] = useState<File | null>(null)
   const [validationError, setValidationError] = useState<string | null>(null)
   const { setRequestsLeft, setRequestsCooldown, isCooldownActive } =
@@ -21,6 +25,13 @@ export const useAnalyzer = () => {
     onSuccess: (response) => {
       updateRequestLimit(response)
       setValidationError(null)
+
+      if (user?.id) {
+        queryClient.invalidateQueries({
+          queryKey: QUERY_KEYS.analysis.history(user?.id)
+        })
+      }
+
       navigate({ to: `/analyse/${response.data.id}` })
     },
     onError: (err) => {

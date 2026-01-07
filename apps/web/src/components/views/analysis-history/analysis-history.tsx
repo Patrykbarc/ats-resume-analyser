@@ -1,10 +1,10 @@
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
 import { AnalysisHistoryResponse } from '@/services/analyseService'
 import { Link } from '@tanstack/react-router'
 import { format } from 'date-fns'
-import { Clock, FileText, Trash2 } from 'lucide-react'
+import { Clock, FileText } from 'lucide-react'
 
 type AnalysisHistoryProps = {
   history: AnalysisHistoryResponse
@@ -55,14 +55,14 @@ export function AnalysisHistory({ history }: AnalysisHistoryProps) {
               >
                 View
               </Link>
-              <Button
-                // onClick={() => onDelete(record.id)}
+              {/* <Button
+                onClick={() => onDelete(record.analyseId)}
                 variant="outline"
                 size="sm"
                 className="text-destructive hover:bg-destructive/10"
               >
                 <Trash2 className="h-4 w-4" />
-              </Button>
+              </Button> */}
             </div>
           </div>
         ))}
