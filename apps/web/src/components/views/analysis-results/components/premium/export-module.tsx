@@ -12,8 +12,8 @@ export function ExportModule({ data }: ExportModuleProps) {
 
   return (
     <PremiumCard
-      title="Export to PDF"
-      description="Ordered export plan so reports stay reader-friendly after download."
+      title="CV layout order"
+      description="A well-organized layout plan ensures that reports remain legible after downloading."
     >
       <div className="grid gap-4 md:grid-cols-2">
         <ListBlock title="PDF outline" items={pdf_outline} />

@@ -1,4 +1,3 @@
-import { Card, CardContent } from '@/components/ui/card'
 import type { PremiumModules } from '@monorepo/types'
 
 import { AtsKeywordModule } from './ats-keyword-module'
@@ -17,13 +16,7 @@ type PremiumModulesProps = {
 
 export function PremiumModules({ premium }: PremiumModulesProps) {
   if (!premium) {
-    return (
-      <Card>
-        <CardContent className="pt-6 text-sm text-muted-foreground">
-          Premium analysis modules available only to premium users.
-        </CardContent>
-      </Card>
-    )
+    return null
   }
 
   return (

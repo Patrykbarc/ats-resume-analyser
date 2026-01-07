@@ -1,5 +1,11 @@
 import type { PremiumModules } from '@monorepo/types'
 
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle
+} from '@/components/ui/item'
 import { ListBlock } from './list-block'
 import { PremiumCard } from './premium-card'
 
@@ -31,6 +37,20 @@ export function CoverLetterModule({ data }: CoverLetterModuleProps) {
           <p className="rounded-md bg-muted px-3 py-2 text-sm text-muted-foreground">
             {tailored_prompt}
           </p>
+
+          <Item variant="outline" size="sm" className="w-fit" asChild>
+            <div className="w-full">
+              <ItemContent>
+                <ItemTitle>
+                  Use the prompt above to generate a cover letter.
+                </ItemTitle>
+                <ItemDescription className="line-clamp-none">
+                  Do not forget to customize the generated letter to better suit
+                  your style and job description, especially company name.
+                </ItemDescription>
+              </ItemContent>
+            </div>
+          </Item>
         </div>
       </div>
     </PremiumCard>

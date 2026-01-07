@@ -48,7 +48,7 @@ export function AnalysisSections({
             <h3 className="text-lg font-semibold text-foreground">{title}</h3>
           </div>
 
-          <ol className="list-inside list-decimal space-y-2">
+          <ol className="list-inside list-decimal space-y-2 text-sm">
             {items.map((item, idx) => (
               <li key={idx} className="leading-relaxed text-muted-foreground">
                 {item}

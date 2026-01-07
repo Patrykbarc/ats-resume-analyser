@@ -7,9 +7,7 @@ const FIVE_MINUTES = 5 * 60 * 1000
 export const useVerifyStripeSession = (sessionId: string) => {
   return useQuery({
     queryKey: QUERY_KEYS.stripe.session(sessionId),
-    queryFn: async () => {
-      return verifyStripeSession(sessionId)
-    },
+    queryFn: () => verifyStripeSession(sessionId),
     enabled: !!sessionId,
     staleTime: FIVE_MINUTES
   })

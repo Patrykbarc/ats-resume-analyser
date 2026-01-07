@@ -1,10 +1,15 @@
 import { apiClient } from '@/api/apiClient'
 import type { RequestLog, User } from '@monorepo/database'
-import { AnalysisParamsWithLimit } from '@monorepo/schemas'
+import { AnalysisParamsWithLimit, UserSchemaType } from '@monorepo/schemas'
 import type { AiAnalysis, Pagination } from '@monorepo/types'
 import { AxiosResponse } from 'axios'
 
-export type AnalyseResult = AxiosResponse<AiAnalysis>
+export type AnalysisDetails = AiAnalysis & {
+  parsed_file?: string
+  user?: Pick<UserSchemaType, 'id'> | null
+}
+
+export type AnalyseResult = AxiosResponse<AnalysisDetails>
 
 export const submitAnalyseResume = async ({
   file,
@@ -39,8 +44,8 @@ export const submitAnalyseResume = async ({
   return response
 }
 
-export const getAnalysis = async (id: string): Promise<AnalyseResult> => {
-  const response = await apiClient<AiAnalysis>(`/cv/analysis/${id}`)
+export const getAnalysis = async (id: string) => {
+  const response = await apiClient<AnalysisDetails>(`/cv/analysis/${id}`)
 
   return response
 }

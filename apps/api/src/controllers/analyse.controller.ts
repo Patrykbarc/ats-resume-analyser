@@ -96,18 +96,29 @@ export const getAnalysis = async (req: Request, res: Response) => {
   const { id } = req.params
 
   try {
-    const response = await openAiClient.responses.retrieve(id)
-
-    const responseList = (await openAiClient.responses.inputItems.list(
-      id
-    )) as unknown as ParsedFile
+    const [user, response, responseList] = await Promise.all([
+      prisma.user.findFirst({
+        select: {
+          id: true
+        },
+        where: {
+          requestLogs: {
+            some: {
+              analyseId: id
+            }
+          }
+        }
+      }),
+      openAiClient.responses.retrieve(id),
+      openAiClient.responses.inputItems.list(id) as unknown as ParsedFile
+    ])
 
     const parsed_file = responseList.data[0].content[0].text
     const parsedResponse = parseOpenAiApiResponse(response)
 
     return res
       .status(StatusCodes.OK)
-      .json({ status: StatusCodes.OK, ...parsedResponse, parsed_file })
+      .json({ status: StatusCodes.OK, ...parsedResponse, parsed_file, user })
   } catch (error) {
     handleError(error, res)
   }

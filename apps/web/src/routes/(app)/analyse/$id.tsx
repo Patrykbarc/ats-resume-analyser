@@ -19,7 +19,7 @@ export const Route = createFileRoute('/(app)/analyse/$id')({
 
 function Analysis() {
   const { id } = useParams({ from: '/(app)/analyse/$id' })
-  const { data, isLoading, isError, error } = useGetAnalyseById(id)
+  const { data: analysis, isLoading, isError, error } = useGetAnalyseById(id)
 
   if (isLoading) {
     return <AnalysisSkeletonWithNavigation />
@@ -40,7 +40,7 @@ function Analysis() {
           <ArrowLeft size={16} /> Home
         </Link>
       </div>
-      <AnalysisResults analysis={data.data} />
+      <AnalysisResults analysis={analysis.data} />
     </div>
   )
 }
