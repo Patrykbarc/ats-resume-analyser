@@ -1,4 +1,5 @@
 import { Card, CardContent } from '@/components/ui/card'
+import { Note } from '@/components/ui/note'
 import { AnalysisDetails } from '@/services/analyseService'
 import { useSessionStore } from '@/stores/session/useSessionStore'
 import { lazy, Suspense } from 'react'
@@ -87,6 +88,14 @@ export function AnalysisResults({ analysis }: AnalysisResultsProps) {
               parsing (like missing formatting or broken line breaks) can
               severely impact their ability to read key information.
             </p>
+
+            <Note
+              variant="muted"
+              size="sm"
+              title="Info"
+              className="mt-4"
+              description="Parsed file preview is available only to the analysis owner."
+            />
           </div>
 
           <Card>
