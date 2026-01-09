@@ -28,7 +28,7 @@ export const useAnalyzer = () => {
 
       if (user?.id) {
         queryClient.invalidateQueries({
-          queryKey: QUERY_KEYS.analysis.history(user?.id)
+          queryKey: QUERY_KEYS.analysis.latestHistory(user?.id)
         })
       }
 
