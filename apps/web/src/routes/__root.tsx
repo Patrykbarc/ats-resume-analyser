@@ -13,6 +13,7 @@ import {
   Outlet
 } from '@tanstack/react-router'
 import { Analytics } from '@vercel/analytics/react'
+import { NuqsAdapter } from 'nuqs/adapters/tanstack-router'
 import { Toaster } from 'react-hot-toast'
 import '../index.css'
 
@@ -27,18 +28,20 @@ const RootLayout = () => {
       {VITE_NODE_ENV !== 'development' && <Analytics />}
       <Toaster />
 
-      <div className="bg-background min-h-dvh flex flex-col">
-        <Navigation />
-        <main className="flex-1 py-10">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-            <Outlet />
-            <Devtools />
-          </div>
-        </main>
+      <NuqsAdapter>
+        <div className="bg-background min-h-dvh flex flex-col">
+          <Navigation />
+          <main className="flex-1 py-10">
+            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+              <Outlet />
+              <Devtools />
+            </div>
+          </main>
 
-        <AdSense adSlot="9101349995" />
-        <Footer />
-      </div>
+          <AdSense adSlot="9101349995" />
+          <Footer />
+        </div>
+      </NuqsAdapter>
     </>
   )
 }

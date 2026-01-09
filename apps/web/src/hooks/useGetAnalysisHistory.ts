@@ -1,22 +1,37 @@
 import { QUERY_KEYS } from '@/constants/query-keys'
-import {
-  AnalysisHistoryResponse,
-  getAnalysisHistory
-} from '@/services/analyseService'
+import { getAnalysisHistory } from '@/services/analyseService'
 import { AnalysisParamsWithLimit } from '@monorepo/schemas'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
+import { AnalysisHistoryResponse } from './useGetAnalysisHistory/types/types'
 
-const analysisOptions = ({ id, limit, page }: AnalysisParamsWithLimit) =>
-  queryOptions<AxiosResponse<AnalysisHistoryResponse> | null, AxiosError>({
-    queryKey: QUERY_KEYS.analysis.history(id),
-    queryFn: () => getAnalysisHistory({ id, limit, page })
-  })
+type AnalysisHistoryKeyType = 'latestHistory' | 'historyPage'
 
-export const useGetAnalysisHistory = ({
+type UseGetAnalysisHistoryParams = AnalysisParamsWithLimit & {
+  keyType: AnalysisHistoryKeyType
+}
+
+const analysisOptions = ({
   id,
   limit,
-  page
-}: AnalysisParamsWithLimit) => {
-  return useQuery(analysisOptions({ id, limit, page }))
+  page,
+  keyType
+}: UseGetAnalysisHistoryParams) => {
+  const queryKey =
+    keyType === 'historyPage' && page && limit
+      ? QUERY_KEYS.analysis.historyPage(id, page, limit)
+      : QUERY_KEYS.analysis.latestHistory(id)
+
+  return queryOptions<
+    AxiosResponse<AnalysisHistoryResponse> | null,
+    AxiosError
+  >({
+    queryKey,
+    queryFn: () => getAnalysisHistory({ id, limit, page }),
+    enabled: !!id
+  })
+}
+
+export const useGetAnalysisHistory = (params: UseGetAnalysisHistoryParams) => {
+  return useQuery(analysisOptions(params))
 }

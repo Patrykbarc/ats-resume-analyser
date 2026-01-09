@@ -1,72 +1,141 @@
-import { buttonVariants } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { cn } from '@/lib/utils'
-import { AnalysisHistoryResponse } from '@/services/analyseService'
+import { Pagination } from '@/components/ui/pagination/pagination'
+import { Skeleton } from '@/components/ui/skeleton'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table'
+import { HISTORY_PAGE_LIMIT } from '@/constants/history-pagination-limits'
+import { useGetAnalysisHistory } from '@/hooks/useGetAnalysisHistory'
+import { HistoryLogs } from '@/hooks/useGetAnalysisHistory/types/types'
+import { useSessionStore } from '@/stores/session/useSessionStore'
 import { Link } from '@tanstack/react-router'
+import {
+  ColumnDef,
+  flexRender,
+  getCoreRowModel,
+  useReactTable
+} from '@tanstack/react-table'
 import { format } from 'date-fns'
-import { Clock, FileText } from 'lucide-react'
+import { parseAsInteger, useQueryState } from 'nuqs'
+import { useMemo } from 'react'
 
-type AnalysisHistoryProps = {
-  history: AnalysisHistoryResponse
-  // onDelete: (id: string) => void
-  // onLoad: (record: AnalysisRecord) => void
-}
+export function AnalysisHistory() {
+  const { user } = useSessionStore()
+  const [currentPage] = useQueryState('page', parseAsInteger.withDefault(1))
 
-export function AnalysisHistory({ history }: AnalysisHistoryProps) {
-  return (
-    <Card className="border-border bg-card p-6">
-      <h3 className="mb-4 text-lg font-semibold text-foreground">
-        Analysis History
-      </h3>
-      <div className="space-y-3">
-        {history.logs.map((record) => (
-          <div
-            key={record.analyseId}
-            className="flex items-center justify-between rounded-lg border border-border bg-secondary p-4 transition-colors hover:bg-secondary/80"
+  const { data: history, isLoading } = useGetAnalysisHistory({
+    id: user?.id ?? '',
+    limit: HISTORY_PAGE_LIMIT,
+    page: currentPage,
+    keyType: 'historyPage'
+  })
+
+  const historyLogs: HistoryLogs[] = history?.data.logs ?? []
+  const pagination = history?.data.pagination
+
+  const columns: ColumnDef<HistoryLogs>[] = useMemo(
+    () => [
+      {
+        header: 'File Name',
+        accessorKey: 'fileName',
+        cell: (info) => (
+          <Link
+            to="/analyse/$id"
+            params={{ id: info.row.original.analyseId }}
+            className="hover:underline underline-offset-2"
           >
-            <div className="flex flex-1 items-center gap-3">
-              <FileText className="mt-1 h-5 w-5 text-accent" />
-              <div className="min-w-0 flex-1">
-                {record.fileName && (
-                  <Link
-                    to="/analyse/$id"
-                    params={{ id: record.analyseId }}
-                    className="truncate font-medium text-foreground"
-                  >
-                    {record.fileName}
-                  </Link>
-                )}
+            {info.row.original.fileName}
+          </Link>
+        )
+      },
+      {
+        header: 'File Size (bytes)',
+        accessorKey: 'fileSize'
+      },
+      {
+        header: 'Analyzed At',
+        accessorKey: 'createdAt',
+        cell: (info) => format(new Date(info.getValue() as string), 'PPpp')
+      }
+    ],
+    []
+  )
 
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Clock className="size-3.5" />
-                  {format(new Date(record.createdAt), 'PPpp')}
-                </div>
-              </div>
-            </div>
-            <div className="ml-4 flex gap-2">
-              <Link
-                to="/analyse/$id"
-                params={{ id: record.analyseId }}
-                className={cn(
-                  buttonVariants({ variant: 'outline', size: 'sm' }),
-                  'text-xs'
-                )}
-                // onClick={() => onLoad(record)}
-              >
-                View
-              </Link>
-              {/* <Button
-                onClick={() => onDelete(record.analyseId)}
-                variant="outline"
-                size="sm"
-                className="text-destructive hover:bg-destructive/10"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button> */}
-            </div>
-          </div>
-        ))}
+  const table = useReactTable({
+    data: historyLogs,
+    columns,
+    getCoreRowModel: getCoreRowModel()
+  })
+
+  const totalPages = pagination?.totalPages ?? 1
+
+  return (
+    <div className="space-y-4">
+      <div className="overflow-x-auto">
+        <Table className="table-fixed w-full">
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead className="max-w-[250px]" key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+
+          {isLoading ? (
+            <TableBody>
+              {Array.from({ length: 10 }).map((_, index) => (
+                <TableRow key={`skeleton-${index}`}>
+                  {columns.map((_, cellIndex) => (
+                    <TableCell key={`skeleton-cell-${cellIndex}`}>
+                      <Skeleton className="h-[20px] w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          ) : (
+            <TableBody>
+              {table.getRowModel().rows.length > 0 ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell className="max-w-[250px]" key={cell.id}>
+                        <div className="truncate">
+                          {flexRender(
+                            cell.column.columnDef.cell,
+                            cell.getContext()
+                          )}
+                        </div>
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={columns.length}>
+                    No analysis history found
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          )}
+        </Table>
       </div>
-    </Card>
+
+      {totalPages > 1 && <Pagination totalPages={totalPages} />}
+    </div>
   )
 }
