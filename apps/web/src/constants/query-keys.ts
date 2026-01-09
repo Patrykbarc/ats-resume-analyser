@@ -11,6 +11,8 @@ export const QUERY_KEYS = {
   },
   analysis: {
     byId: (id: string) => ['analysis', id] as const,
-    history: (userId: string) => ['analysisHistory', userId] as const
+    latestHistory: (userId: string) => ['analysisLatestHistory', userId] as const,
+    historyPage: (userId: string, page: number, limit: number) =>
+      ['analysisHistoryPage', userId, page, limit] as const
   }
 }

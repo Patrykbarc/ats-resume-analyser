@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteRouteImport } from './routes/_auth/route'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as appHistoryRouteRouteImport } from './routes/(app)/history/route'
 import { Route as AuthRegisterIndexRouteImport } from './routes/_auth/register/index'
 import { Route as AuthLogoutIndexRouteImport } from './routes/_auth/logout/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/_auth/login/index'
@@ -32,6 +33,11 @@ const AuthRouteRoute = AuthRouteRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const appHistoryRouteRoute = appHistoryRouteRouteImport.update({
+  id: '/(app)/history',
+  path: '/history',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
@@ -102,6 +108,7 @@ const appCheckoutCancelIndexRoute = appCheckoutCancelIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/history': typeof appHistoryRouteRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/reset-password/$id': typeof AuthResetPasswordIdRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/history': typeof appHistoryRouteRoute
   '/analyse/$id': typeof appAnalyseIdRoute
   '/verify/$token': typeof appVerifyTokenRoute
   '/reset-password/$id': typeof AuthResetPasswordIdRoute
@@ -136,6 +144,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/_auth': typeof AuthRouteRouteWithChildren
+  '/(app)/history': typeof appHistoryRouteRoute
   '/(app)/analyse/$id': typeof appAnalyseIdRoute
   '/(app)/verify/$token': typeof appVerifyTokenRoute
   '/_auth/reset-password/$id': typeof AuthResetPasswordIdRoute
@@ -154,6 +163,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/history'
     | '/analyse/$id'
     | '/verify/$token'
     | '/reset-password/$id'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/history'
     | '/analyse/$id'
     | '/verify/$token'
     | '/reset-password/$id'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/_auth'
+    | '/(app)/history'
     | '/(app)/analyse/$id'
     | '/(app)/verify/$token'
     | '/_auth/reset-password/$id'
@@ -205,6 +217,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  appHistoryRouteRoute: typeof appHistoryRouteRoute
   appAnalyseIdRoute: typeof appAnalyseIdRoute
   appVerifyTokenRoute: typeof appVerifyTokenRoute
   appAccountIndexRoute: typeof appAccountIndexRoute
@@ -229,6 +242,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(app)/history': {
+      id: '/(app)/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof appHistoryRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_auth/register/': {
@@ -348,6 +368,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  appHistoryRouteRoute: appHistoryRouteRoute,
   appAnalyseIdRoute: appAnalyseIdRoute,
   appVerifyTokenRoute: appVerifyTokenRoute,
   appAccountIndexRoute: appAccountIndexRoute,

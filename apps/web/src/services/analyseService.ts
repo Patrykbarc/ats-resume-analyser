@@ -1,7 +1,7 @@
 import { apiClient } from '@/api/apiClient'
-import type { RequestLog, User } from '@monorepo/database'
+import type { User } from '@monorepo/database'
 import { AnalysisParamsWithLimit, UserSchemaType } from '@monorepo/schemas'
-import type { AiAnalysis, Pagination } from '@monorepo/types'
+import type { AiAnalysis } from '@monorepo/types'
 import { AxiosResponse } from 'axios'
 
 export type AnalysisDetails = AiAnalysis & {
@@ -48,11 +48,6 @@ export const getAnalysis = async (id: string) => {
   const response = await apiClient<AnalysisDetails>(`/cv/analysis/${id}`)
 
   return response
-}
-
-export type AnalysisHistoryResponse = {
-  logs: Pick<RequestLog, 'analyseId' | 'fileName' | 'fileSize' | 'createdAt'>[]
-  pagination: Pagination
 }
 
 export const getAnalysisHistory = async ({
