@@ -64,7 +64,7 @@ export function LatestsAnalysisHistory({ history }: AnalysisHistoryProps) {
 
       {shouldShowViewAll && (
         <Link className="w-fit" to="/history">
-          View All
+          View all
         </Link>
       )}
     </Card>

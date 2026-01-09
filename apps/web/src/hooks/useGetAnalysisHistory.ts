@@ -27,7 +27,8 @@ const analysisOptions = ({
     AxiosError
   >({
     queryKey,
-    queryFn: () => getAnalysisHistory({ id, limit, page })
+    queryFn: () => getAnalysisHistory({ id, limit, page }),
+    enabled: !!id
   })
 }
 
