@@ -12,7 +12,8 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "tsc": "tsc --noEmit"
   },
   "dependencies": {
     "zod": "catalog:"
