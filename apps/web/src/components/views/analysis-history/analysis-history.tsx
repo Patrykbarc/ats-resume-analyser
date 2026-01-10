@@ -23,6 +23,8 @@ import { format } from 'date-fns'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 
+type Column = ColumnDef<HistoryLogs>[]
+
 export function AnalysisHistory() {
   const { user } = useSessionStore()
   const [currentPage] = useQueryState('page', parseAsInteger.withDefault(1))
@@ -37,7 +39,7 @@ export function AnalysisHistory() {
   const historyLogs: HistoryLogs[] = history?.data.logs ?? []
   const pagination = history?.data.pagination
 
-  const columns: ColumnDef<HistoryLogs>[] = useMemo(
+  const columns: Column = useMemo(
     () => [
       {
         header: 'File Name',
@@ -76,7 +78,7 @@ export function AnalysisHistory() {
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto">
-        <Table className="table-fixed w-full">
+        <Table className="table-fixed w-full bg-white border p-6 rounded-lg">
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
@@ -95,17 +97,7 @@ export function AnalysisHistory() {
           </TableHeader>
 
           {isLoading ? (
-            <TableBody>
-              {Array.from({ length: 10 }).map((_, index) => (
-                <TableRow key={`skeleton-${index}`}>
-                  {columns.map((_, cellIndex) => (
-                    <TableCell key={`skeleton-cell-${cellIndex}`}>
-                      <Skeleton className="h-[20px] w-full" />
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
+            <TableBodySkeleton columns={columns} />
           ) : (
             <TableBody>
               {table.getRowModel().rows.length > 0 ? (
@@ -138,4 +130,16 @@ export function AnalysisHistory() {
       {totalPages > 1 && <Pagination totalPages={totalPages} />}
     </div>
   )
+}
+
+function TableBodySkeleton({ columns }: { columns: Column }) {
+  return Array.from({ length: 10 }).map((_, index) => (
+    <TableRow key={`skeleton-${index}`}>
+      {columns.map((_, cellIndex) => (
+        <TableCell key={`skeleton-cell-${cellIndex}`}>
+          <Skeleton className="h-5 w-full" />
+        </TableCell>
+      ))}
+    </TableRow>
+  ))
 }
