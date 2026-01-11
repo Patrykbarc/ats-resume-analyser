@@ -20,6 +20,7 @@ import {
   getCoreRowModel,
   useReactTable
 } from '@tanstack/react-table'
+import { File } from 'lucide-react'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 
@@ -45,18 +46,17 @@ export function AnalysisHistory() {
         header: 'File Name',
         accessorKey: 'fileName',
         cell: ({ row: { original } }) => (
-          <Link
-            to="/analyse/$id"
-            params={{ id: original.analyseId }}
-            className="hover:underline underline-offset-2"
-          >
-            {original.fileName}
-          </Link>
+          <div className="flex items-center gap-2">
+            <File className="size-4 text-accent flex-shrink-0" />
+            <Link
+              to="/analyse/$id"
+              params={{ id: original.analyseId }}
+              className="hover:underline underline-offset-2"
+            >
+              {original.fileName}
+            </Link>
+          </div>
         )
-      },
-      {
-        header: 'File Size (bytes)',
-        accessorKey: 'fileSize'
       },
       {
         header: 'Analyzed At',
@@ -78,13 +78,24 @@ export function AnalysisHistory() {
   })
 
   const totalPages = pagination?.totalPages ?? 1
+  const totalCount = pagination?.totalCount ?? 0
 
+  const rows = table.getRowModel().rows
+  const headers = table.getHeaderGroups()
+  
   return (
-    <div className="space-y-4">
-      <div className="overflow-x-auto">
-        <Table className="table-fixed w-full bg-white border p-6 rounded-lg">
+    <div className="space-y-4 bg-white border p-6 rounded-xl">
+      <div className="space-y-2">
+        <h1 className="leading-none font-semibold">Analysis Records</h1>
+        <p className="text-muted-foreground text-sm">
+          {totalCount} records found
+        </p>
+      </div>
+
+      <div className="overflow-x-auto border rounded-lg">
+        <Table className="table-fixed w-full">
           <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
+            {headers.map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <TableHead className="max-w-[250px]" key={header.id}>
@@ -104,11 +115,11 @@ export function AnalysisHistory() {
             <TableBodySkeleton columns={columns} />
           ) : (
             <TableBody>
-              {table.getRowModel().rows.length > 0 ? (
-                table.getRowModel().rows.map((row) => (
+              {rows.length > 0 ? (
+                rows.map((row) => (
                   <TableRow key={row.id}>
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell className="max-w-[250px]" key={cell.id}>
+                      <TableCell key={cell.id} className="max-w-[250px]">
                         <div className="truncate">
                           {flexRender(
                             cell.column.columnDef.cell,
@@ -137,13 +148,17 @@ export function AnalysisHistory() {
 }
 
 function TableBodySkeleton({ columns }: { columns: Column }) {
-  return Array.from({ length: 10 }).map((_, index) => (
-    <TableRow key={`skeleton-${index}`}>
-      {columns.map((_, cellIndex) => (
-        <TableCell key={`skeleton-cell-${cellIndex}`}>
-          <Skeleton className="h-5 w-full" />
-        </TableCell>
+  return (
+    <TableBody>
+      {Array.from({ length: 10 }).map((_, index) => (
+        <TableRow key={`skeleton-${index}`}>
+          {columns.map((_, cellIndex) => (
+            <TableCell key={`skeleton-cell-${cellIndex}`}>
+              <Skeleton className="h-5 w-full" />
+            </TableCell>
+          ))}
+        </TableRow>
       ))}
-    </TableRow>
-  ))
+    </TableBody>
+  )
 }
