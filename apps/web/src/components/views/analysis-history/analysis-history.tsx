@@ -11,6 +11,7 @@ import {
 import { HISTORY_PAGE_LIMIT } from '@/constants/history-pagination-limits'
 import { useGetAnalysisHistory } from '@/hooks/useGetAnalysisHistory'
 import { HistoryLogs } from '@/hooks/useGetAnalysisHistory/types/types'
+import { formatHistoryDate } from '@/lib/formatHistoryDate'
 import { useSessionStore } from '@/stores/session/useSessionStore'
 import { Link } from '@tanstack/react-router'
 import {
@@ -19,7 +20,6 @@ import {
   getCoreRowModel,
   useReactTable
 } from '@tanstack/react-table'
-import { format } from 'date-fns'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { useMemo } from 'react'
 
@@ -44,13 +44,13 @@ export function AnalysisHistory() {
       {
         header: 'File Name',
         accessorKey: 'fileName',
-        cell: (info) => (
+        cell: ({ row: { original } }) => (
           <Link
             to="/analyse/$id"
-            params={{ id: info.row.original.analyseId }}
+            params={{ id: original.analyseId }}
             className="hover:underline underline-offset-2"
           >
-            {info.row.original.fileName}
+            {original.fileName}
           </Link>
         )
       },
@@ -61,7 +61,11 @@ export function AnalysisHistory() {
       {
         header: 'Analyzed At',
         accessorKey: 'createdAt',
-        cell: (info) => format(new Date(info.getValue() as string), 'PPpp')
+        cell: ({ getValue }) => {
+          const createdAt = getValue<HistoryLogs['createdAt']>()
+
+          return formatHistoryDate(createdAt)
+        }
       }
     ],
     []

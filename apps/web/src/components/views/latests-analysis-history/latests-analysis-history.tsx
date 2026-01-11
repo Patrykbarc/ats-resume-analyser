@@ -2,10 +2,10 @@ import { buttonVariants } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { LATEST_HISTORY_LIMIT } from '@/constants/history-pagination-limits'
 import { AnalysisHistoryResponse } from '@/hooks/useGetAnalysisHistory/types/types'
+import { formatHistoryDate } from '@/lib/formatHistoryDate'
 
 import { cn } from '@/lib/utils'
 import { Link } from '@tanstack/react-router'
-import { format } from 'date-fns'
 import { Clock, FileText } from 'lucide-react'
 
 type AnalysisHistoryProps = {
@@ -42,7 +42,7 @@ export function LatestsAnalysisHistory({ history }: AnalysisHistoryProps) {
 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <Clock className="size-3.5" />
-                  {format(new Date(record.createdAt), 'PPpp')}
+                  {formatHistoryDate(record.createdAt)}
                 </div>
               </div>
             </div>

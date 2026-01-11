@@ -8,7 +8,7 @@ import { buttonVariants } from '../ui/button'
 export function RequestLimitError() {
   const { cooldownDate } = useRateLimit()
 
-  const formattedDate = format(cooldownDate ? cooldownDate : new Date(), 'PPpp')
+  const formattedDate = format(cooldownDate ? cooldownDate : new Date(), 'PPp')
 
   return (
     <div className="w-full mx-auto max-w-md space-y-8 rounded-lg border border-border bg-card p-8 text-center">
